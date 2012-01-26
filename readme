@@ -1,0 +1,7 @@
+A simple proof of concept app for the iPad.  A 'my first monogame' application.
+
+This demonstrates how easy it is to produce something quickly and easily with monogame.  This is a simple paint app.  You can choose your colour from a pre-set list or define the exact RGBA values by dragging gauges.  Choose your brush size and then just drag your finger around the iPad screen.
+
+In order to build this you will need to also have the MonoGame project (which is here in GitHub) 
+
+Note: At the time of writing this I've only ever run it on the iPad emulator in MonoDevelop.  I've yet to spend the money to allow me to run it on a real iPad, however in theory it should work fine. :-)
