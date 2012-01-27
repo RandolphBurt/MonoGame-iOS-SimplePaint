@@ -145,14 +145,17 @@ namespace Paint
 			this.spriteBatch.End();
 			
 			/* 
-			 * We use alpha blending when drawing our picture - this allows the user to reduce the alpha value (transparency)
+			 * We use NonPremultiplied when drawing our picture - this allows the user to reduce the alpha value (transparency)
 			 * and then build up the color by drawing over the top of it.
-			 * Also if painting one color over another then they will erge slightly - e.g. painting a red over a green will make a yellow.
-			 * Other alternatives are Additive, Opaque and NonPremultiplied.
+			 * Also if painting one color over another then they will merge slightly - e.g. painting a red over a green will make a yellow.
+			 * Other alternatives are Additive, Opaque and AlphaBlending.
 			 * Additive will eventually turn everything white the more you colour it.
 			 * Opaque simply ignores the alpha value - hence useful when drawing controls as we want to completely replace the previous image
+			 * AlphaBlending and NonPremultiplied are very similar - NonPremultiplied uses Blend.SourceAlpha when mixing the source and 
+			 * destination colours - BlendAlpha uses BlendOne.  (See Monogame/BlendState.cs)
+			 * 
 			 */			
-			this.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend);
+			this.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied);
 			
 			this.DrawPicture();
 			
