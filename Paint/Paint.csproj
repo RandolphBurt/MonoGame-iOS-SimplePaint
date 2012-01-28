@@ -68,26 +68,35 @@
     <Compile Include="Main.cs" />
     <Compile Include="AppDelegate.cs" />
     <Compile Include="PaintApp.cs" />
-    <Compile Include="Interfaces\ICanvas.cs" />
     <Compile Include="Tools\Canvas.cs" />
-    <Compile Include="Interfaces\IGauge.cs" />
     <Compile Include="Tools\Gauge.cs" />
     <Compile Include="Tools\ColorSelector.cs" />
-    <Compile Include="TouchPoint.cs" />
-    <Compile Include="Interfaces\ITouchPoint.cs" />
-    <Compile Include="TouchType.cs" />
     <Compile Include="Tools\HorizontalGauge.cs" />
     <Compile Include="Tools\VerticalGauge.cs" />
-    <Compile Include="Interfaces\IBrushSizeSelector.cs" />
     <Compile Include="Tools\BrushSizeSelector.cs" />
     <Compile Include="Tools\ColorPicker.cs" />
-    <Compile Include="Interfaces\IColorPicker.cs" />
-    <Compile Include="Interfaces\IColorSelector.cs" />
-    <Compile Include="Interfaces\IColorSetter.cs" />
-    <Compile Include="Interfaces\ICanvasToolTouch.cs" />
-    <Compile Include="Interfaces\ICanvasTool.cs" />
     <Compile Include="Tools\ColorSetter.cs" />
     <Compile Include="Tools\CanvasToolTouchBase.cs" />
+    <Compile Include="BusinessLogic\TouchPoint.cs" />
+    <Compile Include="BusinessLogic\TouchType.cs" />
+    <Compile Include="BusinessLogic\DockPosition.cs" />
+    <Compile Include="ToolInterfaces\ICanvas.cs" />
+    <Compile Include="ToolInterfaces\IGauge.cs" />
+    <Compile Include="ToolInterfaces\ITouchPoint.cs" />
+    <Compile Include="ToolInterfaces\IBrushSizeSelector.cs" />
+    <Compile Include="ToolInterfaces\IColorPicker.cs" />
+    <Compile Include="ToolInterfaces\IColorSelector.cs" />
+    <Compile Include="ToolInterfaces\IColorSetter.cs" />
+    <Compile Include="ToolInterfaces\ICanvasToolTouch.cs" />
+    <Compile Include="ToolInterfaces\ICanvasTool.cs" />
+    <Compile Include="ToolInterfaces\IToggleMinimizeMaximize.cs" />
+    <Compile Include="BusinessLogic\MinimizedMaximizedState.cs" />
+    <Compile Include="Tools\ToggleDockButton.cs" />
+    <Compile Include="ToolInterfaces\IToggleDock.cs" />
+    <Compile Include="ToolInterfaces\IToggleDockButton.cs" />
+    <Compile Include="ToolInterfaces\IToggleMinimizeMaximizeButton.cs" />
+    <Compile Include="Tools\ToggleMinimizeMaximizeButton.cs" />
+    <Compile Include="ToolInterfaces\IToolBox.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -98,8 +107,9 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Content\" />
-    <Folder Include="Interfaces\" />
     <Folder Include="Tools\" />
+    <Folder Include="BusinessLogic\" />
+    <Folder Include="ToolInterfaces\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\transparent.png" />

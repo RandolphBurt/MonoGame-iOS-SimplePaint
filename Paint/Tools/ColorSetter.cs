@@ -78,7 +78,7 @@ namespace Paint
 			if (this.color != this.previousColor || refreshDisplay == true)
 			{
 				// Blank out everything 
-				this.spriteBatch.Draw(this.transparentSquareTexture, this.bounds, this.borderColor); 
+				this.DrawRectangle(this.bounds, this.borderColor); 
 				
 				Rectangle inBorderRectangle = new Rectangle(
 					this.bounds.X + BorderWidth,
@@ -86,7 +86,7 @@ namespace Paint
 					this.bounds.Width - (2 * BorderWidth),
 					this.bounds.Height - (2 * BorderWidth));
 				
-				this.spriteBatch.Draw(this.transparentSquareTexture, inBorderRectangle, this.Color); 
+				this.DrawRectangle(inBorderRectangle, this.Color); 
 			}
 		}
 		
@@ -107,6 +107,16 @@ namespace Paint
 					this.color = value;
 				}
 			}
+		}
+
+		/// <summary>
+		/// Draws the rectangle.
+		/// </summary>
+		/// <param name='rectangle' The rectangluar region to paint />
+		/// <param name='color' The color we wish to paint the rectangle/>
+		protected void DrawRectangle(Rectangle rectangle, Color color)
+		{
+			this.spriteBatch.Draw(this.transparentSquareTexture, rectangle, color); 
 		}
 	}
 }

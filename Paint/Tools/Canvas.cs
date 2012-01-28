@@ -289,12 +289,11 @@ namespace Paint
 			for (int i = 0; i < colorList.Length; i++)
 			{
 				ColorPicker colorPicker = new ColorPicker(
-					backgroundColor, 
+					colorList[i], 
 					borderColor,
 					this.spriteBatch,
 					this.transparentSquareTexture,
-					new Rectangle((int)(bounds.X + (colorPickerWidth * (i + 1))), (int)((bounds.Height - 230) - colorPickerWidth), (int)colorPickerWidth, (int)colorPickerWidth),
-					colorList[i]);
+					new Rectangle((int)(bounds.X + (colorPickerWidth * (i + 1))), (int)((bounds.Height - 230) - colorPickerWidth), (int)colorPickerWidth, (int)colorPickerWidth));
 				
 				colorPicker.ColorSelected += (sender, e) => {
 					colorSelector.Color = colorPicker.Color;

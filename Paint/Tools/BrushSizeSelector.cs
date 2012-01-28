@@ -14,12 +14,7 @@ namespace Paint
 	/// Brush size selector - tool allowing the user to pick the size of the brush for drawing
 	/// </summary>
 	public class BrushSizeSelector : CanvasToolTouchBase, IBrushSizeSelector
-	{
-		/// <summary>
-		/// The size of the border around this tool
-		/// </summary>
-		private const int BorderWidth = 5;
-		
+	{		
 		/// <summary>
 		/// The color of the gauge.
 		/// </summary>
@@ -142,15 +137,7 @@ namespace Paint
 			if (refreshDisplay == true) 
 			{
 				// Blank out everything 
-				this.spriteBatch.Draw(this.transparentSquareTexture, this.bounds, this.borderColor); 
-					
-				Rectangle inBorderRectangle = new Rectangle(
-					this.bounds.X + BorderWidth,
-					this.bounds.Y + BorderWidth,
-					this.bounds.Width - (2 * BorderWidth),
-					this.bounds.Height - (2 * BorderWidth));
-					
-				this.spriteBatch.Draw(this.transparentSquareTexture, inBorderRectangle, this.backgroundColor); 
+				this.BlankAndRedrawWithBorder();
 			}
 			
 			this.DrawBrush();
@@ -195,7 +182,7 @@ namespace Paint
 				this.maxBrushSize,
 				this.maxBrushSize);
 			
-			this.spriteBatch.Draw(this.transparentSquareTexture, blankRectangle, this.backgroundColor); 							
+			this.DrawRectangle(blankRectangle, this.backgroundColor); 							
 			
 			// draw new brush
 			Rectangle brushRectangle = new Rectangle(
@@ -204,7 +191,7 @@ namespace Paint
 				this.BrushSize,
 				this.BrushSize);
 			
-			this.spriteBatch.Draw(this.transparentSquareTexture, brushRectangle, this.Color); 			
+			this.DrawRectangle(brushRectangle, this.Color); 			
 		}
 	
 		/// <summary>

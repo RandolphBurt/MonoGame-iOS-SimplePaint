@@ -1,14 +1,14 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|iPhoneSimulator" />
-  <MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.Workbench ActiveDocument="Paint/Tools/Canvas.cs">
+    <Files>
+      <File FileName="Paint/Tools/Canvas.cs" Line="137" Column="4" />
+    </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State expanded="True">
           <Node name="Paint" expanded="True">
-            <Node name="Content" expanded="True" />
-            <Node name="Interfaces" expanded="True">
-              <Node name="ITouchPoint.cs" selected="True" />
-            </Node>
+            <Node name="Interfaces" selected="True" />
             <Node name="Tools" expanded="True" />
           </Node>
         </State>

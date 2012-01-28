@@ -16,6 +16,11 @@ namespace Paint
 	public abstract class CanvasToolTouchBase : ICanvasToolTouch
 	{
 		/// <summary>
+		/// Border size for drawing the tool on screen.
+		/// </summary>
+		protected const int StandardBorderWidth = 5;
+
+		/// <summary>
 		/// The background color of the tool
 		/// </summary>
 		protected Color backgroundColor;
@@ -31,14 +36,14 @@ namespace Paint
 		protected Rectangle bounds;
 		
 		/// <summary>
-		/// The SpriteBatch used for drawing
-		/// </summary>
-		protected SpriteBatch spriteBatch;
-		
-		/// <summary>
 		/// A simple transparent texture used for all drawing - simply set the color required at the time of drawing
 		/// </summary>
 		protected Texture2D transparentSquareTexture;
+		
+		/// <summary>
+		/// The SpriteBatch used for drawing
+		/// </summary>
+		private SpriteBatch spriteBatch;
 		
 		/// <summary>
 		/// Small bit of state - determines whether the user is currently interacting with this control by dragging their finger across the iPad
@@ -127,6 +132,41 @@ namespace Paint
 		/// The position and type of gesture/touch made
 		/// </param>
 		protected abstract void HandleTouch(ITouchPoint touchPosition);
+		
+		/// <summary>
+		/// Draws the rectangle.
+		/// </summary>
+		/// <param name='rectangle' The rectangluar region to paint />
+		/// <param name='color' The color we wish to paint the rectangle/>
+		protected void DrawRectangle(Rectangle rectangle, Color color)
+		{
+			this.spriteBatch.Draw(this.transparentSquareTexture, rectangle, color); 
+		}
+		
+		/// <summary>
+		/// Blanks this tool and then redraws the border round the edge.
+		/// </summary>
+		protected void BlankAndRedrawWithBorder()
+		{
+			this.BlankAndRedrawWithBorder(this.bounds);
+		}
+		
+		/// <summary>
+		/// Blanks the specific rectangle and then redraws the border round the edge.
+		/// </summary>
+		/// <param name='redrawRectangle' The rectangular region that should be blanked and redrawn with the border/>
+		protected void BlankAndRedrawWithBorder(Rectangle redrawRectangle)
+		{
+			this.spriteBatch.Draw(this.transparentSquareTexture, redrawRectangle, this.borderColor); 
+			
+			Rectangle inBorderRectangle = new Rectangle(
+				this.bounds.X + StandardBorderWidth,
+				this.bounds.Y + StandardBorderWidth,
+				this.bounds.Width - (2 * StandardBorderWidth),
+				this.bounds.Height - (2 * StandardBorderWidth));
+			
+			this.spriteBatch.Draw(this.transparentSquareTexture, inBorderRectangle, this.backgroundColor); 
+		}
 	}
 }
 

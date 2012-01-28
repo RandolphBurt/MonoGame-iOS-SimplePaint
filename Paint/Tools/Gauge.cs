@@ -91,13 +91,13 @@ namespace Paint
 			if (refreshDisplay == true || this.previousMarker != this.currentMarker) 
 			{
 				// Blank out everything 
-				this.spriteBatch.Draw(this.transparentSquareTexture, this.bounds, this.backgroundColor); 
+				this.DrawRectangle(this.bounds, this.backgroundColor); 
 								
 				// Draw the gauge bar
-				this.spriteBatch.Draw(this.transparentSquareTexture, this.CreateGaugeRectangle(), this.gaugeColor);
+				this.DrawRectangle(this.CreateGaugeRectangle(), this.gaugeColor);
 				
 				// Draw the marker
-				this.spriteBatch.Draw(this.transparentSquareTexture, this.CreateMarkerRectangle(), this.gaugeColor);			
+				this.DrawRectangle(this.CreateMarkerRectangle(), this.gaugeColor);			
 				
 				this.previousMarker = this.currentMarker;
 			}

@@ -14,12 +14,7 @@ namespace Paint
 	/// Color selector - a tool allowing the user to specify the exact color to use by specifying individual RGBA values
 	/// </summary>
 	public class ColorSelector : CanvasToolTouchBase, IColorSelector
-	{
-		/// <summary>
-		/// Border size for drawing the tool on screen.
-		/// </summary>
-		private const int BorderWidth = 5;
-		
+	{		
 		/// <summary>
 		/// Relative order of the Red Gauge on screen and in the internal array of gauges.
 		/// </summary>
@@ -156,15 +151,7 @@ namespace Paint
 			if (refreshDisplay == true) 
 			{
 				// Blank out everything 
-				this.spriteBatch.Draw(this.transparentSquareTexture, this.bounds, this.borderColor); 
-				
-				Rectangle inBorderRectangle = new Rectangle(
-					this.bounds.X + BorderWidth,
-					this.bounds.Y + BorderWidth,
-					this.bounds.Width - (2 * BorderWidth),
-					this.bounds.Height - (2 * BorderWidth));
-				
-				this.spriteBatch.Draw(this.transparentSquareTexture, inBorderRectangle, this.backgroundColor); 
+				this.BlankAndRedrawWithBorder();
 			}
 			
 			for (int i = 0; i < GaugeCount; i++)			

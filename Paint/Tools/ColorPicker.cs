@@ -16,11 +16,6 @@ namespace Paint
 	public class ColorPicker : CanvasToolTouchBase, IColorPicker
 	{
 		/// <summary>
-		/// Border size for drawing the tool on screen.
-		/// </summary>
-		private const int BorderWidth = 5;
-		
-		/// <summary>
 		/// Initializes a new instance of the <see cref="Paint.ColorPicker"/> class.
 		/// </summary>
 		/// <param name='backgroundColor' The background color of the ColorPicker />
@@ -29,10 +24,9 @@ namespace Paint
 		/// <param name='transparentSquareTexture' The transparent texture used for all drawing - we just specify the color we want at the time />
 		/// <param name='bounds' The bounds of this control/tool />
 		/// <param name='color' The color this tool represents />
-		public ColorPicker (Color backgroundColor, Color borderColor, SpriteBatch spriteBatch, Texture2D transparentSquareTexture, Rectangle bounds, Color color) 
+		public ColorPicker (Color backgroundColor, Color borderColor, SpriteBatch spriteBatch, Texture2D transparentSquareTexture, Rectangle bounds) 
 			: base(backgroundColor, borderColor, spriteBatch, transparentSquareTexture, bounds) 
 		{
-			this.Color = color;
 		}
 		
 		/// <summary>
@@ -40,8 +34,10 @@ namespace Paint
 		/// </summary>
 		public Color Color 
 		{ 
-			get;
-			private set;
+			get 
+			{
+				return this.backgroundColor;
+			}
 		}
 		
 		/// <summary>
@@ -61,15 +57,7 @@ namespace Paint
 			if (refreshDisplay == true) 
 			{
 				// Blank out everything 
-				this.spriteBatch.Draw(this.transparentSquareTexture, this.bounds, this.borderColor); 
-				
-				Rectangle inBorderRectangle = new Rectangle(
-					this.bounds.X + BorderWidth,
-					this.bounds.Y + BorderWidth,
-					this.bounds.Width - (2 * BorderWidth),
-					this.bounds.Height - (2 * BorderWidth));
-				
-				this.spriteBatch.Draw(this.transparentSquareTexture, inBorderRectangle, this.Color); 
+				this.BlankAndRedrawWithBorder();
 			}
 		}
 		
