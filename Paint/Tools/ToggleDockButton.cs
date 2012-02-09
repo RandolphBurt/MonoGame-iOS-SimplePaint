@@ -23,7 +23,7 @@ namespace Paint
 		/// <summary>
 		/// Gap between the border and the arrow.
 		/// </summary>
-		private const int ArrowTopBottomMargin = 2;
+		private const int ArrowTopBottomMargin = 5;
 
 		/// <summary>
 		/// The rectangle where the middle of the arraw appears
@@ -63,7 +63,7 @@ namespace Paint
 				bounds.X + (bounds.Width - ArrowWidth) / 2,
 				bounds.Y + StandardBorderWidth + ArrowTopBottomMargin,
 				ArrowWidth,
-				bounds.Height - ((StandardBorderWidth + ArrowWidth) * 2));
+				bounds.Height - ((StandardBorderWidth + ArrowTopBottomMargin) * 2));
 			
 			this.arrowPointingUpRectangle = new Rectangle(
 				this.middleOfArrawRectangle.X - ArrowWidth,

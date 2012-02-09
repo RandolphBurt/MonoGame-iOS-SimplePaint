@@ -14,52 +14,12 @@ namespace Paint
 	/// The main class - Canvas - handles all the rendering and user interaction
 	/// </summary>
 	public class Canvas : ICanvas
-	{
-		/// <summary>
-		/// Defines the height/ location of the picture on our screen
-		/// </summary>
-		private const int PictureHeight = 715;
-		
-		/// <summary>
-		/// The color we will set the brush to start with
-		/// </summary>
-		private readonly Color StartColor = Color.Green;
-		
-		/// <summary>
-		/// The maximum size of the brush
-		/// </summary>
-		private const int MaxBrushSize = 50;
-
-		/// <summary>
-		/// The minimum size of the brush
-		/// </summary>
-		private const int MinBrushSize = 1;
-		
-		/// <summary>
-		/// The initial size of the brush
-		/// </summary>
-		private const int StartBrushSize = 10;
-		
-		/// <summary>
-		/// Simply tracks whether this is the very first time we are drawing the canvas - if so then we need to draw everything on each control/tool.
-		/// </summary>
-		private bool initialDraw = true;
-		
+	{				
 		/// <summary>
 		/// The list of touchpoints (gesture type and location) made since the last update
 		/// </summary>
 		private List<Vector2> touchPoints = new List<Vector2>();
 		
-		/// <summary>
-		/// All the tools we can use to assist us with our drawing
-		/// </summary>
-		private List<ICanvasToolTouch> canvasTools;
-		
-		/// <summary>
-		/// The color setter tool
-		/// </summary>
-		private ColorSetter colorSetter;
-
 		/// <summary>
 		/// The SpriteBatch for all rendering
 		/// </summary>
@@ -80,30 +40,10 @@ namespace Paint
 		/// <param name='bounds' The bounds of this control/tool />
 		public Canvas(Color backgroundColor, Color borderColor, SpriteBatch spriteBatch, Texture2D transparentSquareTexture, Rectangle bounds)
 		{
-			this.Color = StartColor;
-			this.Brush = new Rectangle(0, 0, StartBrushSize, StartBrushSize);
 			this.spriteBatch = spriteBatch;
 			this.transparentSquareTexture = transparentSquareTexture;
-			this.CreateCanvasTools(backgroundColor, borderColor, bounds);
-		}
-
-		/// <summary>
-		/// Gets the current color being used for drawing
-		/// </summary>
-		public Color Color 
-		{
-			get;
-			private set;
 		}
 		
-		/// <summary>
-		/// Gets the current brush being used for drawing
-		/// </summary>
-		public Rectangle Brush 
-		{
-			get;
-			private set;
-		}
 		
 		/// <summary>
 		/// Handles any user interaction.
@@ -115,35 +55,21 @@ namespace Paint
 		{
 			foreach (var touch in touchPointList)
 			{
-				if (this.HandleTouchInCanvasTools(touch) == false)
-				{
-					if (touch.Position.Y < PictureHeight)
-					{
-						this.HandleTouchPicture(touch);
-					}
-				}
+				this.touchPoints.Add(touch.Position);
 			}
 		}
 		
 		/// <summary>
 		/// Draw the latest updates to our image/render target.
+		/// <param name='color' The color to use for the drawing />
+		/// <param name='brush' The brush to use for the drawing />
+		/// <param name='refreshDisplay'>
+		/// True = we should redraw the entire control
+		/// False = just draw any updates 
+		/// </param>
 		/// </summary>
-		public void Draw()
+		public void Draw(Color color, Rectangle brush, bool refreshDisplay = false)
 		{
-			/*
-			 * Draw the tools with an Opque BlendState to ensure we overwrite the previous color completely
-			 */
-			this.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Opaque);
-			
-			this.colorSetter.Draw(this.initialDraw);
-			
-			foreach (var tool in this.canvasTools)
-			{
-				tool.Draw(this.initialDraw);
-			}
-
-			this.spriteBatch.End();
-			
 			/* 
 			 * We use NonPremultiplied when drawing our picture - this allows the user to reduce the alpha value (transparency)
 			 * and then build up the color by drawing over the top of it.
@@ -157,150 +83,32 @@ namespace Paint
 			 */			
 			this.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied);
 			
-			this.DrawPicture();
+			this.DrawPicture(color, brush);
 			
 			this.spriteBatch.End();
-			
-			this.initialDraw = false;
 		}
 		
 		/// <summary>
 		/// Updates our picture with any new points on screen that the user has touched
+		/// <param name='color' The color to use for the drawing />
+		/// <param name='brush' The brush to use for the drawing />
 		/// </summary>
-		private void DrawPicture()
+		private void DrawPicture(Color color, Rectangle brush)
 		{
-			int brushOffset = this.Brush.Width / 2;
+			int brushOffset = brush.Width / 2;
 			
 			foreach (var touch in touchPoints) 
 			{
 				Rectangle rectangle = new Rectangle(
 					(int)touch.X - brushOffset,
 					(int)touch.Y - brushOffset,
-					this.Brush.Width,
-					this.Brush.Height);
+					brush.Width,
+					brush.Height);
 				
-				this.spriteBatch.Draw(this.transparentSquareTexture, rectangle, this.colorSetter.Color);
+				this.spriteBatch.Draw(this.transparentSquareTexture, rectangle, color);
 			}
 			
 			touchPoints = new List<Vector2>();
-		}
-		
-		/// <summary>
-		/// Handles any user interaction with the actual picture element of the screen.
-		/// This is a case of adding it to our list of touch points that will need drawing onto the image when it comes to drawing
-		/// </summary>
-		/// <param name='touch'>
-		/// The position and type of touch/gesture being made
-		/// </param>
-		private void HandleTouchPicture(ITouchPoint touch)
-		{
-			this.touchPoints.Add(touch.Position);
-		}
-		
-		/// <summary>
-		/// Handles any user interaction with the controls/toolds
-		/// </summary>
-		/// <returns>
-		/// Was this touchPoint consumed/handled by one of the controls
-		/// </returns>
-		/// <param name='touch'>
-		/// The position and type of touch/gesture being made
-		/// </param>
-		private bool HandleTouchInCanvasTools(ITouchPoint touch)
-		{
-			foreach (var tool in this.canvasTools)
-			{
-				if (tool.CheckTouchCollision(touch) == true)
-				{
-					// no need to check the other tools so exit now
-					return true;
-				}
-			}
-			
-			return false;
-		}
-		
-		/// <summary>
-		/// Creates all our canvas tools.
-		/// </summary>
-		/// <param name='backgroundColor' The background color for each tool />
-		/// <param name='borderColor' The border color for each control />
-		/// <param name='bounds' The size of the iPad screen />
-		private void CreateCanvasTools(Color backgroundColor, Color borderColor, Rectangle bounds)
-		{
-			this.canvasTools = new List<ICanvasToolTouch>();
-			
-			// Bush size selector
-			BrushSizeSelector brushSizeSelector = new BrushSizeSelector(
-				backgroundColor,
-				borderColor,
-				this.spriteBatch,
-				this.transparentSquareTexture,
-				new Rectangle(bounds.X, bounds.Height - 230, 70, 230),
-				MinBrushSize, MaxBrushSize, StartBrushSize, this.StartColor);
-			
-			brushSizeSelector.BrushSizeChanged += (sender, e) => { 
-				this.Brush = new Rectangle(0, 0, brushSizeSelector.BrushSize, brushSizeSelector.BrushSize);
-			};
-
-			this.canvasTools.Add(brushSizeSelector);			
-
-			// Pre defined color pickers
-			Color[] colorList = new Color[] { 
-				Color.White, 
-				Color.Black, 
-				Color.Red, 
-				Color.Green, 
-				Color.Blue,
-				Color.Yellow,
-				Color.Cyan,
-				Color.Pink, 
-				Color.Orange
-			};
-			
-			float colorPickerWidth = (float)(bounds.Width) / (float)(colorList.Length + 1);
-			
-			// ColorSetter - shows what colour the user has chosen
-			colorSetter = new ColorSetter(
-					borderColor,
-					this.spriteBatch,
-					this.transparentSquareTexture,
-					new Rectangle(bounds.X, (int)((bounds.Height - 230) - colorPickerWidth), (int)colorPickerWidth, (int)colorPickerWidth),
-					this.StartColor);
-
-			// User defined color selector
-			ColorSelector colorSelector = new ColorSelector(
-				backgroundColor, 
-				borderColor,
-				this.spriteBatch,
-				this.transparentSquareTexture,
-				new Rectangle(bounds.X + 70, bounds.Height - 230, bounds.Width - 70, 230),
-				StartColor);
-			
-			colorSelector.ColorChanged += (sender, e) => { 
-				this.colorSetter.Color = colorSelector.Color;
-				brushSizeSelector.Color = colorSelector.Color;
-			};
-			
-			this.canvasTools.Add(colorSelector);
-
-
-			// Pre defined color pickers
-			for (int i = 0; i < colorList.Length; i++)
-			{
-				ColorPicker colorPicker = new ColorPicker(
-					colorList[i], 
-					borderColor,
-					this.spriteBatch,
-					this.transparentSquareTexture,
-					new Rectangle((int)(bounds.X + (colorPickerWidth * (i + 1))), (int)((bounds.Height - 230) - colorPickerWidth), (int)colorPickerWidth, (int)colorPickerWidth));
-				
-				colorPicker.ColorSelected += (sender, e) => {
-					colorSelector.Color = colorPicker.Color;
-				};
-				
-				this.canvasTools.Add(colorPicker);
-			}
 		}
 	}
 }

@@ -23,7 +23,7 @@ namespace Paint
 		/// <summary>
 		/// Gap between the border and the plus/minus sign.
 		/// </summary>
-		private const int SymbolMargin = 2;
+		private const int SymbolMargin = 5;
 
 		/// <summary>
 		/// The horizontal rectangle to draw in the minMax square representing the 'minus' for the minimize
@@ -59,12 +59,12 @@ namespace Paint
 				bounds.X + (bounds.Width - SymbolWidth) / 2,
 				bounds.Y + StandardBorderWidth + SymbolMargin,
 				SymbolWidth,
-				bounds.Height - ((StandardBorderWidth + SymbolWidth) * 2));
+				bounds.Height - ((StandardBorderWidth + SymbolMargin) * 2));
 
 			this.horizontalMinMaxRectangle = new Rectangle(
 				bounds.X + StandardBorderWidth + SymbolMargin,
 				bounds.Y + (bounds.Height - SymbolWidth) / 2,
-				bounds.Width - ((StandardBorderWidth + SymbolWidth) * 2),
+				bounds.Width - ((StandardBorderWidth + SymbolMargin) * 2),
 				SymbolWidth);
 		}
 

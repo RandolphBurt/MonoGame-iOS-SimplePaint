@@ -13,17 +13,7 @@ namespace Paint
 	/// ICanvas - Interface for classes handling the rendering and user interaction
 	/// </summary>
 	public interface ICanvas
-	{		
-		/// <summary>
-		/// Gets the current color being used for drawing
-		/// </summary>
-		Color Color { get; }
-		
-		/// <summary>
-		/// Gets the current brush being used for drawing
-		/// </summary>
-		Rectangle Brush { get; }
-		
+	{			
 		/// <summary>
 		/// Handles any user interaction.
 		/// </summary>
@@ -34,8 +24,14 @@ namespace Paint
 		
 		/// <summary>
 		/// Draw the latest updates to our image/render target.
+		/// <param name='color' The color to use for the drawing />
+		/// <param name='brush' The brush to use for the drawing />
+		/// <param name='refreshDisplay'>
+		/// True = we should redraw the entire control
+		/// False = just draw any updates 
+		/// </param>
 		/// </summary>
-		void Draw();
+		void Draw(Color color, Rectangle brush, bool refreshDisplay = false);
 	}
 }
 
