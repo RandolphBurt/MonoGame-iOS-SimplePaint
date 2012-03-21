@@ -37,13 +37,14 @@ namespace Paint
 		/// <summary>
 		/// Handles a particular touch/gesture made by the user
 		/// </summary>
-		/// <param name='touch'>
-		/// The position and type of gesture/touch made
-		/// </param>
-		protected override void HandleTouch(ITouchPoint touch)
+		/// <param name='xPosition'>
+		/// The x-position of the touch 
+		/// (This is all we are interested in)
+		/// </param>		
+		public void HandleTouch(float xPosition)
 		{
 			// Calculate the new value, but make sure still in bounds
-			int xPos = Math.Max((int)touch.Position.X, this.bounds.X);
+			int xPos = Math.Max((int)xPosition, this.bounds.X);
 			xPos = Math.Min(xPos, this.bounds.X + this.bounds.Width);
 			
 			this.currentMarker = (float)(xPos - this.bounds.X) / (float)this.bounds.Width;
@@ -52,6 +53,17 @@ namespace Paint
 			{
 				this.OnMarkerChanged(EventArgs.Empty);
 			}
+		}
+		
+		/// <summary>
+		/// Handles a particular touch/gesture made by the user
+		/// </summary>
+		/// <param name='touch'>
+		/// The position and type of gesture/touch made
+		/// </param>
+		protected override void HandleTouch(ITouchPoint touch)
+		{
+			this.HandleTouch(touch.Position.X);
 		}
 		
 		/// <summary>

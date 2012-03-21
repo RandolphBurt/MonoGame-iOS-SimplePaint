@@ -37,13 +37,14 @@ namespace Paint
 		/// <summary>
 		/// Handles a particular touch/gesture made by the user
 		/// </summary>
-		/// <param name='touch'>
-		/// The position and type of gesture/touch made
-		/// </param>
-		protected override void HandleTouch(ITouchPoint touch)
+		/// <param name='yPosition'>
+		/// The y-position of the touch 
+		/// (This is all we are interested in)
+		/// </param>		
+		public void HandleTouch(float yPosition)
 		{
 			// Calculate the new value, but make sure still in bounds
-			int yPos = Math.Max((int)touch.Position.Y, this.bounds.Y);
+			int yPos = Math.Max((int)yPosition, this.bounds.Y);
 			yPos = Math.Min(yPos, this.bounds.Y + this.bounds.Height);
 			
 			this.currentMarker = (float)((this.bounds.Y + this.bounds.Height) - yPos) / (float)this.bounds.Height;
@@ -52,6 +53,17 @@ namespace Paint
 			{
 				this.OnMarkerChanged(EventArgs.Empty);
 			}
+		}
+
+		/// <summary>
+		/// Handles a particular touch/gesture made by the user
+		/// </summary>
+		/// <param name='touch'>
+		/// The position and type of gesture/touch made
+		/// </param>
+		protected override void HandleTouch(ITouchPoint touch)
+		{
+			this.HandleTouch(touch.Position.Y);
 		}
 		
 		/// <summary>
@@ -79,7 +91,7 @@ namespace Paint
 				this.bounds.Width,
 				this.markerWidth);
 		}
-
+				
 		/// <summary>
 		/// Ensures the specified y co-ordinate is inside the bounds of the gauage
 		/// </summary>

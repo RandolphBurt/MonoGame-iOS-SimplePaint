@@ -153,7 +153,9 @@ namespace Paint
 		/// </param>
 		protected override void HandleTouch(ITouchPoint touchPosition)
 		{
-			this.brushSizeGauge.CheckTouchCollision(touchPosition);
+			// We are only interested in the y-position - we know the touch is within this control so anywhere on the x axis is good enough
+			// This ensures an improved user experience because the user can click just to the side of the gauge and now it will count as a hit.
+			this.brushSizeGauge.HandleTouch(touchPosition.Position.Y);
 		}
 		
 		/// <summary>
