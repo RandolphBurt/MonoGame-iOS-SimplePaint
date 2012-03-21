@@ -87,6 +87,8 @@ namespace Paint
 					this.bounds.Height - (2 * BorderWidth));
 				
 				this.DrawRectangle(inBorderRectangle, this.Color); 
+				
+				this.previousColor = this.color;
 			}
 		}
 		
