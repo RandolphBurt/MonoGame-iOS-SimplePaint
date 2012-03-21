@@ -123,7 +123,7 @@ namespace Paint
 		protected override void LoadContent()
 		{
 			this.spriteBatch = new SpriteBatch (graphicsDeviceManager.GraphicsDevice);
-			this.transparentSquareTexture = Content.Load<Texture2D> ("Transparent.png");
+			this.transparentSquareTexture = Content.Load<Texture2D> ("transparent.png");
 						
 			this.CreateCanvas();
 			this.CreateToolbox();
