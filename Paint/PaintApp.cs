@@ -214,11 +214,10 @@ namespace Paint
 		/// </summary>
 		private void DrawToolboxOnScreen()
 		{
-			// y axis is inverted for specifying the source rectangle!
 			Rectangle toolboxBounds = 
 				new Rectangle(
 					0, 
-					this.inMemoryToolboxRenderTarget.Height - this.toolBox.ToolboxHeight, 
+					0,
 					this.inMemoryToolboxRenderTarget.Width, 
 					this.toolBox.ToolboxHeight);
 
