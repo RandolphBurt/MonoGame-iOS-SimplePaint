@@ -29,11 +29,39 @@ namespace Paint
 		//
 		public override bool FinishedLaunching (UIApplication app, NSDictionary options)
 		{
-			// Simply instantiate the class derived from monogame:game and away we go...
-			PaintApp paintApp  = new PaintApp();
-			paintApp.Run();
+			// TODO - launch initial page to select image
+			this.EditImage();
 			
 			return true;
+		}
+
+		/// <summary>
+		/// Edits a specific image.
+		/// </summary>
+		private void EditImage ()
+		{
+			// Simply instantiate the class derived from monogame:game and away we go...
+			PaintApp paintApp  = new PaintApp();
+			paintApp.Exiting += PaintAppExiting;
+			paintApp.Run();
+		}
+		
+		/// <summary>
+		/// Called once the 'paint app' has exited.
+		/// </summary>
+		/// <param name='sender'>Sender</param>
+		/// <param name='e'>Any relevant event args </param>
+		private void PaintAppExiting (object sender, EventArgs e)
+		{
+			// TODO - Go back to main screen
+			PaintApp paintApp = sender as PaintApp;
+			if (paintApp != null)
+			{
+				paintApp.Exiting -= PaintAppExiting;
+			}
+			
+			// TODO - temporary code until main screen developed
+			this.EditImage();
 		}
 	}
 }

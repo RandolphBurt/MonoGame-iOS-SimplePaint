@@ -286,6 +286,17 @@ namespace Paint
 				this.graphicsDeviceManager.GraphicsDevice, 
 			    this.graphicsDeviceManager.GraphicsDevice.PresentationParameters.BackBufferWidth, 
 			    this.graphicsDeviceManager.GraphicsDevice.PresentationParameters.BackBufferHeight);			
+			
+			this.toolBox.ExitSelected += (sender, e) => 
+			{
+				SaveAndExit();
+			};
+		}
+		
+		private void SaveAndExit()
+		{
+			// TODO - save image to disk
+			this.Exit();
 		}
 		
 		/// <summary>

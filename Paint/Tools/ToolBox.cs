@@ -147,6 +147,11 @@ namespace Paint
 		}
 		
 		/// <summary>
+		/// Occurs when the user has selected the Exit button
+		/// </summary>
+		public event EventHandler ExitSelected;
+		
+		/// <summary>
 		/// Checks wheter a particular touch point (user pressing the screen) is within the bounds of one of the tools.
 		/// </summary>
 		/// <returns>
@@ -191,6 +196,20 @@ namespace Paint
 			
 			this.spriteBatch.End ();
 		}
+		
+		/// <summary>
+		/// Raises the exit selected changed event.
+		/// </summary>
+		/// <param name='e'>
+		/// Any relevant EventArgs (should be EventArgs.Empty)
+		/// </param>
+		protected virtual void OnExitSelected(EventArgs e)
+		{
+			if (this.ExitSelected != null) 
+			{
+				this.ExitSelected(this, EventArgs.Empty);
+			}
+		}		
 		
 		/// <summary>
 		/// Sets the brush size rectange.
@@ -240,8 +259,20 @@ namespace Paint
 					this.borderColor,
 					this.spriteBatch,
 					this.transparentSquareTexture,
-					new Rectangle(0, 0, toolboxWidth - (2 * ToolbarSize), ToolbarSize),
+					new Rectangle(ToolbarSize, 0, toolboxWidth - (3 * ToolbarSize), ToolbarSize),
 					startColor);
+			
+			// Exit/save button
+			ExitButton exitButton = new ExitButton(
+				backgroundColor,
+				borderColor,
+				this.spriteBatch,
+				this.transparentSquareTexture,
+				new Rectangle(0, 0, ToolbarSize, ToolbarSize));
+			
+			exitButton.ExitSelected += (sender, e) => (this.OnExitSelected(EventArgs.Empty));
+			
+			this.canvasTools.Add(exitButton);
 
 			// min/max
 			ToggleMinimizeMaximizeButton toggleMinMaxButton = new ToggleMinimizeMaximizeButton(

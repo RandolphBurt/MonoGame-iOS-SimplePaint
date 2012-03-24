@@ -15,6 +15,11 @@ namespace Paint
 	public interface IToolBox 
 	{
 		/// <summary>
+		/// Occurs when the user has selected to exit
+		/// </summary>
+		event EventHandler ExitSelected;
+		
+		/// <summary>
 		/// Gets the current height of the toolbox.
 		/// </summary>
 		int ToolboxHeight { get; }
