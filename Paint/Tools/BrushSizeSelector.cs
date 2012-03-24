@@ -59,6 +59,11 @@ namespace Paint
 		/// The current color used when drawing with this brush.
 		/// </summary>
 		private Color color;
+		
+		/// <summary>
+		/// Caches the Y position of the gauge so we can quickly check if and 'touch' was within the gauge
+		/// </summary>
+		private int gaugeYPosition = 0;
 				
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Paint.BrushSizeSelector"/> class.
@@ -80,10 +85,12 @@ namespace Paint
 			this.minBrushSize = minBrushSize;
 			this.maxBrushSize = maxBrushSize;
 			this.BrushSize = startBrushSize;
-
+			
+			this.gaugeYPosition = bounds.Y + GaugeVerticalMargin + maxBrushSize;
+			
 			Rectangle gaugeRectangle = new Rectangle(
 				bounds.X + GaugeHorizontalMargin,
-				bounds.Y + GaugeVerticalMargin + maxBrushSize,
+				this.gaugeYPosition,
 				GaugeWidth,
 				bounds.Height - (maxBrushSize + (GaugeVerticalMargin * 2)));
 			
@@ -153,9 +160,12 @@ namespace Paint
 		/// </param>
 		protected override void HandleTouch(ITouchPoint touchPosition)
 		{
-			// We are only interested in the y-position - we know the touch is within this control so anywhere on the x axis is good enough
-			// This ensures an improved user experience because the user can click just to the side of the gauge and now it will count as a hit.
-			this.brushSizeGauge.HandleTouch(touchPosition.Position.Y);
+			if (touchPosition.Position.Y >= this.gaugeYPosition)
+			{
+				// We are only interested in the y-position - we know the touch is within this control so anywhere on the x axis is good enough
+				// This ensures an improved user experience because the user can click just to the side of the gauge and now it will count as a hit.
+				this.brushSizeGauge.HandleTouch(touchPosition.Position.Y);
+			}
 		}
 		
 		/// <summary>
