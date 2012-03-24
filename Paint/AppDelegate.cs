@@ -30,10 +30,8 @@ namespace Paint
 		public override bool FinishedLaunching (UIApplication app, NSDictionary options)
 		{
 			// Simply instantiate the class derived from monogame:game and away we go...
-			using (PaintApp paintApp  = new PaintApp()) 
-			{
-				paintApp.Run();
-			}
+			PaintApp paintApp  = new PaintApp();
+			paintApp.Run();
 			
 			return true;
 		}
