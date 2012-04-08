@@ -86,6 +86,11 @@ namespace Paint
 		private ICanvas canvas;
 		
 		/// <summary>
+		/// The canvas recorder - for recording every brush stroke for possible later playback
+		/// </summary>
+		private ICanvasRecorder canvasRecorder;
+		
+		/// <summary>
 		/// The tool box - contains all our color pickers and brush size controls
 		/// </summary>
 		private IToolBox toolBox;
@@ -104,6 +109,11 @@ namespace Paint
 		/// The height of the screen.
 		/// </summary>
 		private int screenHeight;
+		
+		/// <summary>
+		/// Keeps track of all touch/gestures made on the canvas since the last Draw command- is then reset after handled by the Draw.
+		/// </summary>
+		private List<ITouchPoint> canvasTouchPoints = new List<ITouchPoint>();
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Paint.PaintApp"/> class.
@@ -159,7 +169,8 @@ namespace Paint
 			
 			// First set the render target to be our image that we update as we go along...
 			device.SetRenderTarget(inMemoryCanvasRenderTarget);
-			this.canvas.Draw(this.toolBox.Color, this.toolBox.Brush, this.initialDraw);
+			this.canvas.Draw(this.toolBox.Color, this.toolBox.Brush, this.canvasTouchPoints);
+			this.canvasRecorder.Draw(this.toolBox.Color, this.toolBox.Brush, this.canvasTouchPoints);
 			
 			// Then we draw the toolbox
 			device.SetRenderTarget(inMemoryToolboxRenderTarget);
@@ -177,6 +188,9 @@ namespace Paint
 			spriteBatch.End ();
 			
 			this.initialDraw = false;
+			
+			// We've dealt with all the touch points so now we can start with a new list
+			this.canvasTouchPoints = new List<ITouchPoint>();
 			
 			base.Draw(gameTime);
 		}
@@ -236,21 +250,19 @@ namespace Paint
 		/// </summary>
 		private void CreateCanvas()
 		{
-			this.canvas = new Canvas(
-				this.BackgroundColor, 
-				this.BorderColor, 
-				this.spriteBatch, 
-				this.transparentSquareTexture, 
-				new Microsoft.Xna.Framework.Rectangle(0, 0, 
-			                                      this.graphicsDeviceManager.GraphicsDevice.PresentationParameters.BackBufferWidth, 
-			                                      this.graphicsDeviceManager.GraphicsDevice.PresentationParameters.BackBufferHeight));
-
+			this.canvas = new Canvas(this.spriteBatch, this.transparentSquareTexture);
+			
 			this.inMemoryCanvasRenderTarget = new RenderTarget2D(
 				this.graphicsDeviceManager.GraphicsDevice, 
 			    this.graphicsDeviceManager.GraphicsDevice.PresentationParameters.BackBufferWidth, 
 			    this.graphicsDeviceManager.GraphicsDevice.PresentationParameters.BackBufferHeight);		
 			
-			this.LoadFile();
+			var documents = Environment.GetFolderPath (Environment.SpecialFolder.Personal);
+			string recorderFile = Path.Combine(documents, "image.rec");
+
+			this.canvasRecorder = new CanvasRecorder(recorderFile);
+			
+			// this.LoadFile();
 		}
 		
 		/// <summary>
@@ -323,19 +335,18 @@ namespace Paint
   			var documents = Environment.GetFolderPath (Environment.SpecialFolder.Personal);
 			string pictureFile = Path.Combine(documents, "image.png");
 			
-			inMemoryCanvasRenderTarget.SaveAsPng(pictureFile, inMemoryCanvasRenderTarget.Width, inMemoryCanvasRenderTarget.Height);
+			this.inMemoryCanvasRenderTarget.SaveAsPng(pictureFile, inMemoryCanvasRenderTarget.Width, inMemoryCanvasRenderTarget.Height);
+			this.canvasRecorder.Save();
 			
 			this.Exit();
 		}
 		
 		/// <summary>
 		/// Handles any user input.
-		/// Collect all gestures made since the last 'update' - then pass this through to our Canvas to handle
+		/// Collect all gestures made since the last 'update' - stores these ready to be handled by the Canvas for drawing
 		/// </summary>
 		private void HandleInput()
-		{
-			List<ITouchPoint> canvasTouchPoints = new List<ITouchPoint>();
-	
+		{	
 			while (TouchPanel.IsGestureAvailable)
             {
                 // read the next gesture from the queue
@@ -348,13 +359,11 @@ namespace Paint
 				// First check if this can be handled by the toolbox - if not then we will keep for the canvas
 				if (this.CheckToolboxCollision(touchPoint) == false)
 				{
-					canvasTouchPoints.Add(this.ConvertScreenTouchToCanvasTouch(touchPoint));
+					this.canvasTouchPoints.Add(this.ConvertScreenTouchToCanvasTouch(touchPoint));
 				}
 				
-				previousTouchType = touchType;
+				this.previousTouchType = touchType;
 			}
-			
-			this.canvas.HandleTouchPoints(canvasTouchPoints);
 		}
 		
 		/// <summary>
@@ -440,7 +449,7 @@ namespace Paint
 					return TouchType.Tap;
 				
 				case GestureType.FreeDrag:
-					if (previousTouchType != TouchType.FreeDrag && previousTouchType != TouchType.StartDrag) 
+					if (this.previousTouchType != TouchType.FreeDrag && this.previousTouchType != TouchType.StartDrag) 
 					{
 						return TouchType.StartDrag;
 					}

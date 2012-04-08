@@ -15,23 +15,14 @@ namespace Paint
 	public interface ICanvas
 	{			
 		/// <summary>
-		/// Handles any user interaction.
-		/// </summary>
-		/// <param name='touchPointList'>
-		/// Teh list of all gestures / locations touched by the user since the last update
-		/// </param>
-		void HandleTouchPoints(List<ITouchPoint> touchPointList);
-		
-		/// <summary>
 		/// Draw the latest updates to our image/render target.
 		/// <param name='color' The color to use for the drawing />
 		/// <param name='brush' The brush to use for the drawing />
-		/// <param name='refreshDisplay'>
-		/// True = we should redraw the entire control
-		/// False = just draw any updates 
-		/// </param>
+		/// <param name='touchPointList'>
+		/// The list of all gestures / locations touched by the user since the last update
+		/// </param>		
 		/// </summary>
-		void Draw(Color color, Rectangle brush, bool refreshDisplay = false);
+		void Draw(Color color, Rectangle brush, List<ITouchPoint> touchPoints);
 	}
 }
 

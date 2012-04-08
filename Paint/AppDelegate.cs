@@ -47,6 +47,36 @@ namespace Paint
 		}
 		
 		/// <summary>
+		/// Playback an image.
+		/// </summary>
+		private void PlayBackImage ()
+		{
+			// Simply instantiate the class derived from monogame:game and away we go...
+			CanvasPlaybackApp playBackApp  = new CanvasPlaybackApp();
+			playBackApp.Exiting += CanvasPlaybackAppExiting;
+			playBackApp.Run();
+		}
+		
+		/// <summary>
+		/// Called once the 'playback app' has exited.
+		/// </summary>
+		/// <param name='sender'>Sender</param>
+		/// <param name='e'>Any relevant event args </param>
+		private void CanvasPlaybackAppExiting (object sender, EventArgs e)
+		{
+			// TODO - Go back to main screen
+			CanvasPlaybackApp playBackApp = sender as CanvasPlaybackApp;
+			if (playBackApp != null)
+			{
+				playBackApp.Exiting -= CanvasPlaybackAppExiting;
+			}
+			
+			// TODO - temporary code until main screen developed
+			this.PlayBackImage();
+		}
+		
+		
+		/// <summary>
 		/// Called once the 'paint app' has exited.
 		/// </summary>
 		/// <param name='sender'>Sender</param>
@@ -61,7 +91,7 @@ namespace Paint
 			}
 			
 			// TODO - temporary code until main screen developed
-			this.EditImage();
+			this.PlayBackImage();
 		}
 	}
 }

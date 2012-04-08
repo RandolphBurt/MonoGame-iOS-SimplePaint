@@ -112,6 +112,12 @@
     <Compile Include="Tools\ToolBox.cs" />
     <Compile Include="Tools\ExitButton.cs" />
     <Compile Include="ToolInterfaces\IExitButton.cs" />
+    <Compile Include="RecordAndPlaybackInterfaces\ICanvasRecorder.cs" />
+    <Compile Include="RecordAndPlayback\CanvasRecorder.cs" />
+    <Compile Include="RecordAndPlayback\CanvasPlayback.cs" />
+    <Compile Include="RecordAndPlaybackInterfaces\ICanvasPlayback.cs" />
+    <Compile Include="RecordAndPlayback\CanvasRecorderCommand.cs" />
+    <Compile Include="RecordAndPlayback\CanvasPlaybackApp.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -119,6 +125,8 @@
     <Folder Include="Tools\" />
     <Folder Include="BusinessLogic\" />
     <Folder Include="ToolInterfaces\" />
+    <Folder Include="RecordAndPlayback\" />
+    <Folder Include="RecordAndPlaybackInterfaces\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\transparent.png" />

@@ -16,11 +16,6 @@ namespace Paint
 	public class Canvas : ICanvas
 	{				
 		/// <summary>
-		/// The list of touchpoints (gesture type and location) made since the last update
-		/// </summary>
-		private List<Vector2> touchPoints = new List<Vector2>();
-		
-		/// <summary>
 		/// The SpriteBatch for all rendering
 		/// </summary>
 		private SpriteBatch spriteBatch;
@@ -33,42 +28,23 @@ namespace Paint
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Paint.Canvas"/> class.
 		/// </summary>
-		/// <param name='backgroundColor' The background color of the canvas />
-		/// <param name='borderColor' The border color for all controls on the canvas />
 		/// <param name='spriteBatch' The SpriteBatch object used for any rendering />
 		/// <param name='transparentSquareTexture' The transparent texture used for all drawing - we just specify the color we want at the time />
-		/// <param name='bounds' The bounds of this control/tool />
-		public Canvas(Color backgroundColor, Color borderColor, SpriteBatch spriteBatch, Texture2D transparentSquareTexture, Rectangle bounds)
+		public Canvas(SpriteBatch spriteBatch, Texture2D transparentSquareTexture)
 		{
 			this.spriteBatch = spriteBatch;
 			this.transparentSquareTexture = transparentSquareTexture;
-		}
-		
-		
-		/// <summary>
-		/// Handles any user interaction.
-		/// </summary>
-		/// <param name='touchPointList'>
-		/// The list of all gestures / locations touched by the user since the last update
-		/// </param>		
-		public void HandleTouchPoints(List<ITouchPoint> touchPointList)
-		{
-			foreach (var touch in touchPointList)
-			{
-				this.touchPoints.Add(touch.Position);
-			}
 		}
 		
 		/// <summary>
 		/// Draw the latest updates to our image/render target.
 		/// <param name='color' The color to use for the drawing />
 		/// <param name='brush' The brush to use for the drawing />
-		/// <param name='refreshDisplay'>
-		/// True = we should redraw the entire control
-		/// False = just draw any updates 
-		/// </param>
+		/// <param name='touchPointList'>
+		/// The list of all gestures / locations touched by the user since the last update
+		/// </param>		
 		/// </summary>
-		public void Draw(Color color, Rectangle brush, bool refreshDisplay = false)
+		public void Draw(Color color, Rectangle brush, List<ITouchPoint> touchPoints)
 		{
 			/* 
 			 * We use NonPremultiplied when drawing our picture - this allows the user to reduce the alpha value (transparency)
@@ -83,7 +59,7 @@ namespace Paint
 			 */			
 			this.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied);
 			
-			this.DrawPicture(color, brush);
+			this.DrawPicture(color, brush, touchPoints);
 			
 			this.spriteBatch.End();
 		}
@@ -92,23 +68,26 @@ namespace Paint
 		/// Updates our picture with any new points on screen that the user has touched
 		/// <param name='color' The color to use for the drawing />
 		/// <param name='brush' The brush to use for the drawing />
+		/// <param name='touchPoints'>
+		/// The list of all gestures / locations that we need to paint
+		/// </param>		
 		/// </summary>
-		private void DrawPicture(Color color, Rectangle brush)
+		private void DrawPicture(Color color, Rectangle brush, List<ITouchPoint> touchPoints)
 		{
 			int brushOffset = brush.Width / 2;
 			
 			foreach (var touch in touchPoints) 
 			{
+				Vector2 position = touch.Position;
+				
 				Rectangle rectangle = new Rectangle(
-					(int)touch.X - brushOffset,
-					(int)touch.Y - brushOffset,
+					(int)position.X - brushOffset,
+					(int)position.Y - brushOffset,
 					brush.Width,
 					brush.Height);
 				
 				this.spriteBatch.Draw(this.transparentSquareTexture, rectangle, color);
 			}
-			
-			touchPoints = new List<Vector2>();
 		}
 	}
 }
