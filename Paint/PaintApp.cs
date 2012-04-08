@@ -6,6 +6,7 @@ namespace Paint
 {
 	using System;
 	using System.Collections.Generic;
+	using System.IO;
 	
 	using Microsoft.Xna.Framework;
 	using Microsoft.Xna.Framework.Audio;
@@ -247,7 +248,9 @@ namespace Paint
 			this.inMemoryCanvasRenderTarget = new RenderTarget2D(
 				this.graphicsDeviceManager.GraphicsDevice, 
 			    this.graphicsDeviceManager.GraphicsDevice.PresentationParameters.BackBufferWidth, 
-			    this.graphicsDeviceManager.GraphicsDevice.PresentationParameters.BackBufferHeight);			
+			    this.graphicsDeviceManager.GraphicsDevice.PresentationParameters.BackBufferHeight);		
+			
+			this.LoadFile();
 		}
 		
 		/// <summary>
@@ -293,9 +296,35 @@ namespace Paint
 			};
 		}
 		
+		private void LoadFile()
+		{
+			var documents = Environment.GetFolderPath (Environment.SpecialFolder.Personal);
+			string pictureFile = Path.Combine(documents, "image.png");
+			
+			if (File.Exists(pictureFile))
+			{
+				GraphicsDevice device = this.graphicsDeviceManager.GraphicsDevice;	
+				
+				var savedImage = Texture2D.FromFile(
+					this.graphicsDeviceManager.GraphicsDevice, 
+				    pictureFile,                                            
+			    	this.graphicsDeviceManager.GraphicsDevice.PresentationParameters.BackBufferWidth, 
+			    	this.graphicsDeviceManager.GraphicsDevice.PresentationParameters.BackBufferHeight);	
+				
+				device.SetRenderTarget(inMemoryCanvasRenderTarget);
+				this.spriteBatch.Begin();
+				this.spriteBatch.Draw(savedImage, Vector2.Zero, Color.White);
+				this.spriteBatch.End();
+			}	                            
+		}
+		
 		private void SaveAndExit()
 		{
-			// TODO - save image to disk
+  			var documents = Environment.GetFolderPath (Environment.SpecialFolder.Personal);
+			string pictureFile = Path.Combine(documents, "image.png");
+			
+			inMemoryCanvasRenderTarget.SaveAsPng(pictureFile, inMemoryCanvasRenderTarget.Width, inMemoryCanvasRenderTarget.Height);
+			
 			this.Exit();
 		}
 		
