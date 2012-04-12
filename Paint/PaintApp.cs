@@ -59,9 +59,9 @@ namespace Paint
 		private GraphicsDeviceManager graphicsDeviceManager;
 
 		/// <summary>
-		/// We have a single transparent png file with which we draw everything - just simply specify the color we want to use whenever we use it - nice and simple.
+		/// The graphics texture map - contains all our graphics for buttons etc
 		/// </summary>
-		private Texture2D transparentSquareTexture;
+		private IGraphicsDisplay graphicsDisplay;
 		
 		/// <summary>
 		/// An in memory render target - as the user draws on the canvas then so we update this rendertarget.
@@ -134,8 +134,11 @@ namespace Paint
 		protected override void LoadContent()
 		{
 			this.spriteBatch = new SpriteBatch (graphicsDeviceManager.GraphicsDevice);
-			this.transparentSquareTexture = Content.Load<Texture2D> ("transparent.png");
-						
+			this.screenHeight = this.graphicsDeviceManager.GraphicsDevice.PresentationParameters.BackBufferHeight;
+			
+			var graphicsTextureMap = Content.Load<Texture2D> ("graphics.png");
+			this.graphicsDisplay = new GraphicsDisplay(graphicsTextureMap, this.spriteBatch, screenHeight > 1024); // TODO - check resolution!
+			
 			this.CreateCanvas();
 			this.CreateToolbox();
 		}
@@ -151,9 +154,7 @@ namespace Paint
                 GestureType.Tap | 
                 GestureType.FreeDrag |
 				GestureType.DragComplete;
-			
-			this.screenHeight = this.graphicsDeviceManager.GraphicsDevice.PresentationParameters.BackBufferHeight;
-			
+						
             base.Initialize();
         }
 		
@@ -250,7 +251,7 @@ namespace Paint
 		/// </summary>
 		private void CreateCanvas()
 		{
-			this.canvas = new Canvas(this.spriteBatch, this.transparentSquareTexture);
+			this.canvas = new Canvas(this.graphicsDisplay);
 			
 			this.inMemoryCanvasRenderTarget = new RenderTarget2D(
 				this.graphicsDeviceManager.GraphicsDevice, 
@@ -289,7 +290,7 @@ namespace Paint
 				this.BackgroundColor, 
 				this.BorderColor, 
 				this.spriteBatch, 
-				this.transparentSquareTexture, 
+				this.graphicsDisplay,
 				colorList, 
 				this.StartColor,
 				this.graphicsDeviceManager.GraphicsDevice.PresentationParameters.BackBufferWidth,

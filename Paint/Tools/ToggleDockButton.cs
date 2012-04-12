@@ -49,13 +49,12 @@ namespace Paint
 		/// Initializes a new instance of the <see cref="Paint.DockingBar"/> class.
 		/// </summary>
 		/// <param name='backgroundColor' The background color of the gauge />
-		/// <param name='spriteBatch' The SpriteBatch object used for any rendering />
-		/// <param name='transparentSquareTexture' The transparent texture used for all drawing - we just specify the color we want at the time />
+		/// <param name='graphicsDisplay' Contains all the graphics for drawing the tools />
 		/// <param name='bounds' The bounds of this control/tool />
 		/// <param name='startDockPosition' The initial DockPosition />
-		public ToggleDockButton (Color backgroundColor, Color borderColor, SpriteBatch spriteBatch, Texture2D transparentSquareTexture, Rectangle bounds,
+		public ToggleDockButton (Color backgroundColor, Color borderColor, IGraphicsDisplay graphicsDisplay, Rectangle bounds,
 		                   DockPosition startDockPosition) 
-			: base(backgroundColor, borderColor, spriteBatch, transparentSquareTexture, bounds)
+			: base(backgroundColor, borderColor, graphicsDisplay, bounds)
 		{
 			this.DockPosition = previousDockPosition = startDockPosition;
 

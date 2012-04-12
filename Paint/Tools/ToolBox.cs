@@ -61,10 +61,10 @@ namespace Paint
 		Color backgroundColor;
 		
 		/// <summary>
-		/// A simple transparent texture used for all drawing - we simply set the appropriate color.
+		/// The graphics texture map - contains images for buttons and controls
 		/// </summary>
-		private Texture2D transparentSquareTexture;
-		
+		private IGraphicsDisplay graphicsDisplay;
+
 		/// <summary>
 		/// The height of the toolbox when maximised.
 		/// </summary>
@@ -76,7 +76,7 @@ namespace Paint
 		/// <param name='backgroundColor' The background color of the toolbox />
 		/// <param name='borderColor' The border color for all controls in the toolbox />
 		/// <param name='spriteBatch' The SpriteBatch object used for any rendering />
-		/// <param name='transparentSquareTexture' The transparent texture used for all drawing - we just specify the color we want at the time />
+		/// <param name='graphicsDisplay' The graphics texture map - contains images for buttons and controls />
 		/// <param name='colorList' List of pre-defined colors for the user to pick from  />
 		/// <param name='startColor' The color we will start drawing with />
 		/// <param name='toolboxWidth' The width of the toolbox />
@@ -84,11 +84,11 @@ namespace Paint
 		/// <param name='maxBrushSize' The minimum size brush we can use />
 		/// <param name='startBrushSize' The initial size brush we can use />
 		public ToolBox (Color backgroundColor, Color borderColor, SpriteBatch spriteBatch, 
-		                Texture2D transparentSquareTexture, Color[] colorList, Color startColor, int toolboxWidth,
-		                int minBrushSize, int maxBrushSize, int startBrushSize)
+		                IGraphicsDisplay graphicsDisplay, Color[] colorList, Color startColor, 
+		                int toolboxWidth, int minBrushSize, int maxBrushSize, int startBrushSize)
 		{
 			this.spriteBatch = spriteBatch;
-			this.transparentSquareTexture = transparentSquareTexture;
+			this.graphicsDisplay = graphicsDisplay;
 			this.backgroundColor = backgroundColor;
 			this.borderColor = borderColor;
 			this.toolboxWidth = toolboxWidth;
@@ -203,7 +203,7 @@ namespace Paint
 		/// <param name='e'>
 		/// Any relevant EventArgs (should be EventArgs.Empty)
 		/// </param>
-		protected virtual void OnExitSelected(EventArgs e)
+		protected virtual void OnButtonPressed(EventArgs e)
 		{
 			if (this.ExitSelected != null) 
 			{
@@ -241,8 +241,7 @@ namespace Paint
 			BrushSizeSelector brushSizeSelector = new BrushSizeSelector(
 				this.backgroundColor,
 				this.borderColor,
-				this.spriteBatch,
-				this.transparentSquareTexture,
+				this.graphicsDisplay,
 				new Rectangle(0, (int)(ToolbarSize + colorPickerWidth), BrushControlWidth, BrushControlHeight),
 				minBrushSize, maxBrushSize, startBrushSize, startColor);
 			
@@ -257,20 +256,19 @@ namespace Paint
 			// ColorSetter - shows what colour the user has chosen
 			this.colorSetter = new ColorSetter(
 					this.borderColor,
-					this.spriteBatch,
-					this.transparentSquareTexture,
-					new Rectangle(ToolbarSize, 0, toolboxWidth - (3 * ToolbarSize), ToolbarSize),
+					this.graphicsDisplay,
+					new Rectangle(BrushControlWidth, 0, toolboxWidth - (2 * ToolbarSize) - BrushControlWidth, ToolbarSize),
 					startColor);
 			
 			// Exit/save button
-			ExitButton exitButton = new ExitButton(
+			Button exitButton = new Button(
 				backgroundColor,
 				borderColor,
-				this.spriteBatch,
-				this.transparentSquareTexture,
-				new Rectangle(0, 0, ToolbarSize, ToolbarSize));
+				new Rectangle(0, 0, BrushControlWidth, ToolbarSize), // Ensure lines up with the brush control
+				this.graphicsDisplay,
+				ImageType.ExitButton);
 			
-			exitButton.ExitSelected += (sender, e) => (this.OnExitSelected(EventArgs.Empty));
+			exitButton.ButtonPressed += (sender, e) => (this.OnButtonPressed(EventArgs.Empty));
 			
 			this.canvasTools.Add(exitButton);
 
@@ -278,8 +276,7 @@ namespace Paint
 			ToggleMinimizeMaximizeButton toggleMinMaxButton = new ToggleMinimizeMaximizeButton(
 				backgroundColor, 
 				borderColor, 
-				this.spriteBatch, 
-				this.transparentSquareTexture,
+				this.graphicsDisplay,
 				new Rectangle(toolboxWidth - (2 * ToolbarSize), 0, ToolbarSize, ToolbarSize),
 				MinimizedMaximizedState.Maximized);
 			
@@ -301,8 +298,7 @@ namespace Paint
 			ToggleDockButton toggleDock = new ToggleDockButton(
 				backgroundColor, 
 				borderColor, 
-				this.spriteBatch, 
-				this.transparentSquareTexture,
+				this.graphicsDisplay,
 				new Rectangle(toolboxWidth - ToolbarSize, 0, ToolbarSize, ToolbarSize),
 				this.DockPosition);
 				
@@ -317,8 +313,7 @@ namespace Paint
 			ColorSelector colorSelector = new ColorSelector(
 				this.backgroundColor, 
 				this.borderColor,
-				this.spriteBatch,
-				this.transparentSquareTexture,
+				this.graphicsDisplay,
 				new Rectangle(BrushControlWidth, (int)(ToolbarSize + colorPickerWidth), toolboxWidth - BrushControlWidth, BrushControlHeight),
 				startColor);
 			
@@ -335,8 +330,7 @@ namespace Paint
 				ColorPicker colorPicker = new ColorPicker(
 					colorList[i], 
 					this.borderColor,
-					this.spriteBatch,
-					this.transparentSquareTexture,
+					this.graphicsDisplay,
 					new Rectangle((int)(colorPickerWidth * i), ToolbarSize, (int)colorPickerWidth, (int)colorPickerWidth));
 				
 				colorPicker.ColorSelected += (sender, e) => 

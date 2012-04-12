@@ -16,24 +16,17 @@ namespace Paint
 	public class Canvas : ICanvas
 	{				
 		/// <summary>
-		/// The SpriteBatch for all rendering
+		/// Contains all the graphics for rendering - including the 'paint brush' (empty square)
 		/// </summary>
-		private SpriteBatch spriteBatch;
-		
-		/// <summary>
-		/// A simple transparent texture used for all drawing - we simply set the appropriate color.
-		/// </summary>
-		private Texture2D transparentSquareTexture;
+		private IGraphicsDisplay graphicsDisplay;
 				
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Paint.Canvas"/> class.
 		/// </summary>
-		/// <param name='spriteBatch' The SpriteBatch object used for any rendering />
-		/// <param name='transparentSquareTexture' The transparent texture used for all drawing - we just specify the color we want at the time />
-		public Canvas(SpriteBatch spriteBatch, Texture2D transparentSquareTexture)
+		/// <param name='graphicsDisplay' Contains all the graphics for rendering - including the 'paint brush' (empty square) />
+		public Canvas(IGraphicsDisplay graphicsDisplay)
 		{
-			this.spriteBatch = spriteBatch;
-			this.transparentSquareTexture = transparentSquareTexture;
+			this.graphicsDisplay = graphicsDisplay;
 		}
 		
 		/// <summary>
@@ -57,11 +50,11 @@ namespace Paint
 			 * destination colours - BlendAlpha uses BlendOne.  (See Monogame/BlendState.cs)
 			 * 
 			 */			
-			this.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied);
+			this.graphicsDisplay.BeginRenderNonPremultiplied();
 			
 			this.DrawPicture(color, brush, touchPoints);
 			
-			this.spriteBatch.End();
+			this.graphicsDisplay.EndRender();
 		}
 		
 		/// <summary>
@@ -86,7 +79,7 @@ namespace Paint
 					brush.Width,
 					brush.Height);
 				
-				this.spriteBatch.Draw(this.transparentSquareTexture, rectangle, color);
+				this.graphicsDisplay.DrawGraphic(ImageType.EmptySquare, rectangle, color);
 			}
 		}
 	}

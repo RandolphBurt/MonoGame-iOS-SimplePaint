@@ -70,16 +70,15 @@ namespace Paint
 		/// </summary>
 		/// <param name='backgroundColor' The background color of the colorSelector />
 		/// <param name='borderColor' The border color of the colorSelector />
-		/// <param name='spriteBatch' The SpriteBatch object used for any rendering />
-		/// <param name='transparentSquareTexture' The transparent texture used for all drawing - we just specify the color we want at the time />
+		/// <param name='graphicsDisplay' Contains all the graphics for creating tools />
 		/// <param name='bounds' The bounds of this control/tool />
 		/// <param name='minBrushSize' The minimum size allowed for the brush />
 		/// <param name='maxBrushSize' The maximum size allowed for the brush />
 		/// <param name='startBrushSize' The starting size of the brush />
 		/// <param name='startColor' The color we should start with />
-		public BrushSizeSelector(Color backgroundColor, Color borderColor, SpriteBatch spriteBatch, Texture2D transparentSquareTexture, Rectangle bounds,
+		public BrushSizeSelector(Color backgroundColor, Color borderColor, IGraphicsDisplay graphicsDisplay, Rectangle bounds,
 		                         int minBrushSize, int maxBrushSize, int startBrushSize, Color startColor) 
-			: base(backgroundColor, borderColor, spriteBatch, transparentSquareTexture, bounds) 
+			: base(backgroundColor, borderColor, graphicsDisplay, bounds) 
 		{
 			this.color = startColor;
 			this.minBrushSize = minBrushSize;
@@ -95,7 +94,7 @@ namespace Paint
 				bounds.Height - (maxBrushSize + (GaugeVerticalMargin * 2)));
 			
 			float startMarkerValue = (float)(startBrushSize - minBrushSize) / (float)(maxBrushSize - minBrushSize);
-			this.brushSizeGauge = new VerticalGauge(backgroundColor, spriteBatch, transparentSquareTexture, gaugeRectangle, GaugeMarkerWidth, GaugeColor, startMarkerValue);
+			this.brushSizeGauge = new VerticalGauge(backgroundColor, graphicsDisplay, gaugeRectangle, GaugeMarkerWidth, GaugeColor, startMarkerValue);
 			this.brushSizeGauge.MarkerChanged += brushSizeGauge_MarkerChanged;
 		}
 				

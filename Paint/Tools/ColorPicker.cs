@@ -20,12 +20,11 @@ namespace Paint
 		/// </summary>
 		/// <param name='backgroundColor' The background color of the ColorPicker />
 		/// <param name='borderColor' The border color of the ColorPicker />
-		/// <param name='spriteBatch' The SpriteBatch object used for any rendering />
-		/// <param name='transparentSquareTexture' The transparent texture used for all drawing - we just specify the color we want at the time />
+		/// <param name='graphicsDisplay' Contains all the graphics for rendering the tools />
 		/// <param name='bounds' The bounds of this control/tool />
 		/// <param name='color' The color this tool represents />
-		public ColorPicker (Color backgroundColor, Color borderColor, SpriteBatch spriteBatch, Texture2D transparentSquareTexture, Rectangle bounds) 
-			: base(backgroundColor, borderColor, spriteBatch, transparentSquareTexture, bounds) 
+		public ColorPicker (Color backgroundColor, Color borderColor, IGraphicsDisplay graphicsDisplay, Rectangle bounds) 
+			: base(backgroundColor, borderColor, graphicsDisplay, bounds) 
 		{
 		}
 		

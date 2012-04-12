@@ -110,14 +110,17 @@
     <Compile Include="Tools\ToggleMinimizeMaximizeButton.cs" />
     <Compile Include="ToolInterfaces\IToolBox.cs" />
     <Compile Include="Tools\ToolBox.cs" />
-    <Compile Include="Tools\ExitButton.cs" />
-    <Compile Include="ToolInterfaces\IExitButton.cs" />
     <Compile Include="RecordAndPlaybackInterfaces\ICanvasRecorder.cs" />
     <Compile Include="RecordAndPlayback\CanvasRecorder.cs" />
     <Compile Include="RecordAndPlayback\CanvasPlayback.cs" />
     <Compile Include="RecordAndPlaybackInterfaces\ICanvasPlayback.cs" />
     <Compile Include="RecordAndPlayback\CanvasRecorderCommand.cs" />
     <Compile Include="RecordAndPlayback\CanvasPlaybackApp.cs" />
+    <Compile Include="ToolInterfaces\IButton.cs" />
+    <Compile Include="Tools\Button.cs" />
+    <Compile Include="GraphicsInterfaces\IGraphicsDisplay.cs" />
+    <Compile Include="Graphics\GraphicsDisplay.cs" />
+    <Compile Include="Graphics\ImageType.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -127,9 +130,11 @@
     <Folder Include="ToolInterfaces\" />
     <Folder Include="RecordAndPlayback\" />
     <Folder Include="RecordAndPlaybackInterfaces\" />
+    <Folder Include="GraphicsInterfaces\" />
+    <Folder Include="Graphics\" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\transparent.png" />
+    <Content Include="Content\graphics.png" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\MonoGame\MyFork\MonoGame\MonoGame.Framework\MonoGame.Framework.iOS.csproj">

@@ -44,14 +44,13 @@ namespace Paint
 		/// Initializes a new instance of the <see cref="Paint.DockingBar"/> class.
 		/// </summary>
 		/// <param name='backgroundColor' The background color of the gauge />
-		/// <param name='spriteBatch' The SpriteBatch object used for any rendering />
-		/// <param name='transparentSquareTexture' The transparent texture used for all drawing - we just specify the color we want at the time />
+		/// <param name='graphicsDisplay' Contains all the graphics for drawing the tools />
 		/// <param name='bounds' The bounds of this control/tool />
 		/// <param name='startDockPosition' The initial DockPosition />
 		/// <param name='startMinimizedMaximizedState' The initial minimized/maximized state />
-		public ToggleMinimizeMaximizeButton (Color backgroundColor, Color borderColor, SpriteBatch spriteBatch, Texture2D transparentSquareTexture, Rectangle bounds,
+		public ToggleMinimizeMaximizeButton (Color backgroundColor, Color borderColor, IGraphicsDisplay graphicsDisplay, Rectangle bounds,
 		                   MinimizedMaximizedState startMinimizedMaximizedState) 
-			: base(backgroundColor, borderColor, spriteBatch, transparentSquareTexture, bounds) 
+			: base(backgroundColor, borderColor, graphicsDisplay, bounds) 
 		{
 			this.MinimizedMaximizedState = previousMinimizedMaximizedState = startMinimizedMaximizedState;
 			

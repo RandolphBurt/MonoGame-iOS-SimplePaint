@@ -19,7 +19,7 @@ namespace Paint
 		/// Border size for drawing the tool on screen.
 		/// </summary>
 		protected const int StandardBorderWidth = 5;
-
+		
 		/// <summary>
 		/// The background color of the tool
 		/// </summary>
@@ -36,14 +36,9 @@ namespace Paint
 		protected Rectangle bounds;
 		
 		/// <summary>
-		/// A simple transparent texture used for all drawing - simply set the color required at the time of drawing
+		/// Contains all the images for the application
 		/// </summary>
-		protected Texture2D transparentSquareTexture;
-		
-		/// <summary>
-		/// The SpriteBatch used for drawing
-		/// </summary>
-		private SpriteBatch spriteBatch;
+		private IGraphicsDisplay graphicsDisplay;
 		
 		/// <summary>
 		/// Small bit of state - determines whether the user is currently interacting with this control by dragging their finger across the iPad
@@ -55,14 +50,12 @@ namespace Paint
 		/// </summary>
 		/// <param name='backgroundColor' The background color of this tool />
 		/// <param name='borderColor' The border color of this tool />
-		/// <param name='spriteBatch' The SpriteBatch object used for any rendering />
-		/// <param name='transparentSquareTexture' The transparent texture used for all drawing - we just specify the color we want at the time />
+		/// <param name='graphicsDisplay' Contains all the images for the application />
 		/// <param name='bounds' The bounds of this control/tool />
-		public CanvasToolTouchBase(Color backgroundColor, Color borderColor, SpriteBatch spriteBatch, Texture2D transparentSquareTexture, Rectangle bounds)
+		public CanvasToolTouchBase(Color backgroundColor, Color borderColor, IGraphicsDisplay graphicsDisplay, Rectangle bounds)
 		{
-			this.spriteBatch = spriteBatch;
 			this.bounds = bounds;
-			this.transparentSquareTexture = transparentSquareTexture;
+			this.graphicsDisplay = graphicsDisplay;
 			this.backgroundColor = backgroundColor;
 			this.borderColor = borderColor;
 		}
@@ -134,11 +127,29 @@ namespace Paint
 		/// <summary>
 		/// Draws the rectangle.
 		/// </summary>
-		/// <param name='rectangle' The rectangluar region to paint />
+		/// <param name='paintRegion' The rectangluar region to paint />
 		/// <param name='color' The color we wish to paint the rectangle/>
-		protected void DrawRectangle(Rectangle rectangle, Color color)
+		protected void DrawRectangle(Rectangle paintRegion, Color color)
 		{
-			this.spriteBatch.Draw(this.transparentSquareTexture, rectangle, color); 
+			this.graphicsDisplay.DrawGraphic(ImageType.EmptySquare, paintRegion, color);
+		}
+		
+		/// <summary>
+		/// Draws the graphic.
+		/// </summary>
+		/// <param name='paintRegion' The rectangluar region to paint />
+		/// <param name='graphicsSourceRegion' The region of the graphics texture map to get the image to paint from/>
+		protected void DrawGraphic(ImageType imageType, Rectangle paintRegion)
+		{
+			this.graphicsDisplay.DrawGraphic(imageType, paintRegion, this.backgroundColor); 
+		}
+
+		/// <summary>
+		/// Blanks the entire control
+		/// </summary>
+		protected void Blank()
+		{
+			this.graphicsDisplay.DrawGraphic(ImageType.EmptySquare, this.bounds, this.backgroundColor);
 		}
 		
 		/// <summary>
@@ -155,7 +166,7 @@ namespace Paint
 		/// <param name='redrawRectangle' The rectangular region that should be blanked and redrawn with the border/>
 		protected void BlankAndRedrawWithBorder(Rectangle redrawRectangle)
 		{
-			this.spriteBatch.Draw(this.transparentSquareTexture, redrawRectangle, this.borderColor); 
+			this.graphicsDisplay.DrawGraphic(ImageType.EmptySquare, redrawRectangle, this.borderColor); 
 			
 			Rectangle inBorderRectangle = new Rectangle(
 				this.bounds.X + StandardBorderWidth,
@@ -163,7 +174,7 @@ namespace Paint
 				this.bounds.Width - (2 * StandardBorderWidth),
 				this.bounds.Height - (2 * StandardBorderWidth));
 			
-			this.spriteBatch.Draw(this.transparentSquareTexture, inBorderRectangle, this.backgroundColor); 
+			this.graphicsDisplay.DrawGraphic(ImageType.EmptySquare, inBorderRectangle, this.backgroundColor); 
 		}
 	}
 }

@@ -40,29 +40,22 @@ namespace Paint
 		private Rectangle bounds;
 		
 		/// <summary>
-		/// The SpriteBatch object used for any rendering
+		/// Contains all the graphics for rendering the tools
 		/// </summary>
-		private SpriteBatch spriteBatch;
-		
-		/// <summary>
-		/// A simple transparent texture used for the basis of all drwaing - we just set the color as appropriate.
-		/// </summary>
-		private Texture2D transparentSquareTexture;
+		private IGraphicsDisplay graphicsDisplay;
 		
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Paint.ColorSetter"/> class.
 		/// </summary>
 		/// <param name='backgroundColor' The background color of the colorSetter />
-		/// <param name='spriteBatch' The SpriteBatch object used for any rendering />
-		/// <param name='transparentSquareTexture' The transparent texture used for all drawing - we just specify the color we want at the time />
+		/// <param name='graphicsDisplay' Contains all the graphics for rendering the tools />
 		/// <param name='bounds' The bounds of this control/tool />
 		/// <param name='startColor' The color we should start with />
-		public ColorSetter (Color borderColor, SpriteBatch spriteBatch, Texture2D transparentSquareTexture, Rectangle bounds, Color startColor) 
+		public ColorSetter (Color borderColor, IGraphicsDisplay graphicsDisplay, Rectangle bounds, Color startColor) 
 		{
 			this.previousColor = this.color = startColor;
-			this.spriteBatch = spriteBatch;
 			this.bounds = bounds;
-			this.transparentSquareTexture = transparentSquareTexture;
+			this.graphicsDisplay = graphicsDisplay;
 			this.borderColor = borderColor;
 		}
 
@@ -118,7 +111,7 @@ namespace Paint
 		/// <param name='color' The color we wish to paint the rectangle/>
 		protected void DrawRectangle(Rectangle rectangle, Color color)
 		{
-			this.spriteBatch.Draw(this.transparentSquareTexture, rectangle, color); 
+			this.graphicsDisplay.DrawGraphic(ImageType.EmptySquare, rectangle, color); 
 		}
 	}
 }

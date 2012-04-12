@@ -22,14 +22,13 @@ namespace Paint
 		/// Initializes a new instance of the <see cref="Paint.VerticalGauge"/> class.
 		/// </summary>
 		/// <param name='backgroundColor' The background color of the gauge />
-		/// <param name='spriteBatch' The SpriteBatch object used for any rendering />
-		/// <param name='transparentSquareTexture' The transparent texture used for all drawing - we just specify the color we want at the time />
+		/// <param name='graphicsDisplay' Contains all the graphics for rendering the tools />
 		/// <param name='bounds' The bounds of this control/tool />
 		/// <param name='markerWidth' The size of the marked (the bit the user drags) />
 		/// <param name='gaugeColor' The color of the gauge />
 		/// <param name='startMarker' The starting position/value of the marker />
-		public VerticalGauge (Color backgroundColor, SpriteBatch spriteBatch, Texture2D transparentSquareTexture, Rectangle bounds, int markerWidth, Color gaugeColor, float startMarker) 
-			: base(backgroundColor, spriteBatch, transparentSquareTexture, bounds, markerWidth, gaugeColor, startMarker) 
+		public VerticalGauge (Color backgroundColor, IGraphicsDisplay graphicsDisplay, Rectangle bounds, int markerWidth, Color gaugeColor, float startMarker) 
+			: base(backgroundColor, graphicsDisplay, bounds, markerWidth, gaugeColor, startMarker) 
 		{
 			this.gaugeRectangle = new Rectangle(bounds.X + (bounds.Width / 3), bounds.Y, bounds.Width / 3, bounds.Height);
 		}

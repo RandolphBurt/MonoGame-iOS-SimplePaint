@@ -39,9 +39,9 @@ namespace Paint
 		private ICanvasPlayback canvasPlayback;
 		
 		/// <summary>
-		/// We have a single transparent png file with which we draw everything - just simply specify the color we want to use whenever we use it - nice and simple.
+		/// The graphics texture map - contains all our graphics for buttons etc
 		/// </summary>
-		private Texture2D transparentSquareTexture;
+		private IGraphicsDisplay graphicsDisplay;
 
 		/// <summary>
 		/// Background color for our app
@@ -97,7 +97,11 @@ namespace Paint
 		protected override void LoadContent()
 		{
 			this.spriteBatch = new SpriteBatch (graphicsDeviceManager.GraphicsDevice);
-			this.transparentSquareTexture = Content.Load<Texture2D> ("transparent.png");
+			
+			var screenHeight = this.graphicsDeviceManager.GraphicsDevice.PresentationParameters.BackBufferHeight;
+
+			var graphicsTextureMap = Content.Load<Texture2D> ("graphics.png");
+			this.graphicsDisplay = new GraphicsDisplay(graphicsTextureMap, this.spriteBatch, screenHeight > 1024); // TODO - check resolution!
 						
 			this.CreateCanvas();
 		}
@@ -141,12 +145,12 @@ namespace Paint
 			device.SetRenderTarget (null);
 			device.Clear (this.BackgroundColor);
 			
-			spriteBatch.Begin();
+			this.graphicsDisplay.BeginRender();
 									
 			this.DrawCanvasOnScreen();
 //			this.DrawToolboxOnScreen(); // TODO - draw playback control on screen
 			
-			spriteBatch.End ();
+			this.graphicsDisplay.EndRender();
 			
 			// We've dealt with all the touch points so now we can start with a new list
 			this.canvasTouchPoints = new List<ITouchPoint>();
@@ -216,7 +220,7 @@ namespace Paint
 		/// </summary>
 		private void CreateCanvas()
 		{
-			this.canvas = new Canvas(this.spriteBatch, this.transparentSquareTexture);
+			this.canvas = new Canvas(this.graphicsDisplay);
 			
 			this.inMemoryCanvasRenderTarget = new RenderTarget2D(
 				this.graphicsDeviceManager.GraphicsDevice, 

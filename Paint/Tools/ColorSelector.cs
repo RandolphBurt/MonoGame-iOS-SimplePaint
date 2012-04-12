@@ -75,12 +75,11 @@ namespace Paint
 		/// </summary>
 		/// <param name='backgroundColor' The background color of the colorSelector />
 		/// <param name='borderColor' The border color of the colorSelector />
-		/// <param name='spriteBatch' The SpriteBatch object used for any rendering />
-		/// <param name='transparentSquareTexture' The transparent texture used for all drawing - we just specify the color we want at the time />
+		/// <param name='graphicsDisplay' Contains all the graphics for rendering the tools />
 		/// <param name='bounds' The bounds of this control/tool />
 		/// <param name='startColor' The color we should start with />
-		public ColorSelector (Color backgroundColor, Color borderColor, SpriteBatch spriteBatch, Texture2D transparentSquareTexture, Rectangle bounds, Color startColor) 
-			: base(backgroundColor, borderColor, spriteBatch, transparentSquareTexture, bounds) 
+		public ColorSelector (Color backgroundColor, Color borderColor, IGraphicsDisplay graphicsDisplay, Rectangle bounds, Color startColor) 
+			: base(backgroundColor, borderColor, graphicsDisplay, bounds) 
 		{
 			// Create all our gauge sub-controls
 			List<Gauge> gauges = new List<Gauge>();
@@ -96,7 +95,7 @@ namespace Paint
 					bounds.Width - GaugeHorizontalMargin * 2,	
 					GaugeHeight);
 
-				gauges.Add(new HorizontalGauge(backgroundColor, spriteBatch, transparentSquareTexture, gaugeRectangle, GaugeMarkerWidth, colorList[i], markerValueList[i] / 255.0f));
+				gauges.Add(new HorizontalGauge(backgroundColor, graphicsDisplay, gaugeRectangle, GaugeMarkerWidth, colorList[i], markerValueList[i] / 255.0f));
 			}
 			
 			gaugeList = gauges.ToArray();
