@@ -26,6 +26,24 @@ namespace Paint
 		private Rectangle exitButton;
 
 		/// <summary>
+		/// The rectangle for the dock-bottom-button within the graphics texture
+		/// </summary>
+		private Rectangle dockToolbarTopButton;
+		/// <summary>
+		/// The rectangle for the dock-top-button within the graphics texture
+		/// </summary>
+		private Rectangle dockToolbarBottomButton;
+		/// <summary>
+		/// The rectangle for the maximize-button within the graphics texture
+		/// </summary>
+		private Rectangle maximizeToolbarButton;
+		/// <summary>
+		/// The rectangle for the minimize-button within the graphics texture
+		/// </summary>
+		private Rectangle minimizeToolbarButton;
+
+		
+		/// <summary>
 		/// Image containing all graphics for the app.
 		/// </summary>
 		private Texture2D graphicsTexture;
@@ -48,11 +66,40 @@ namespace Paint
 
 			if (highResolution == true)
 			{
-				this.exitButton = new Rectangle(1 ,0 , 100, 100);
+				int xOffSet = 1;
+				this.exitButton = new Rectangle(xOffSet ,0 , 100, 100);
+				xOffSet += 100;
+				
+				this.minimizeToolbarButton = new Rectangle(xOffSet ,0 , 100, 100);
+				xOffSet += 100;
+				
+				this.maximizeToolbarButton = new Rectangle(xOffSet ,0 , 100, 100);
+				xOffSet += 100;
+				
+				this.dockToolbarBottomButton = new Rectangle(xOffSet ,0 , 100, 100);
+				xOffSet += 100;
+				
+				this.dockToolbarTopButton = new Rectangle(xOffSet ,0 , 100, 100);
 			}
 			else
 			{
-				this.exitButton = new Rectangle(1 ,0 , 50, 50);
+				int xOffSet = 1;
+				
+				this.exitButton = new Rectangle(xOffSet ,0 , 36, 36);
+				xOffSet += 36;
+				
+				this.minimizeToolbarButton = new Rectangle(xOffSet ,0 , 36, 36);
+				xOffSet += 36;
+				
+				this.maximizeToolbarButton = new Rectangle(xOffSet ,0 , 36, 36);
+				xOffSet += 36;
+				
+				this.dockToolbarBottomButton = new Rectangle(xOffSet ,0 , 36, 36);
+				xOffSet += 36;
+				
+				this.dockToolbarTopButton = new Rectangle(xOffSet ,0 , 36, 36);
+				xOffSet += 36;
+				
 			}
 		}
 		
@@ -112,6 +159,18 @@ namespace Paint
 			{				
 				case ImageType.ExitButton:	
 					return this.exitButton;
+
+				case ImageType.DockTopButton:	
+					return this.dockToolbarTopButton;
+
+				case ImageType.DockBottomButton:	
+					return this.dockToolbarBottomButton;
+
+				case ImageType.MaximizeToolbar:	
+					return this.maximizeToolbarButton;
+
+				case ImageType.MinimizeToolbar:	
+					return this.minimizeToolbarButton;
 
 				case ImageType.EmptySquare:
 				default:

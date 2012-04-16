@@ -17,7 +17,7 @@ namespace Paint
 		/// <summary>
 		/// Border size for drawing the tool on screen.
 		/// </summary>
-		private const int BorderWidth = 5;
+		private int borderWidth;
 		
 		/// <summary>
 		/// The previous color used for drawing.
@@ -51,12 +51,14 @@ namespace Paint
 		/// <param name='graphicsDisplay' Contains all the graphics for rendering the tools />
 		/// <param name='bounds' The bounds of this control/tool />
 		/// <param name='startColor' The color we should start with />
-		public ColorSetter (Color borderColor, IGraphicsDisplay graphicsDisplay, Rectangle bounds, Color startColor) 
+		/// <param name='borderWidth' The border width />
+		public ColorSetter (Color borderColor, IGraphicsDisplay graphicsDisplay, Rectangle bounds, Color startColor, int borderWidth) 
 		{
 			this.previousColor = this.color = startColor;
 			this.bounds = bounds;
 			this.graphicsDisplay = graphicsDisplay;
 			this.borderColor = borderColor;
+			this.borderWidth = borderWidth;
 		}
 
 		/// <summary>
@@ -74,10 +76,10 @@ namespace Paint
 				this.DrawRectangle(this.bounds, this.borderColor); 
 				
 				Rectangle inBorderRectangle = new Rectangle(
-					this.bounds.X + BorderWidth,
-					this.bounds.Y + BorderWidth,
-					this.bounds.Width - (2 * BorderWidth),
-					this.bounds.Height - (2 * BorderWidth));
+					this.bounds.X + borderWidth,
+					this.bounds.Y + borderWidth,
+					this.bounds.Width - (2 * borderWidth),
+					this.bounds.Height - (2 * borderWidth));
 				
 				this.DrawRectangle(inBorderRectangle, this.Color); 
 				

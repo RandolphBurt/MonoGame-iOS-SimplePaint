@@ -101,13 +101,6 @@
     <Compile Include="ToolInterfaces\IColorSetter.cs" />
     <Compile Include="ToolInterfaces\ICanvasToolTouch.cs" />
     <Compile Include="ToolInterfaces\ICanvasTool.cs" />
-    <Compile Include="ToolInterfaces\IToggleMinimizeMaximize.cs" />
-    <Compile Include="BusinessLogic\MinimizedMaximizedState.cs" />
-    <Compile Include="Tools\ToggleDockButton.cs" />
-    <Compile Include="ToolInterfaces\IToggleDock.cs" />
-    <Compile Include="ToolInterfaces\IToggleDockButton.cs" />
-    <Compile Include="ToolInterfaces\IToggleMinimizeMaximizeButton.cs" />
-    <Compile Include="Tools\ToggleMinimizeMaximizeButton.cs" />
     <Compile Include="ToolInterfaces\IToolBox.cs" />
     <Compile Include="Tools\ToolBox.cs" />
     <Compile Include="RecordAndPlaybackInterfaces\ICanvasRecorder.cs" />

@@ -181,12 +181,12 @@ namespace Paint
 			device.SetRenderTarget (null);
 			device.Clear (this.BackgroundColor);
 			
-			spriteBatch.Begin();
+			this.graphicsDisplay.BeginRender();
 									
 			this.DrawCanvasOnScreen();
 			this.DrawToolboxOnScreen();
 			
-			spriteBatch.End ();
+			this.graphicsDisplay.EndRender();
 			
 			this.initialDraw = false;
 			
@@ -221,7 +221,7 @@ namespace Paint
 			{
 				canvasPosition = new Vector2(0, this.toolBox.ToolboxMinimizedHeight);
 			}
-
+			
 			this.spriteBatch.Draw(this.inMemoryCanvasRenderTarget, canvasPosition, this.BackgroundColor);
 		}
 		
@@ -275,6 +275,7 @@ namespace Paint
 			Color[] colorList = new Color[] { 
 				Color.White, 
 				Color.Black, 
+				Color.Silver,
 				Color.Red, 
 				Color.Lime, 
 				Color.Blue,
@@ -283,13 +284,12 @@ namespace Paint
 				Color.Fuchsia,
 				Color.Pink, 
 				Color.Orange,
-				Color.Green, 
+				Color.Green
 			};
 			
 			this.toolBox = new ToolBox(
 				this.BackgroundColor, 
 				this.BorderColor, 
-				this.spriteBatch, 
 				this.graphicsDisplay,
 				colorList, 
 				this.StartColor,

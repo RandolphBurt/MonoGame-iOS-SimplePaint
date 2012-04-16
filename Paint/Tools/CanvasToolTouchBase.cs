@@ -18,7 +18,7 @@ namespace Paint
 		/// <summary>
 		/// Border size for drawing the tool on screen.
 		/// </summary>
-		protected const int StandardBorderWidth = 5;
+		protected int borderWidth;
 		
 		/// <summary>
 		/// The background color of the tool
@@ -44,20 +44,37 @@ namespace Paint
 		/// Small bit of state - determines whether the user is currently interacting with this control by dragging their finger across the iPad
 		/// </summary>
 		private bool inDragMode = false;
-		
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Paint.CanvasToolTouchBase"/> class.
+		/// </summary>
+		/// <param name='backgroundColor' The background color of this tool />
+		/// <param name='graphicsDisplay' Contains all the images for the application />
+		/// <param name='bounds' The bounds of this control/tool />
+		public CanvasToolTouchBase(Color backgroundColor, IGraphicsDisplay graphicsDisplay, Rectangle bounds)
+		{
+			this.bounds = bounds;
+			this.graphicsDisplay = graphicsDisplay;
+			this.backgroundColor = backgroundColor;
+			this.borderColor = backgroundColor;
+			this.borderWidth = 0;
+		}
+
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Paint.CanvasToolTouchBase"/> class.
 		/// </summary>
 		/// <param name='backgroundColor' The background color of this tool />
 		/// <param name='borderColor' The border color of this tool />
+		/// <param name='borderWidth' The border width of this tool />
 		/// <param name='graphicsDisplay' Contains all the images for the application />
 		/// <param name='bounds' The bounds of this control/tool />
-		public CanvasToolTouchBase(Color backgroundColor, Color borderColor, IGraphicsDisplay graphicsDisplay, Rectangle bounds)
+		public CanvasToolTouchBase(Color backgroundColor, Color borderColor, int borderWidth, IGraphicsDisplay graphicsDisplay, Rectangle bounds)
 		{
 			this.bounds = bounds;
 			this.graphicsDisplay = graphicsDisplay;
 			this.backgroundColor = backgroundColor;
 			this.borderColor = borderColor;
+			this.borderWidth = borderWidth;
 		}
 		
 		/// <summary>
@@ -157,7 +174,14 @@ namespace Paint
 		/// </summary>
 		protected void BlankAndRedrawWithBorder()
 		{
-			this.BlankAndRedrawWithBorder(this.bounds);
+			if (this.borderWidth == 0)
+			{
+				this.Blank();
+			}
+			else 
+			{
+				this.BlankAndRedrawWithBorder(this.bounds);
+			}
 		}
 		
 		/// <summary>
@@ -169,10 +193,10 @@ namespace Paint
 			this.graphicsDisplay.DrawGraphic(ImageType.EmptySquare, redrawRectangle, this.borderColor); 
 			
 			Rectangle inBorderRectangle = new Rectangle(
-				this.bounds.X + StandardBorderWidth,
-				this.bounds.Y + StandardBorderWidth,
-				this.bounds.Width - (2 * StandardBorderWidth),
-				this.bounds.Height - (2 * StandardBorderWidth));
+				this.bounds.X + this.borderWidth,
+				this.bounds.Y + this.borderWidth,
+				this.bounds.Width - (2 * this.borderWidth),
+				this.bounds.Height - (2 * this.borderWidth));
 			
 			this.graphicsDisplay.DrawGraphic(ImageType.EmptySquare, inBorderRectangle, this.backgroundColor); 
 		}

@@ -26,12 +26,12 @@ namespace Paint
 		private const int GaugeVerticalMargin = 20;
 
 		/// <summary>
-		/// The horizontal margin used around each gauge.
+		/// The horizontal margin used around the gauge.
 		/// </summary>
-		private const int GaugeHorizontalMargin = 20;
+		private const int GaugeHorizontalMargin = 15;
 		
 		/// <summary>
-		/// The width of each gauge.
+		/// The width of the gauge.
 		/// </summary>
 		private const int GaugeWidth = 30;
 
@@ -70,15 +70,16 @@ namespace Paint
 		/// </summary>
 		/// <param name='backgroundColor' The background color of the colorSelector />
 		/// <param name='borderColor' The border color of the colorSelector />
+		/// <param name='borderWidth' The border width />
 		/// <param name='graphicsDisplay' Contains all the graphics for creating tools />
 		/// <param name='bounds' The bounds of this control/tool />
 		/// <param name='minBrushSize' The minimum size allowed for the brush />
 		/// <param name='maxBrushSize' The maximum size allowed for the brush />
 		/// <param name='startBrushSize' The starting size of the brush />
 		/// <param name='startColor' The color we should start with />
-		public BrushSizeSelector(Color backgroundColor, Color borderColor, IGraphicsDisplay graphicsDisplay, Rectangle bounds,
+		public BrushSizeSelector(Color backgroundColor, Color borderColor, int borderWidth, IGraphicsDisplay graphicsDisplay, Rectangle bounds,
 		                         int minBrushSize, int maxBrushSize, int startBrushSize, Color startColor) 
-			: base(backgroundColor, borderColor, graphicsDisplay, bounds) 
+			: base(backgroundColor, borderColor, borderWidth, graphicsDisplay, bounds) 
 		{
 			this.color = startColor;
 			this.minBrushSize = minBrushSize;
@@ -88,7 +89,7 @@ namespace Paint
 			this.gaugeYPosition = bounds.Y + GaugeVerticalMargin + maxBrushSize;
 			
 			Rectangle gaugeRectangle = new Rectangle(
-				bounds.X + GaugeHorizontalMargin,
+				bounds.X + ((bounds.Width - GaugeWidth) / 2),
 				this.gaugeYPosition,
 				GaugeWidth,
 				bounds.Height - (maxBrushSize + (GaugeVerticalMargin * 2)));

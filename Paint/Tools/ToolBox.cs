@@ -16,14 +16,19 @@ namespace Paint
 	public class ToolBox : IToolBox
 	{
 		/// <summary>
+		/// Border size for drawing the tool on screen.
+		/// </summary>
+		protected const int StandardBorderSize = 2;
+
+		/// <summary>
 		/// The height of the toolbar and the width of the min/max and dock buttons inside it
 		/// </summary>
-		public const int ToolbarSize = 50;
+		public const int ToolbarHeight = 50;
 		
 		/// <summary>
 		/// The brush control's width.
 		/// </summary>
-		private const int BrushControlWidth = 70;
+		private const int BrushControlWidth = 63;
 		
 		/// <summary>
 		/// The brush control's height.
@@ -45,11 +50,6 @@ namespace Paint
 		/// </summary>
 		private ColorSetter colorSetter;
 
-		/// <summary>
-		/// The SpriteBatch for all rendering
-		/// </summary>
-		private SpriteBatch spriteBatch;
-		
 		/// <summary>
 		/// The color of the border of all controls
 		/// </summary>
@@ -75,7 +75,6 @@ namespace Paint
 		/// </summary>
 		/// <param name='backgroundColor' The background color of the toolbox />
 		/// <param name='borderColor' The border color for all controls in the toolbox />
-		/// <param name='spriteBatch' The SpriteBatch object used for any rendering />
 		/// <param name='graphicsDisplay' The graphics texture map - contains images for buttons and controls />
 		/// <param name='colorList' List of pre-defined colors for the user to pick from  />
 		/// <param name='startColor' The color we will start drawing with />
@@ -83,11 +82,10 @@ namespace Paint
 		/// <param name='minBrushSize' The minimum size brush we can use />
 		/// <param name='maxBrushSize' The minimum size brush we can use />
 		/// <param name='startBrushSize' The initial size brush we can use />
-		public ToolBox (Color backgroundColor, Color borderColor, SpriteBatch spriteBatch, 
-		                IGraphicsDisplay graphicsDisplay, Color[] colorList, Color startColor, 
-		                int toolboxWidth, int minBrushSize, int maxBrushSize, int startBrushSize)
+		public ToolBox (Color backgroundColor, Color borderColor, IGraphicsDisplay graphicsDisplay, 
+		                Color[] colorList, Color startColor, int toolboxWidth, int minBrushSize, 
+		                int maxBrushSize, int startBrushSize)
 		{
-			this.spriteBatch = spriteBatch;
 			this.graphicsDisplay = graphicsDisplay;
 			this.backgroundColor = backgroundColor;
 			this.borderColor = borderColor;
@@ -113,7 +111,7 @@ namespace Paint
 		{
 			get 
 			{
-				return ToolbarSize;
+				return ToolbarHeight;
 			}
 		}
 		
@@ -185,8 +183,13 @@ namespace Paint
 			/*
 			 * Draw the tools with an Opque BlendState to ensure we overwrite the previous color completely
 			 */
-			this.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Opaque);
-
+			this.graphicsDisplay.BeginRenderOpaque();
+			
+			if (refreshDisplay == true)
+			{
+				this.DrawBackground();
+			}
+			
 			this.colorSetter.Draw(refreshDisplay);
 			
 			foreach (var tool in this.canvasTools)
@@ -194,7 +197,7 @@ namespace Paint
 				tool.Draw(refreshDisplay);
 			}
 			
-			this.spriteBatch.End ();
+			this.graphicsDisplay.EndRender();
 		}
 		
 		/// <summary>
@@ -203,7 +206,7 @@ namespace Paint
 		/// <param name='e'>
 		/// Any relevant EventArgs (should be EventArgs.Empty)
 		/// </param>
-		protected virtual void OnButtonPressed(EventArgs e)
+		protected virtual void OnExitButtonPressed(EventArgs e)
 		{
 			if (this.ExitSelected != null) 
 			{
@@ -223,6 +226,30 @@ namespace Paint
 		}
 		
 		/// <summary>
+		/// Draws the background (and border)
+		/// </summary>
+		private void DrawBackground()
+		{
+			// First fill the entire region with the border colour
+			Rectangle borderRectangle = new Rectangle(0, 0, this.toolboxWidth, this.toolboxMaximisedHeight);
+			
+			this.graphicsDisplay.DrawGraphic(ImageType.EmptySquare, borderRectangle, this.borderColor);
+			
+			// Then go over the tool bar area - we want to ensure there is a double thickness border because we won't draw 
+			// the border on buttons
+			Rectangle toolbarRectangle = new Rectangle(
+				StandardBorderSize * 2, 
+				StandardBorderSize * 2, 
+				this.toolboxWidth - (4 * StandardBorderSize),
+				ToolbarHeight - (3 * StandardBorderSize));
+			
+			this.graphicsDisplay.DrawGraphic(ImageType.EmptySquare, toolbarRectangle, this.backgroundColor);
+			
+			// We don't bother blanking out the area beneath the toolbar because we'll draw over that with our
+			// controls anyway
+		}
+
+		/// <summary>
 		/// Creates all our canvas tools.
 		/// </summary>
 		/// <param name='bounds' The size of the iPad screen />
@@ -234,89 +261,45 @@ namespace Paint
 		private void CreateCanvasTools(Color[] colorList, Color startColor, int minBrushSize, int maxBrushSize, int startBrushSize)
 		{
 			this.canvasTools = new List<ICanvasToolTouch>();
-
-			float colorPickerWidth = (float)(toolboxWidth) / (float)(colorList.Length);
-
-			// Bush size selector
-			BrushSizeSelector brushSizeSelector = new BrushSizeSelector(
-				this.backgroundColor,
-				this.borderColor,
-				this.graphicsDisplay,
-				new Rectangle(0, (int)(ToolbarSize + colorPickerWidth), BrushControlWidth, BrushControlHeight),
-				minBrushSize, maxBrushSize, startBrushSize, startColor);
 			
-			this.SetBrushSizeRectange(brushSizeSelector.BrushSize);
-
-			brushSizeSelector.BrushSizeChanged += (sender, e) => { 
-				this.SetBrushSizeRectange(brushSizeSelector.BrushSize);
-			};
-
-			this.canvasTools.Add(brushSizeSelector);			
+			// Reduce by the "2 * StandardBorderSize" because that is the border round the edge of the toolbox
+			float colorPickerSquareSize = (float)(this.toolboxWidth - (2 * StandardBorderSize)) / (float)(colorList.Length);
 			
+			var brushSizeSelector = this.CreateBrushSizeSelector(
+				startColor, 
+				minBrushSize, 
+				maxBrushSize, 
+				startBrushSize, 
+				StandardBorderSize,
+				ToolbarHeight + (int)colorPickerSquareSize + StandardBorderSize);			
+
+			this.canvasTools.Add(brushSizeSelector);
+
 			// ColorSetter - shows what colour the user has chosen
-			this.colorSetter = new ColorSetter(
-					this.borderColor,
-					this.graphicsDisplay,
-					new Rectangle(BrushControlWidth, 0, toolboxWidth - (2 * ToolbarSize) - BrushControlWidth, ToolbarSize),
-					startColor);
+			this.CreateColorSetter(
+				startColor, 
+				BrushControlWidth, 
+				0, 
+				(toolboxWidth - (2 * ToolbarHeight) - BrushControlWidth) - (StandardBorderSize * 2), 
+				ToolbarHeight + (StandardBorderSize * 2));
 			
-			// Exit/save button
-			Button exitButton = new Button(
-				backgroundColor,
-				borderColor,
-				new Rectangle(0, 0, BrushControlWidth, ToolbarSize), // Ensure lines up with the brush control
-				this.graphicsDisplay,
-				ImageType.ExitButton);
+			// Exit Button
+			this.canvasTools.Add(this.CreateExitButton());
 			
-			exitButton.ButtonPressed += (sender, e) => (this.OnButtonPressed(EventArgs.Empty));
+			// Min/Max Button
+			this.canvasTools.Add(this.CreateMinMaxButton());
 			
-			this.canvasTools.Add(exitButton);
+			// dock Button
+			this.canvasTools.Add(this.CreateDockButton());			
 
-			// min/max
-			ToggleMinimizeMaximizeButton toggleMinMaxButton = new ToggleMinimizeMaximizeButton(
-				backgroundColor, 
-				borderColor, 
-				this.graphicsDisplay,
-				new Rectangle(toolboxWidth - (2 * ToolbarSize), 0, ToolbarSize, ToolbarSize),
-				MinimizedMaximizedState.Maximized);
-			
-			toggleMinMaxButton.MinimizeMaximizeStateChanged += (sender, e) => 
-			{
-				if (toggleMinMaxButton.MinimizedMaximizedState == MinimizedMaximizedState.Maximized)
-				{
-					this.ToolboxHeight = this.toolboxMaximisedHeight;
-				}
-				else 
-				{
-					this.ToolboxHeight = ToolbarSize;
-				}
-			};
+			// User defined color selector			
+			var colorSelector = this.CreateColorSelector(
+				startColor, 
+				BrushControlWidth + StandardBorderSize, 
+				ToolbarHeight + (int)colorPickerSquareSize + StandardBorderSize, 
+				(toolboxWidth - BrushControlWidth) - (StandardBorderSize + 1), 
+				BrushControlHeight);
 
-			this.canvasTools.Add(toggleMinMaxButton);
-			
-			// dock position
-			ToggleDockButton toggleDock = new ToggleDockButton(
-				backgroundColor, 
-				borderColor, 
-				this.graphicsDisplay,
-				new Rectangle(toolboxWidth - ToolbarSize, 0, ToolbarSize, ToolbarSize),
-				this.DockPosition);
-				
-			toggleDock.DockPositionChanged += (sender, e) => 
-			{
-				this.DockPosition = toggleDock.DockPosition;
-			};
-			
-			this.canvasTools.Add(toggleDock);			
-
-			// User defined color selector
-			ColorSelector colorSelector = new ColorSelector(
-				this.backgroundColor, 
-				this.borderColor,
-				this.graphicsDisplay,
-				new Rectangle(BrushControlWidth, (int)(ToolbarSize + colorPickerWidth), toolboxWidth - BrushControlWidth, BrushControlHeight),
-				startColor);
-			
 			colorSelector.ColorChanged += (sender, e) => { 
 				this.colorSetter.Color = colorSelector.Color;
 				brushSizeSelector.Color = colorSelector.Color;
@@ -325,13 +308,44 @@ namespace Paint
 			this.canvasTools.Add(colorSelector);
 
 			// Pre defined color pickers
+			this.CreateColorPickers(colorSelector, colorList, colorPickerSquareSize);
+			
+			this.toolboxMaximisedHeight = ToolbarHeight + (int)(colorPickerSquareSize) + BrushControlHeight + (2 * StandardBorderSize);
+			
+			// we start maximised
+			this.ToolboxHeight = toolboxMaximisedHeight;
+		}	
+		
+		/// <summary>
+		/// Creates the color pickers.
+		/// </summary>
+		/// <param name='colorSelector' The colorSelector control we need to update when ever the user picks a color />
+		/// <param name='colorList' The list of colors the user can pick from />
+		/// <param name='colorPickerSquareSize' The size of each color picker control />
+		private void CreateColorPickers(ColorSelector colorSelector, Color[] colorList, float colorPickerSquareSize)
+		{
 			for (int i = 0; i < colorList.Length; i++)
 			{
+				// The adjustedPickerWidth ensures the final color lines up correctly with the edge of the tool box
+				int adjustedPickerWidth = (int)colorPickerSquareSize;
+				
+				if (i == colorList.Length - 1) 
+				{
+					adjustedPickerWidth = this.toolboxWidth - ((int)(colorPickerSquareSize * i) + StandardBorderSize + 1);
+				}
+				
+				Rectangle colorPickerArea = new Rectangle(
+					StandardBorderSize + (int)(colorPickerSquareSize * i),
+					ToolbarHeight + StandardBorderSize,
+					adjustedPickerWidth,
+					(int)colorPickerSquareSize);
+				
 				ColorPicker colorPicker = new ColorPicker(
 					colorList[i], 
 					this.borderColor,
+					StandardBorderSize,
 					this.graphicsDisplay,
-					new Rectangle((int)(colorPickerWidth * i), ToolbarSize, (int)colorPickerWidth, (int)colorPickerWidth));
+					colorPickerArea);
 				
 				colorPicker.ColorSelected += (sender, e) => 
 				{
@@ -340,12 +354,188 @@ namespace Paint
 				
 				this.canvasTools.Add(colorPicker);
 			}
+		}
+
+		/// <summary>
+		/// Creates the exit button.
+		/// </summary>
+		/// <returns>
+		/// The exit button.
+		/// </returns>
+		private Button CreateExitButton()
+		{
+			var exitButton = this.CreateButton(
+				StandardBorderSize * 2, 
+				StandardBorderSize * 2, 
+				BrushControlWidth - (StandardBorderSize * 2), // Ensure lines up with the brush control
+				ToolbarHeight - (StandardBorderSize * 2),
+				new ImageType[1] { ImageType.ExitButton });
 			
-			this.toolboxMaximisedHeight = ToolbarSize + (int)(colorPickerWidth) + BrushControlHeight;
+			exitButton.ButtonPressed += (sender, e) => (this.OnExitButtonPressed(EventArgs.Empty));
 			
-			// we start maximised
-			this.ToolboxHeight = toolboxMaximisedHeight;
-		}		
+			return exitButton;
+		}
+
+		/// <summary>
+		/// Creates the dock button.
+		/// </summary>
+		/// <returns>
+		/// The dock button.
+		/// </returns>
+		private Button CreateDockButton ()
+		{
+			var toggleDockButton = this.CreateButton(
+				(toolboxWidth - ToolbarHeight) - (StandardBorderSize * 2), 
+				StandardBorderSize * 2, 
+				ToolbarHeight, 
+				ToolbarHeight - (StandardBorderSize * 2),
+				new ImageType[2] { ImageType.DockTopButton, ImageType.DockBottomButton });
+				
+			toggleDockButton.ButtonPressed += (sender, e) => 
+			{
+				if (toggleDockButton.State == 0)
+				{
+					this.DockPosition = DockPosition.Bottom;
+				}
+				else 
+				{
+					this.DockPosition = DockPosition.Top;
+				}
+			};
+			
+			return toggleDockButton;
+		}
+		
+		/// <summary>
+		/// Creates the min/max button.
+		/// </summary>
+		/// <returns>
+		/// The min/max button.
+		/// </returns>
+		private Button CreateMinMaxButton ()
+		{
+			var minMaxButton = this.CreateButton(
+				(toolboxWidth - (2 * ToolbarHeight)) - (StandardBorderSize * 2), 
+				StandardBorderSize * 2, 
+				ToolbarHeight,
+				ToolbarHeight - (StandardBorderSize * 2),
+				new ImageType[2] { ImageType.MinimizeToolbar, ImageType.MaximizeToolbar });
+			
+			minMaxButton.ButtonPressed += (sender, e) => 
+			{
+				if (minMaxButton.State == 0)
+				{
+					this.ToolboxHeight = this.toolboxMaximisedHeight;
+				}
+				else 
+				{
+					this.ToolboxHeight = ToolbarHeight + (2 * StandardBorderSize);
+				}
+			};
+			
+			return minMaxButton;
+		}
+
+		/// <summary>
+		/// Creates a button.
+		/// </summary>
+		/// <returns>
+		/// The button.
+		/// </returns>
+		/// <param name='xPos' X offset for placing the control/>
+		/// <param name='yPos' Y offset for placing the control/>
+		/// <param name='width' width of the control/>
+		/// <param name='height' height of the control/>
+		/// <param name='imageTypeList' list of images to use for the button/>
+		private Button CreateButton(int xPos, int yPos, int width, int height, ImageType[] imageTypeList)
+		{
+			Rectangle buttonArea = new Rectangle(xPos, yPos, width, height);
+			
+			return new Button(backgroundColor, buttonArea, this.graphicsDisplay, imageTypeList);
+		}
+		
+		/// <summary>
+		/// Creates the color selector.
+		/// </summary>
+		/// <returns>
+		/// The color selector.
+		/// </returns>
+		/// <param name='startColor' The color we will start drawing with />
+		/// <param name='xPos' X offset for placing the control/>
+		/// <param name='yPos' Y offset for placing the control/>
+		/// <param name='width' width of the control/>
+		/// <param name='height' height of the control/>
+		private ColorSelector CreateColorSelector(Color startColor, int xPos, int yPos, int width, int height)
+		{
+			Rectangle colorSelectorArea = new Rectangle(xPos, yPos, width, height);
+			
+			ColorSelector colorSelector = new ColorSelector(
+				this.backgroundColor, 
+				this.borderColor,
+				StandardBorderSize,
+				this.graphicsDisplay,
+				colorSelectorArea,
+				startColor);
+						
+			return colorSelector;
+		}
+
+		/// <summary>
+		/// Creates the color setter.
+		/// </summary>
+		/// <param name='startColor' The color we will start drawing with />
+		/// <param name='xPos' X offset for placing the control/>
+		/// <param name='yPos' Y offset for placing the control/>
+		/// <param name='width' width of the control/>
+		/// <param name='height' height of the control/>
+		private void CreateColorSetter (Color startColor, int xPos, int yPos, int width, int height)
+		{
+			Rectangle colorSetterArea = new Rectangle(xPos, yPos, width, height);
+			
+			this.colorSetter = new ColorSetter(
+					this.borderColor,
+					this.graphicsDisplay,
+					colorSetterArea,
+					startColor,
+					StandardBorderSize * 2);
+		}
+
+		/// <summary>
+		/// Creates the brush size selector.
+		/// </summary>
+		/// <param name='startColor' The color we will start drawing with />
+		/// <param name='minBrushSize' The minimum size brush we can use />
+		/// <param name='maxBrushSize' The minimum size brush we can use />
+		/// <param name='startBrushSize' The initial size brush we can use />
+		/// <param name='xPos' X offset for placing the control/>
+		/// <param name='yPos' Y offset for placing the control/>
+		private BrushSizeSelector CreateBrushSizeSelector (Color startColor, int minBrushSize, int maxBrushSize, int startBrushSize, int xPos, int yPos)
+		{
+			Rectangle brushArea = new Rectangle(
+					xPos, 
+					yPos, 
+					BrushControlWidth, 
+					BrushControlHeight);
+			
+			BrushSizeSelector brushSizeSelector = new BrushSizeSelector(
+				this.backgroundColor,
+				this.borderColor,
+				StandardBorderSize,
+				this.graphicsDisplay,
+				brushArea,
+				minBrushSize, 
+				maxBrushSize, 
+				startBrushSize, 
+				startColor);
+			
+			this.SetBrushSizeRectange(brushSizeSelector.BrushSize);
+
+			brushSizeSelector.BrushSizeChanged += (sender, e) => { 
+				this.SetBrushSizeRectange(brushSizeSelector.BrushSize);
+			};
+			
+			return brushSizeSelector;
+		}
 	}
 }
 

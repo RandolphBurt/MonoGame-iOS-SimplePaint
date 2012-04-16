@@ -75,11 +75,12 @@ namespace Paint
 		/// </summary>
 		/// <param name='backgroundColor' The background color of the colorSelector />
 		/// <param name='borderColor' The border color of the colorSelector />
+		/// <param name='borderWidth' The border width />
 		/// <param name='graphicsDisplay' Contains all the graphics for rendering the tools />
 		/// <param name='bounds' The bounds of this control/tool />
 		/// <param name='startColor' The color we should start with />
-		public ColorSelector (Color backgroundColor, Color borderColor, IGraphicsDisplay graphicsDisplay, Rectangle bounds, Color startColor) 
-			: base(backgroundColor, borderColor, graphicsDisplay, bounds) 
+		public ColorSelector (Color backgroundColor, Color borderColor, int borderWidth, IGraphicsDisplay graphicsDisplay, Rectangle bounds, Color startColor) 
+			: base(backgroundColor, borderColor, borderWidth, graphicsDisplay, bounds) 
 		{
 			// Create all our gauge sub-controls
 			List<Gauge> gauges = new List<Gauge>();

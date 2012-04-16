@@ -45,7 +45,7 @@ namespace Paint
 		/// <param name='gaugeColor' The color of the gauge />
 		/// <param name='startMarker' The starting position/value of the marker />
 		public Gauge (Color backgroundColor, IGraphicsDisplay graphicsDisplay, Rectangle bounds, int markerWidth, Color gaugeColor, float startMarker) 
-			: base(backgroundColor, backgroundColor, graphicsDisplay, bounds) 
+			: base(backgroundColor, graphicsDisplay, bounds) 
 		{
 			this.currentMarker = this.previousMarker = startMarker;
 			this.gaugeColor = gaugeColor;
