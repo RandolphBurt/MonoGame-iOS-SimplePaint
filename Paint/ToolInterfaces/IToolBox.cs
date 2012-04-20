@@ -20,6 +20,26 @@ namespace Paint
 		event EventHandler ExitSelected;
 		
 		/// <summary>
+		/// Occurs when the user has pressed the undo button.
+		/// </summary>
+		event EventHandler UndoSelected;
+		
+		/// <summary>
+		/// Occurs when the user has pressed the redo button.
+		/// </summary>
+		event EventHandler RedoSelected;
+		
+		/// <summary>
+		/// Gets or sets a value indicating whether the undo button should be enabled or not.
+		/// </summary>
+		bool UndoEnabled { get; set; }
+
+		/// <summary>
+		/// Gets or sets a value indicating whether the redo button should be enabled or not.
+		/// </summary>
+		bool RedoEnabled { get; set; }
+
+		/// <summary>
 		/// Gets the current height of the toolbox.
 		/// </summary>
 		int ToolboxHeight { get; }

@@ -71,6 +71,17 @@ namespace Paint
 		private int toolboxMaximisedHeight;
 		
 		/// <summary>
+		/// The undo button.
+		/// </summary>
+		private Button undoButton;
+
+		/// <summary>
+		/// The redo button.
+		/// </summary>
+		private Button redoButton;
+
+		
+		/// <summary>
 		/// Initializes a new instance of the <see cref="Paint.ToolBox"/> class.
 		/// </summary>
 		/// <param name='backgroundColor' The background color of the toolbox />
@@ -145,10 +156,51 @@ namespace Paint
 		}
 		
 		/// <summary>
+		/// Gets or sets a value indicating whether the undo button should be enabled or not.
+		/// </summary>
+		public bool UndoEnabled { 
+			get
+			{
+				return this.undoButton.Enabled;
+			}
+			
+			set 
+			{
+				this.undoButton.Enabled = value;
+			}
+		}
+
+		/// <summary>
+		/// Gets or sets a value indicating whether the redo button should be enabled or not.
+		/// </summary>
+		public bool RedoEnabled
+		{
+			get
+			{
+				return this.redoButton.Enabled;
+			}
+			
+			set 
+			{
+				this.redoButton.Enabled = value;
+			}
+		}
+		
+		/// <summary>
 		/// Occurs when the user has selected the Exit button
 		/// </summary>
 		public event EventHandler ExitSelected;
+
+		/// <summary>
+		/// Occurs when the user has pressed the undo button.
+		/// </summary>
+		public event EventHandler UndoSelected;
 		
+		/// <summary>
+		/// Occurs when the user has pressed the redo button.
+		/// </summary>
+		public event EventHandler RedoSelected;
+				
 		/// <summary>
 		/// Checks wheter a particular touch point (user pressing the screen) is within the bounds of one of the tools.
 		/// </summary>
@@ -213,7 +265,35 @@ namespace Paint
 				this.ExitSelected(this, EventArgs.Empty);
 			}
 		}		
+
+		/// <summary>
+		/// Raises the undo selected changed event.
+		/// </summary>
+		/// <param name='e'>
+		/// Any relevant EventArgs (should be EventArgs.Empty)
+		/// </param>
+		protected virtual void OnUndoSelected(EventArgs e)
+		{
+			if (this.UndoSelected != null) 
+			{
+				this.UndoSelected(this, EventArgs.Empty);
+			}
+		}		
 		
+		/// <summary>
+		/// Raises the redo selected changed event.
+		/// </summary>
+		/// <param name='e'>
+		/// Any relevant EventArgs (should be EventArgs.Empty)
+		/// </param>
+		protected virtual void OnRedoSelected(EventArgs e)
+		{
+			if (this.RedoSelected != null) 
+			{
+				this.RedoSelected(this, EventArgs.Empty);
+			}
+		}				
+
 		/// <summary>
 		/// Sets the brush size rectange.
 		/// </summary>
@@ -241,7 +321,7 @@ namespace Paint
 				StandardBorderSize * 2, 
 				StandardBorderSize * 2, 
 				this.toolboxWidth - (4 * StandardBorderSize),
-				ToolbarHeight - (3 * StandardBorderSize));
+				ToolbarHeight - (2 * StandardBorderSize));
 			
 			this.graphicsDisplay.DrawGraphic(ImageType.EmptySquare, toolbarRectangle, this.backgroundColor);
 			
@@ -274,30 +354,27 @@ namespace Paint
 				ToolbarHeight + (int)colorPickerSquareSize + StandardBorderSize);			
 
 			this.canvasTools.Add(brushSizeSelector);
-
+			
+			// Where should the buttons be positioned
+			int buttonGroupXPos = toolboxWidth - (int)(4.5 * ToolbarHeight) - (StandardBorderSize * 2);
+			
 			// ColorSetter - shows what colour the user has chosen
 			this.CreateColorSetter(
 				startColor, 
 				BrushControlWidth, 
 				0, 
-				(toolboxWidth - (2 * ToolbarHeight) - BrushControlWidth) - (StandardBorderSize * 2), 
+				buttonGroupXPos - BrushControlWidth, 
 				ToolbarHeight + (StandardBorderSize * 2));
 			
-			// Exit Button
-			this.canvasTools.Add(this.CreateExitButton());
-			
-			// Min/Max Button
-			this.canvasTools.Add(this.CreateMinMaxButton());
-			
-			// dock Button
-			this.canvasTools.Add(this.CreateDockButton());			
-
+			// Add all the buttons
+			this.CreateButtons(buttonGroupXPos);
+	
 			// User defined color selector			
 			var colorSelector = this.CreateColorSelector(
 				startColor, 
 				BrushControlWidth + StandardBorderSize, 
 				ToolbarHeight + (int)colorPickerSquareSize + StandardBorderSize, 
-				(toolboxWidth - BrushControlWidth) - (StandardBorderSize + 1), 
+				(toolboxWidth - BrushControlWidth) - (2 * StandardBorderSize), 
 				BrushControlHeight);
 
 			colorSelector.ColorChanged += (sender, e) => { 
@@ -331,7 +408,7 @@ namespace Paint
 				
 				if (i == colorList.Length - 1) 
 				{
-					adjustedPickerWidth = this.toolboxWidth - ((int)(colorPickerSquareSize * i) + StandardBorderSize + 1);
+					adjustedPickerWidth = this.toolboxWidth - ((int)(colorPickerSquareSize * i) + (2 * StandardBorderSize));
 				}
 				
 				Rectangle colorPickerArea = new Rectangle(
@@ -355,71 +432,54 @@ namespace Paint
 				this.canvasTools.Add(colorPicker);
 			}
 		}
-
-		/// <summary>
-		/// Creates the exit button.
-		/// </summary>
-		/// <returns>
-		/// The exit button.
-		/// </returns>
-		private Button CreateExitButton()
-		{
-			var exitButton = this.CreateButton(
-				StandardBorderSize * 2, 
-				StandardBorderSize * 2, 
-				BrushControlWidth - (StandardBorderSize * 2), // Ensure lines up with the brush control
-				ToolbarHeight - (StandardBorderSize * 2),
-				new ImageType[1] { ImageType.ExitButton });
-			
-			exitButton.ButtonPressed += (sender, e) => (this.OnExitButtonPressed(EventArgs.Empty));
-			
-			return exitButton;
-		}
-
-		/// <summary>
-		/// Creates the dock button.
-		/// </summary>
-		/// <returns>
-		/// The dock button.
-		/// </returns>
-		private Button CreateDockButton ()
-		{
-			var toggleDockButton = this.CreateButton(
-				(toolboxWidth - ToolbarHeight) - (StandardBorderSize * 2), 
-				StandardBorderSize * 2, 
-				ToolbarHeight, 
-				ToolbarHeight - (StandardBorderSize * 2),
-				new ImageType[2] { ImageType.DockTopButton, ImageType.DockBottomButton });
-				
-			toggleDockButton.ButtonPressed += (sender, e) => 
-			{
-				if (toggleDockButton.State == 0)
-				{
-					this.DockPosition = DockPosition.Bottom;
-				}
-				else 
-				{
-					this.DockPosition = DockPosition.Top;
-				}
-			};
-			
-			return toggleDockButton;
-		}
 		
 		/// <summary>
-		/// Creates the min/max button.
+		/// Creates all the buttons.
 		/// </summary>
-		/// <returns>
-		/// The min/max button.
-		/// </returns>
-		private Button CreateMinMaxButton ()
+		/// <param name='buttonGroupXPos' Where should the buttons be positioned on screen />
+		private void CreateButtons(int buttonGroupXPos)
 		{
-			var minMaxButton = this.CreateButton(
-				(toolboxWidth - (2 * ToolbarHeight)) - (StandardBorderSize * 2), 
-				StandardBorderSize * 2, 
-				ToolbarHeight,
-				ToolbarHeight - (StandardBorderSize * 2),
-				new ImageType[2] { ImageType.MinimizeToolbar, ImageType.MaximizeToolbar });
+			int xPos = buttonGroupXPos;
+			int yPos = StandardBorderSize * 2;
+			int width = ToolbarHeight;
+			int height = ToolbarHeight - (StandardBorderSize * 2);
+			/*
+			// Save Button
+			var saveButton = this.CreateButton(xPos, yPos, width, height, ImageType.SaveButton);
+			this.canvasTools.Add(saveButton);
+			xPos += (int)(1.5 * (float)width);
+			
+			saveButton.ButtonPressed += (sender, e) => 
+			{
+				this.OnSaveSelected(EventArgs.Empty);
+			};*/			
+
+			// Undo Button
+			this.undoButton = this.CreateButton(xPos, yPos, width, height, ImageType.UndoButton, ImageType.UndoButtonDisabled);
+			this.undoButton.Enabled = false;
+			this.canvasTools.Add(this.undoButton);
+			xPos += width;
+
+			// Redo Button
+			this.redoButton = this.CreateButton(xPos, yPos, width, height, ImageType.RedoButton, ImageType.RedoButtonDisabled);
+			this.redoButton.Enabled = false;
+			this.canvasTools.Add(this.redoButton);
+			xPos += (int)(1.5 * (float)width);
+
+			this.undoButton.ButtonPressed += (sender, e) => 
+			{
+				this.OnUndoSelected(EventArgs.Empty);
+			};
+
+			this.redoButton.ButtonPressed += (sender, e) => 
+			{
+				this.OnRedoSelected(EventArgs.Empty);
+			};
+
+			// Min/Max Button
+			var minMaxImageList = new ImageType[2] { ImageType.MinimizeToolbar, ImageType.MaximizeToolbar };
+
+			var minMaxButton = this.CreateButton(xPos, yPos, width, height, minMaxImageList);
 			
 			minMaxButton.ButtonPressed += (sender, e) => 
 			{
@@ -432,8 +492,39 @@ namespace Paint
 					this.ToolboxHeight = ToolbarHeight + (2 * StandardBorderSize);
 				}
 			};
+
+			this.canvasTools.Add(minMaxButton);
+
+			// dock Button	
+			xPos += width;
+			var toggleDockImageList = new ImageType[2] { ImageType.DockTopButton, ImageType.DockBottomButton };
+
+			var toggleDockButton = this.CreateButton(xPos, yPos, width, height, toggleDockImageList);
 			
-			return minMaxButton;
+			toggleDockButton.ButtonPressed += (sender, e) => 
+			{
+				if (toggleDockButton.State == 0)
+				{
+					this.DockPosition = DockPosition.Bottom;
+				}
+				else 
+				{
+					this.DockPosition = DockPosition.Top;
+				}
+			};
+			
+			this.canvasTools.Add(toggleDockButton);			
+
+			// Exit button - positioned at the top left of the toolbox - not with the other buttons
+			// Ensure it lines up with the brush control
+			int exitButtonWidth = BrushControlWidth - (StandardBorderSize * 2);
+			int exitButtonXPos = StandardBorderSize * 2;
+			
+			var exitButton = this.CreateButton(exitButtonXPos, yPos, exitButtonWidth, height, ImageType.ExitButton);
+			
+			exitButton.ButtonPressed += (sender, e) => (this.OnExitButtonPressed(EventArgs.Empty));
+			
+			this.canvasTools.Add(exitButton);
 		}
 
 		/// <summary>
@@ -446,12 +537,30 @@ namespace Paint
 		/// <param name='yPos' Y offset for placing the control/>
 		/// <param name='width' width of the control/>
 		/// <param name='height' height of the control/>
+		/// <param name='imageType' image to use for the button/>
+		/// <param name='disabledImageType' The image to use when the button is disabled />
+		private Button CreateButton(int xPos, int yPos, int width, int height, ImageType imageType, ImageType? disabledImageType = null)
+		{
+			return this.CreateButton(xPos, yPos, width, height, new ImageType[1] { imageType}, disabledImageType);
+		}
+		
+		/// <summary>
+		/// Creates a button.
+		/// </summary>
+		/// <returns>
+		/// The button.
+		/// </returns>
+		/// <param name='xPos' X offset for placing the control/>
+		/// <param name='yPos' Y offset for placing the control/>
+		/// <param name='width' width of the control/>
+		/// <param name='height' height of the control/>
 		/// <param name='imageTypeList' list of images to use for the button/>
-		private Button CreateButton(int xPos, int yPos, int width, int height, ImageType[] imageTypeList)
+		/// <param name='disabledImageType' The image to use when the button is disabled />
+		private Button CreateButton(int xPos, int yPos, int width, int height, ImageType[] imageTypeList, ImageType? disabledImageType = null)
 		{
 			Rectangle buttonArea = new Rectangle(xPos, yPos, width, height);
 			
-			return new Button(backgroundColor, buttonArea, this.graphicsDisplay, imageTypeList);
+			return new Button(backgroundColor, buttonArea, this.graphicsDisplay, imageTypeList, disabledImageType);
 		}
 		
 		/// <summary>

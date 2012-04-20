@@ -21,8 +21,13 @@ namespace Paint
 	/// The main application class just inherits from the monogame:Game class
 	/// Override a few key methods and away we go...
 	/// </summary>
-	public class PaintApp : Game
+	public class PaintApp : Game, IRenderTargertHandler
 	{
+		/// <summary>
+		/// MAximum number of changes we can undo in one go
+		/// </summary>
+		private const int UndoRedoBufferSize = 10;
+		
 		/// <summary>
 		/// The maximum size of the brush
 		/// </summary>
@@ -76,6 +81,12 @@ namespace Paint
 		private RenderTarget2D inMemoryToolboxRenderTarget;
 
 		/// <summary>
+		/// The render targets used for tracking undo/redo - The image in the previous (wrapping) entry in the array 
+		/// should be shown when we undo a change
+		/// </summary>
+		private RenderTarget2D[] undoRedoRenderTargets = null;
+		
+		/// <summary>
 		/// The sprite batch handles all the drawing to the render targets / screen
 		/// </summary>
 		private SpriteBatch spriteBatch;
@@ -86,9 +97,9 @@ namespace Paint
 		private ICanvas canvas;
 		
 		/// <summary>
-		/// The canvas recorder - for recording every brush stroke for possible later playback
+		/// The picture state manager - handles playback and save/undo/redo
 		/// </summary>
-		private ICanvasRecorder canvasRecorder;
+		private IPictureStateManager pictureStateManager;
 		
 		/// <summary>
 		/// The tool box - contains all our color pickers and brush size controls
@@ -114,18 +125,55 @@ namespace Paint
 		/// Keeps track of all touch/gestures made on the canvas since the last Draw command- is then reset after handled by the Draw.
 		/// </summary>
 		private List<ITouchPoint> canvasTouchPoints = new List<ITouchPoint>();
+		
+		/// <summary>
+		/// Unique Identifer for this picture
+		/// </summary>
+		private Guid pictureId;
+		
+		/// <summary>
+		/// The picture IO manager - handles all reading / writing images and information file
+		/// </summary>
+		private IPictureIOManager pictureIOManager;
+
+		/// <summary>
+		/// The filename resolver.
+		/// </summary>
+		private IFilenameResolver filenameResolver;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Paint.PaintApp"/> class.
 		/// Instantiate our GraphicsDeviceManager and establish where the content folder is
+		/// <param name='pictureId'></param>
 		/// </summary>
-		public PaintApp()
+		public PaintApp(Guid pictureId)
 		{
+			this.pictureId = pictureId;
 			this.graphicsDeviceManager = new GraphicsDeviceManager(this);
 			this.graphicsDeviceManager.IsFullScreen = true;
+			this.filenameResolver = new FilenameResolver(pictureId);
+			this.pictureIOManager = new PictureIOManager(this.filenameResolver);
 			
 			this.Content.RootDirectory = "Content";
 		}
+		
+		/// <summary>
+		/// Restore the image held in the specified save point to the canvas/display
+		/// </summary>
+		/// <param name='savePoint'>specific save point we wish to restore</param>
+		public void RestoreSavePoint(int savePoint)
+		{
+			this.RenderImage(this.inMemoryCanvasRenderTarget, this.undoRedoRenderTargets[savePoint]);
+		}
+		
+		/// <summary>
+		/// Save the canvas/display to the specified save-point (undo/redo render target).
+		/// </summary>
+		/// <param name='savePoint'>specific save point we wish to use to store the canvas</param>
+		public void StoreSavePoint(int savePoint)
+		{
+			this.RenderImage(this.undoRedoRenderTargets[savePoint], this.inMemoryCanvasRenderTarget);
+		}		
 				
 		/// <summary>
 		/// We load any content we need at the beginning of the application life cycle.
@@ -133,16 +181,18 @@ namespace Paint
 		/// </summary>
 		protected override void LoadContent()
 		{
-			this.spriteBatch = new SpriteBatch (graphicsDeviceManager.GraphicsDevice);
+			this.spriteBatch = new SpriteBatch(graphicsDeviceManager.GraphicsDevice);
 			this.screenHeight = this.graphicsDeviceManager.GraphicsDevice.PresentationParameters.BackBufferHeight;
 			
 			var graphicsTextureMap = Content.Load<Texture2D> ("graphics.png");
 			this.graphicsDisplay = new GraphicsDisplay(graphicsTextureMap, this.spriteBatch, screenHeight > 1024); // TODO - check resolution!
 			
+			// TODO - are the three things below in the correct place?  Maybe should be in initialise
 			this.CreateCanvas();
 			this.CreateToolbox();
+			this.CreatePictureStateManager();
 		}
-		
+				
 		/// <summary>
 		/// Enable the capturing of gestures on the device
 		/// </summary>
@@ -154,7 +204,7 @@ namespace Paint
                 GestureType.Tap | 
                 GestureType.FreeDrag |
 				GestureType.DragComplete;
-						
+			
             base.Initialize();
         }
 		
@@ -167,11 +217,12 @@ namespace Paint
 		protected override void Draw (GameTime gameTime)
 		{
 			GraphicsDevice device = this.graphicsDeviceManager.GraphicsDevice;
-			
+									
 			// First set the render target to be our image that we update as we go along...
 			device.SetRenderTarget(inMemoryCanvasRenderTarget);
+		
 			this.canvas.Draw(this.toolBox.Color, this.toolBox.Brush, this.canvasTouchPoints);
-			this.canvasRecorder.Draw(this.toolBox.Color, this.toolBox.Brush, this.canvasTouchPoints);
+			this.pictureStateManager.Draw(this.toolBox.Color, this.toolBox.Brush, this.canvasTouchPoints);
 			
 			// Then we draw the toolbox
 			device.SetRenderTarget(inMemoryToolboxRenderTarget);
@@ -179,7 +230,7 @@ namespace Paint
 			
 			// Thes switch back to drawing onto the screen where we copy our image on to the screen
 			device.SetRenderTarget (null);
-			device.Clear (this.BackgroundColor);
+			device.Clear(this.BackgroundColor);
 			
 			this.graphicsDisplay.BeginRender();
 									
@@ -209,6 +260,21 @@ namespace Paint
 			
 			base.Update (gameTime);
 		}
+		
+		/// <summary>
+		/// Renders a specific source RenderTarget on to a specific target RenderTarget
+		/// </summary>
+		/// <param name='target'>Where we want to render the image</param>
+		/// <param name='source'>The source image we wish to render</param>
+		private void RenderImage(RenderTarget2D target, RenderTarget2D source)
+		{
+			GraphicsDevice device = this.graphicsDeviceManager.GraphicsDevice;	
+			device.SetRenderTarget(target);
+			this.spriteBatch.Begin();
+			device.Clear(this.BackgroundColor);
+			this.spriteBatch.Draw(source, Vector2.Zero, this.BackgroundColor);
+			this.spriteBatch.End();	                      
+		}		
 		
 		/// <summary>
 		/// Draws the canvas on screen.
@@ -245,25 +311,61 @@ namespace Paint
 				
 			this.spriteBatch.Draw(this.inMemoryToolboxRenderTarget, toolboxPosition, toolboxBounds, this.BackgroundColor);
 		}
-		
+				
 		/// <summary>
 		/// Creates the canvas.
 		/// </summary>
 		private void CreateCanvas()
 		{
 			this.canvas = new Canvas(this.graphicsDisplay);
-			
-			this.inMemoryCanvasRenderTarget = new RenderTarget2D(
-				this.graphicsDeviceManager.GraphicsDevice, 
-			    this.graphicsDeviceManager.GraphicsDevice.PresentationParameters.BackBufferWidth, 
-			    this.graphicsDeviceManager.GraphicsDevice.PresentationParameters.BackBufferHeight);		
-			
-			var documents = Environment.GetFolderPath (Environment.SpecialFolder.Personal);
-			string recorderFile = Path.Combine(documents, "image.rec");
 
-			this.canvasRecorder = new CanvasRecorder(recorderFile);
+			var device = this.graphicsDeviceManager.GraphicsDevice;
+			var width = device.PresentationParameters.BackBufferWidth;
+			var height = device.PresentationParameters.BackBufferHeight;
 			
-			// this.LoadFile();
+			List<RenderTarget2D> renderTargetList = new List<RenderTarget2D>();
+			
+			for (short count = 0; count < UndoRedoBufferSize; count++)
+			{
+				renderTargetList.Add(new RenderTarget2D(device, width, height));
+			}
+						
+			this.undoRedoRenderTargets = renderTargetList.ToArray();
+			this.inMemoryCanvasRenderTarget = new RenderTarget2D(device, width, height);					
+		}
+		
+		/// <summary>
+		/// Creates the picture state manager.
+		/// </summary>
+		private void CreatePictureStateManager()
+		{
+			ImageStateData imageStateData = null;
+			
+			if (File.Exists(this.filenameResolver.ImageInfoFilename()) == true)
+			{
+				// existing image so we load the rendertargetlist from disk
+				imageStateData = this.pictureIOManager.LoadData(this.graphicsDeviceManager.GraphicsDevice, this.spriteBatch, this.undoRedoRenderTargets, this.BackgroundColor);
+			}
+			else
+			{
+				// new image - so ensure directory structure is in place
+				Directory.CreateDirectory(this.filenameResolver.DataFolder);
+				
+				imageStateData = new ImageStateData(0, 0, 0, UndoRedoBufferSize);
+			}
+			
+			this.pictureStateManager = new PictureStateManager(this.filenameResolver, this, imageStateData);			
+			this.pictureStateManager.RedoEnabledChanged += (sender, e) => 
+			{
+				this.toolBox.RedoEnabled = this.pictureStateManager.RedoEnabled;
+			};
+			
+			this.pictureStateManager.UndoEnabledChanged += (sender, e) => 
+			{
+				this.toolBox.UndoEnabled = this.pictureStateManager.UndoEnabled;
+			};
+
+			this.pictureStateManager.InitialisePictureState();			
 		}
 		
 		/// <summary>
@@ -305,39 +407,36 @@ namespace Paint
 			
 			this.toolBox.ExitSelected += (sender, e) => 
 			{
-				SaveAndExit();
+				this.SaveAndExit();
 			};
-		}
-		
-		private void LoadFile()
-		{
-			var documents = Environment.GetFolderPath (Environment.SpecialFolder.Personal);
-			string pictureFile = Path.Combine(documents, "image.png");
 			
-			if (File.Exists(pictureFile))
+			this.toolBox.RedoSelected += (sender, e) => 
 			{
-				GraphicsDevice device = this.graphicsDeviceManager.GraphicsDevice;	
-				
-				var savedImage = Texture2D.FromFile(
-					this.graphicsDeviceManager.GraphicsDevice, 
-				    pictureFile,                                            
-			    	this.graphicsDeviceManager.GraphicsDevice.PresentationParameters.BackBufferWidth, 
-			    	this.graphicsDeviceManager.GraphicsDevice.PresentationParameters.BackBufferHeight);	
-				
-				device.SetRenderTarget(inMemoryCanvasRenderTarget);
-				this.spriteBatch.Begin();
-				this.spriteBatch.Draw(savedImage, Vector2.Zero, Color.White);
-				this.spriteBatch.End();
-			}	                            
+				this.pictureStateManager.Redo();
+			};
+			
+			this.toolBox.UndoSelected += (sender, e) => 
+			{
+				this.pictureStateManager.Undo();
+			};
 		}
 		
 		private void SaveAndExit()
 		{
-  			var documents = Environment.GetFolderPath (Environment.SpecialFolder.Personal);
-			string pictureFile = Path.Combine(documents, "image.png");
+			// TODO - use a progress bar and delete one at a time per update call
+			this.pictureStateManager.Save();
+			this.pictureIOManager.SaveData(this.pictureStateManager.ImageStateData, this.undoRedoRenderTargets);
 			
-			this.inMemoryCanvasRenderTarget.SaveAsPng(pictureFile, inMemoryCanvasRenderTarget.Width, inMemoryCanvasRenderTarget.Height);
-			this.canvasRecorder.Save();
+			// TODO - should this be in our dispose method?
+			foreach (var renderTarget in this.undoRedoRenderTargets)
+			{
+				if (renderTarget != null && renderTarget.IsDisposed == false)
+				{
+					renderTarget.Dispose();
+				}
+			}
+			
+			this.undoRedoRenderTargets = null;
 			
 			this.Exit();
 		}

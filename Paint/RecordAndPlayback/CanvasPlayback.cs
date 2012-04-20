@@ -54,6 +54,9 @@ namespace Paint
 				(fileStream.ReadByte()) << 16 |
 				(fileStream.ReadByte()) << 24;
 			
+			// skip past the final brush size and color as we don't need to know them
+			fileStream.Seek(8, SeekOrigin.Current);
+			
 			this.Color = Color.White;
 		}
 		

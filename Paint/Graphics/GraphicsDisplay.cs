@@ -5,6 +5,7 @@
 namespace Paint
 {
 	using System;
+	using System.Collections.Generic;
 	
 	using Microsoft.Xna.Framework;
 	using Microsoft.Xna.Framework.Graphics;
@@ -15,33 +16,29 @@ namespace Paint
 	public class GraphicsDisplay : IGraphicsDisplay
 	{
 		/// <summary>
-		/// The rectangle for the location of the empty square within the graphics texture
-		/// Can be used to draw blocks in specific colours just be setting the colour
+		/// Icon size for standard displays
 		/// </summary>
-		private Rectangle emptySquare = new Rectangle(0 ,0 , 0, 0);
+		private const int IconSize = 36;
 		
 		/// <summary>
-		/// The rectangle for the exit-button within the graphics texture
+		/// Icon size for Retina displays
 		/// </summary>
-		private Rectangle exitButton;
-
+		private const int IconSizeRetina = 100;
+		
 		/// <summary>
-		/// The rectangle for the dock-bottom-button within the graphics texture
+		/// How many columns of icons are there in the sprite map
 		/// </summary>
-		private Rectangle dockToolbarTopButton;
+		private const int SpriteMapIconColumns = 5;
+		
 		/// <summary>
-		/// The rectangle for the dock-top-button within the graphics texture
+		/// How many rows of icons are there in the sprite map
 		/// </summary>
-		private Rectangle dockToolbarBottomButton;
+		private const int SpriteMapIconRows = 4;
+		
 		/// <summary>
-		/// The rectangle for the maximize-button within the graphics texture
+		/// Size/shape/location of eachimage in the spritemap
 		/// </summary>
-		private Rectangle maximizeToolbarButton;
-		/// <summary>
-		/// The rectangle for the minimize-button within the graphics texture
-		/// </summary>
-		private Rectangle minimizeToolbarButton;
-
+		private Rectangle[] imageRectangles = null;
 		
 		/// <summary>
 		/// Image containing all graphics for the app.
@@ -63,44 +60,22 @@ namespace Paint
 		{
 			this.graphicsTexture = graphicsTexture;
 			this.spriteBatch = spriteBatch;
-
-			if (highResolution == true)
+			
+			List<Rectangle> imageList = new List<Rectangle>();			
+			int iconSize = highResolution ?  IconSizeRetina : IconSize;
+			
+			// This is the empty square image for all basic single color drawing
+			imageList.Add(new Rectangle(0 ,0 , 0, 0));
+			
+			for (int y = 0; y < SpriteMapIconRows; y++)
 			{
-				int xOffSet = 1;
-				this.exitButton = new Rectangle(xOffSet ,0 , 100, 100);
-				xOffSet += 100;
-				
-				this.minimizeToolbarButton = new Rectangle(xOffSet ,0 , 100, 100);
-				xOffSet += 100;
-				
-				this.maximizeToolbarButton = new Rectangle(xOffSet ,0 , 100, 100);
-				xOffSet += 100;
-				
-				this.dockToolbarBottomButton = new Rectangle(xOffSet ,0 , 100, 100);
-				xOffSet += 100;
-				
-				this.dockToolbarTopButton = new Rectangle(xOffSet ,0 , 100, 100);
+				for (int x = 0; x < SpriteMapIconColumns; x++)
+				{
+					imageList.Add(new Rectangle(1 + (x * IconSize), y * IconSize, iconSize, iconSize));
+				}
 			}
-			else
-			{
-				int xOffSet = 1;
-				
-				this.exitButton = new Rectangle(xOffSet ,0 , 36, 36);
-				xOffSet += 36;
-				
-				this.minimizeToolbarButton = new Rectangle(xOffSet ,0 , 36, 36);
-				xOffSet += 36;
-				
-				this.maximizeToolbarButton = new Rectangle(xOffSet ,0 , 36, 36);
-				xOffSet += 36;
-				
-				this.dockToolbarBottomButton = new Rectangle(xOffSet ,0 , 36, 36);
-				xOffSet += 36;
-				
-				this.dockToolbarTopButton = new Rectangle(xOffSet ,0 , 36, 36);
-				xOffSet += 36;
-				
-			}
+			
+			this.imageRectangles = imageList.ToArray();
 		}
 		
 		/// <summary>
@@ -155,27 +130,7 @@ namespace Paint
 		/// <param name='imageType'> Type of image we want to render </param>
 		public Rectangle SourceRectangleFromImageType(ImageType imageType)
 		{
-			switch (imageType)
-			{				
-				case ImageType.ExitButton:	
-					return this.exitButton;
-
-				case ImageType.DockTopButton:	
-					return this.dockToolbarTopButton;
-
-				case ImageType.DockBottomButton:	
-					return this.dockToolbarBottomButton;
-
-				case ImageType.MaximizeToolbar:	
-					return this.maximizeToolbarButton;
-
-				case ImageType.MinimizeToolbar:	
-					return this.minimizeToolbarButton;
-
-				case ImageType.EmptySquare:
-				default:
-					return this.emptySquare;
-			}
+			return this.imageRectangles[(int)imageType];
 		}		
 	}
 }

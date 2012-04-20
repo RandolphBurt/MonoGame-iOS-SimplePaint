@@ -15,6 +15,26 @@ namespace Paint
 		/// Occurs when the user has pressed the button
 		/// </summary>
 		event EventHandler ButtonPressed;
+		
+		/// <summary>
+		/// Gets or sets a value indicating whether this <see cref="Paint.IButton"/> is enabled.
+		/// </summary>
+		/// <value>
+		/// <c>true</c> if enabled; otherwise, <c>false</c>.
+		/// </value>
+		bool Enabled 
+		{
+			get;
+			set;
+		}
+		
+		/// <summary>
+		/// Gets the current Button State
+		/// </summary>
+		int State
+		{
+			get;
+		}
 	}
 }
 

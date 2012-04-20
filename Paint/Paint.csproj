@@ -23,6 +23,7 @@
     <MtouchDebug>true</MtouchDebug>
     <MtouchProfiling>true</MtouchProfiling>
     <MtouchLink>None</MtouchLink>
+    <MtouchArch>ARMv7</MtouchArch>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhoneSimulator' ">
     <DebugType>none</DebugType>
@@ -45,6 +46,7 @@
     <CodesignKey>iPhone Developer</CodesignKey>
     <MtouchDebug>true</MtouchDebug>
     <MtouchProfiling>true</MtouchProfiling>
+    <MtouchArch>ARMv7</MtouchArch>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhone' ">
     <DebugType>none</DebugType>
@@ -54,6 +56,7 @@
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
     <CodesignKey>iPhone Developer</CodesignKey>
+    <MtouchArch>ARMv7</MtouchArch>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Distribution|iPhoneSimulator' ">
     <DebugType>none</DebugType>
@@ -114,6 +117,14 @@
     <Compile Include="GraphicsInterfaces\IGraphicsDisplay.cs" />
     <Compile Include="Graphics\GraphicsDisplay.cs" />
     <Compile Include="Graphics\ImageType.cs" />
+    <Compile Include="BusinessLogic\PictureStateManager.cs" />
+    <Compile Include="BusinessLogic\IPictureStateManager.cs" />
+    <Compile Include="BusinessLogic\IRenderTargertHandler.cs" />
+    <Compile Include="BusinessLogic\FilenameResolver.cs" />
+    <Compile Include="BusinessLogic\IFilenameResolver.cs" />
+    <Compile Include="BusinessLogic\PictureIOManager.cs" />
+    <Compile Include="BusinessLogic\ImageStateData.cs" />
+    <Compile Include="BusinessLogic\IPictureIOManager.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

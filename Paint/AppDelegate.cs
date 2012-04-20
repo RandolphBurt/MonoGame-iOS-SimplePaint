@@ -6,6 +6,7 @@ namespace Paint
 {
 	using System;
 	using System.Collections.Generic;
+	using System.IO;
 	using System.Linq;
 	
 	using MonoTouch.Foundation;
@@ -29,19 +30,60 @@ namespace Paint
 		//
 		public override bool FinishedLaunching (UIApplication app, NSDictionary options)
 		{
+//			window = new UIWindow (UIScreen.MainScreen.Bounds);
+//			window.MakeKeyAndVisible ();
+			
+			var basePath =  Environment.GetFolderPath (Environment.SpecialFolder.Personal);
+			var dir = Path.Combine(basePath, "0fc348d2-83a2-4487-9536-98887c42aa8d");
+			if (Directory.Exists(dir))
+			{
+				foreach (var f in Directory.EnumerateFiles(dir))
+				{
+//					File.Delete(f);
+				}
+			}
+			                           
 			// TODO - launch initial page to select image
 			this.EditImage();
 			
 			return true;
 		}
+		
+		public override void WillEnterForeground(UIApplication application)
+		{
+			// This is called when we re-enable the app from the background
+		}
+		
+		public override void DidEnterBackground(UIApplication application)
+		{
+			// This is called when we enter the background. 
+			// We are never notified if we are terminated.  Therefore we should take this opportunity to save the 
+			// current image and info file etc in case we are then terminated
+			// Then, if monogame is fixed for saving/loading images then we can just leave the app running in the
+			// foreground and we'll be able to carry on.  
+			// However if not fixed then we'll have to go back to monotouch front end and let them pick the picture
+			// and carry on - problem is we lose our undo/redo buffer unless we also save all of those images?!?!
+		}
 
+		//PaintApp paintApp  = null;
+		
 		/// <summary>
 		/// Edits a specific image.
 		/// </summary>
 		private void EditImage ()
 		{
+			Guid pictureId = Guid.NewGuid();
+			pictureId = new Guid("{0fc348d2-83a2-4487-9536-98887c42aa8d}");
+			
 			// Simply instantiate the class derived from monogame:game and away we go...
-			PaintApp paintApp  = new PaintApp();
+			/*
+			if (paintApp != null)
+			{
+				paintApp.Dispose();
+			}
+			
+			paintApp  = null; */
+			PaintApp paintApp  = new PaintApp(pictureId);
 			paintApp.Exiting += PaintAppExiting;
 			paintApp.Run();
 		}
@@ -91,7 +133,7 @@ namespace Paint
 			}
 			
 			// TODO - temporary code until main screen developed
-			this.PlayBackImage();
+			this.EditImage();
 		}
 	}
 }

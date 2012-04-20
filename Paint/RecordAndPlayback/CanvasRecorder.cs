@@ -16,7 +16,7 @@ namespace Paint
 	public class CanvasRecorder : ICanvasRecorder
 	{
 		/// <summary>
-		/// The curren color
+		/// The current color
 		/// </summary>
 		private Color currentColor = Color.White;
 		
@@ -30,22 +30,6 @@ namespace Paint
 		/// </summary>
 		List<byte> commandList = new List<byte>();
 		
-		/// <summary>
-		/// The name of the file where we will save the playback data.
-		/// </summary>
-		private string filename = null;
-		
-		/// <summary>
-		/// Initializes a new instance of the <see cref="Paint.CanvasRecorder"/> class.
-		/// </summary>
-		/// <param name='filename'>
-		/// The name of the file where we should save the recording.
-		/// </param>
-		public CanvasRecorder(string filename)
-		{
-			this.filename = filename;
-		}
-
 		/// <summary>
 		/// Draw the latest updates to our image/render target.
 		/// <param name='color' The color to use for the drawing />
@@ -82,10 +66,11 @@ namespace Paint
 		
 		/// <summary>
 		/// Save the Canvas to file ready for playback.
+		/// <param name='filename' The file we are saving to />
 		/// </summary>
-		public void Save()
+		public void Save(string filename)
 		{
-			using (FileStream stream = File.Open(this.filename, FileMode.Create, FileAccess.Write))
+			using (FileStream stream = File.Open(filename, FileMode.Create, FileAccess.Write))
 			{
 				// 5 bytes per command
 				int commandCount = this.commandList.Count / 5;
@@ -96,8 +81,55 @@ namespace Paint
 				stream.WriteByte((byte)(commandCount >> 16));
 				stream.WriteByte((byte)(commandCount >> 24));
 				
+				// Write the current brush size and color - this is required so that anyone continuing with this playback
+				// file at a later time doesn't have to parse all the existing commands to know what color to continue
+				// with
+				stream.WriteByte((byte)this.currentBrushSize);
+				stream.WriteByte((byte)(this.currentBrushSize >> 8));
+				stream.WriteByte((byte)(this.currentBrushSize >> 16));
+				stream.WriteByte((byte)(this.currentBrushSize >> 24));
+
+				stream.WriteByte((byte)this.currentColor.A);
+				stream.WriteByte((byte)this.currentColor.R);
+				stream.WriteByte((byte)this.currentColor.G);
+				stream.WriteByte((byte)this.currentColor.B);
+
+				// Write all the commands
 				stream.Write(this.commandList.ToArray(), 0, this.commandList.Count);
 			}
+		}
+		
+		/// <summary>
+		/// Load an existing playback file - we will probably end up adding some more commands and resaving
+		/// e.g. someone has pressed 'redo' so we are reloading an existing file.
+		/// <param name='filename' The file we are loading from />
+		/// </summary>
+		public void Load(string filename)
+		{
+			using (FileStream stream = File.OpenRead(filename))
+			{
+				int playbackCommandTotal = 
+					stream.ReadByte() |
+					(stream.ReadByte()) << 8 |
+					(stream.ReadByte()) << 16 |
+					(stream.ReadByte()) << 24;
+				
+				this.currentBrushSize = 
+					stream.ReadByte() |
+					(stream.ReadByte()) << 8 |
+					(stream.ReadByte()) << 16 |
+					(stream.ReadByte()) << 24;
+					
+				this.currentColor.A = (byte)stream.ReadByte();
+				this.currentColor.R = (byte)stream.ReadByte();
+				this.currentColor.G = (byte)stream.ReadByte();
+				this.currentColor.B = (byte)stream.ReadByte();
+
+				byte[] commands = new byte[playbackCommandTotal];
+				stream.Read(commands, 0, playbackCommandTotal);
+				
+				this.commandList = new List<byte>(commands);
+			}			
 		}
 		
 		/// <summary>
