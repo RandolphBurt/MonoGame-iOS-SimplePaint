@@ -24,11 +24,6 @@ namespace Paint
 	public class PaintApp : Game, IRenderTargertHandler
 	{
 		/// <summary>
-		/// MAximum number of changes we can undo in one go
-		/// </summary>
-		private const int UndoRedoBufferSize = 10;
-		
-		/// <summary>
 		/// The maximum size of the brush
 		/// </summary>
 		private readonly int MaxBrushSize = 50;
@@ -115,21 +110,11 @@ namespace Paint
 		/// Keep track of the previous gesture/touch-type that was made by the user.
 		/// </summary>
 		private TouchType previousTouchType = TouchType.DragComplete;
-		
-		/// <summary>
-		/// The height of the screen.
-		/// </summary>
-		private int screenHeight;
-		
+				
 		/// <summary>
 		/// Keeps track of all touch/gestures made on the canvas since the last Draw command- is then reset after handled by the Draw.
 		/// </summary>
 		private List<ITouchPoint> canvasTouchPoints = new List<ITouchPoint>();
-		
-		/// <summary>
-		/// Unique Identifer for this picture
-		/// </summary>
-		private Guid pictureId;
 		
 		/// <summary>
 		/// The picture IO manager - handles all reading / writing images and information file
@@ -140,19 +125,36 @@ namespace Paint
 		/// The filename resolver.
 		/// </summary>
 		private IFilenameResolver filenameResolver;
+		
+		/// <summary>
+		/// The image state data. height/width of image and details of save points (undo/redo state)
+		/// </summary>
+		private ImageStateData imageStateData = null;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Paint.PaintApp"/> class.
 		/// Instantiate our GraphicsDeviceManager and establish where the content folder is
 		/// <param name='pictureId'></param>
 		/// </summary>
-		public PaintApp(Guid pictureId)
+		public PaintApp(
+			IPictureIOManager pictureIOManager, 
+			IFilenameResolver filenameResolver, 
+			ImageStateData imageStateData)
 		{
-			this.pictureId = pictureId;
 			this.graphicsDeviceManager = new GraphicsDeviceManager(this);
 			this.graphicsDeviceManager.IsFullScreen = true;
-			this.filenameResolver = new FilenameResolver(pictureId);
-			this.pictureIOManager = new PictureIOManager(this.filenameResolver);
+			this.filenameResolver = filenameResolver;
+			this.pictureIOManager = pictureIOManager;
+			this.imageStateData = imageStateData;
+			
+			if (imageStateData.Width > imageStateData.Height)
+			{
+				this.graphicsDeviceManager.SupportedOrientations = DisplayOrientation.LandscapeLeft | DisplayOrientation.LandscapeRight;
+			}
+			else
+			{
+				this.graphicsDeviceManager.SupportedOrientations = DisplayOrientation.Portrait | DisplayOrientation.PortraitUpsideDown;
+			}
 			
 			this.Content.RootDirectory = "Content";
 		}
@@ -182,10 +184,11 @@ namespace Paint
 		protected override void LoadContent()
 		{
 			this.spriteBatch = new SpriteBatch(graphicsDeviceManager.GraphicsDevice);
-			this.screenHeight = this.graphicsDeviceManager.GraphicsDevice.PresentationParameters.BackBufferHeight;
+			//this.screenHeight = this.graphicsDeviceManager.GraphicsDevice.PresentationParameters.BackBufferHeight;
 			
+			bool highResolution = Math.Max(this.imageStateData.Height, this.imageStateData.Width) > 1024;
 			var graphicsTextureMap = Content.Load<Texture2D> ("graphics.png");
-			this.graphicsDisplay = new GraphicsDisplay(graphicsTextureMap, this.spriteBatch, screenHeight > 1024); // TODO - check resolution!
+			this.graphicsDisplay = new GraphicsDisplay(graphicsTextureMap, this.spriteBatch, highResolution);
 			
 			// TODO - are the three things below in the correct place?  Maybe should be in initialise
 			this.CreateCanvas();
@@ -320,12 +323,12 @@ namespace Paint
 			this.canvas = new Canvas(this.graphicsDisplay);
 
 			var device = this.graphicsDeviceManager.GraphicsDevice;
-			var width = device.PresentationParameters.BackBufferWidth;
-			var height = device.PresentationParameters.BackBufferHeight;
+			var width = this.imageStateData.Width; // device.PresentationParameters.BackBufferWidth;
+			var height = this.imageStateData.Height; // device.PresentationParameters.BackBufferHeight;
 			
 			List<RenderTarget2D> renderTargetList = new List<RenderTarget2D>();
 			
-			for (short count = 0; count < UndoRedoBufferSize; count++)
+			for (short count = 0; count < this.imageStateData.MaxUndoRedoCount; count++)
 			{
 				renderTargetList.Add(new RenderTarget2D(device, width, height));
 			}
@@ -339,22 +342,13 @@ namespace Paint
 		/// </summary>
 		private void CreatePictureStateManager()
 		{
-			ImageStateData imageStateData = null;
-			
 			if (File.Exists(this.filenameResolver.ImageInfoFilename()) == true)
 			{
 				// existing image so we load the rendertargetlist from disk
-				imageStateData = this.pictureIOManager.LoadData(this.graphicsDeviceManager.GraphicsDevice, this.spriteBatch, this.undoRedoRenderTargets, this.BackgroundColor);
-			}
-			else
-			{
-				// new image - so ensure directory structure is in place
-				Directory.CreateDirectory(this.filenameResolver.DataFolder);
-				
-				imageStateData = new ImageStateData(0, 0, 0, UndoRedoBufferSize);
+				this.pictureIOManager.LoadUndoRedoRenderTargets(this.graphicsDeviceManager.GraphicsDevice, this.spriteBatch, this.undoRedoRenderTargets, this.BackgroundColor);
 			}
 			
-			this.pictureStateManager = new PictureStateManager(this.filenameResolver, this, imageStateData);			
+			this.pictureStateManager = new PictureStateManager(this.filenameResolver, this, this.imageStateData);			
 			this.pictureStateManager.RedoEnabledChanged += (sender, e) => 
 			{
 				this.toolBox.RedoEnabled = this.pictureStateManager.RedoEnabled;
@@ -395,15 +389,18 @@ namespace Paint
 				this.graphicsDisplay,
 				colorList, 
 				this.StartColor,
-				this.graphicsDeviceManager.GraphicsDevice.PresentationParameters.BackBufferWidth,
+				this.imageStateData.Width,
+				//this.graphicsDeviceManager.GraphicsDevice.PresentationParameters.BackBufferWidth,
 				this.MinBrushSize, 
 				this.MaxBrushSize, 
 				this.StartBrushSize);
 			
 			this.inMemoryToolboxRenderTarget = new RenderTarget2D(
 				this.graphicsDeviceManager.GraphicsDevice, 
-			    this.graphicsDeviceManager.GraphicsDevice.PresentationParameters.BackBufferWidth, 
-			    this.graphicsDeviceManager.GraphicsDevice.PresentationParameters.BackBufferHeight);			
+				this.imageStateData.Width,
+				this.imageStateData.Height);
+			    //this.graphicsDeviceManager.GraphicsDevice.PresentationParameters.BackBufferWidth, 
+			    //this.graphicsDeviceManager.GraphicsDevice.PresentationParameters.BackBufferHeight);			
 			
 			this.toolBox.ExitSelected += (sender, e) => 
 			{
@@ -499,7 +496,7 @@ namespace Paint
 			
 			if (this.toolBox.DockPosition == DockPosition.Bottom)
 			{
-				int toolboxPositionY = (this.screenHeight - this.toolBox.ToolboxHeight);
+				int toolboxPositionY = (this.imageStateData.Height - this.toolBox.ToolboxHeight);
 				Vector2 offsetPosition = new Vector2(touchPoint.Position.X, touchPoint.Position.Y - toolboxPositionY);
 				offsetCollisionPoint = new TouchPoint(offsetPosition, touchPoint.TouchType);
 				

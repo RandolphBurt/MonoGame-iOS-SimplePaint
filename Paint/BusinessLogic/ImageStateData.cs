@@ -11,12 +11,31 @@ namespace Paint
 	/// </summary>
 	public class ImageStateData
 	{
-		public ImageStateData(int firstSavePoint, int lastSavePoint, int currentSavePoint, int maxUndoRedoCount)
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Paint.ImageStateData"/> class.
+		/// </summary>
+		/// <param name='firstSavePoint'>Which save point is the first one - ie. what is the furthest we can go back
+		/// if we continually undo</param>
+		/// <param name='lastSavePoint'>Which save point is the last one - ie. indicates how many times we can press
+		/// redo</param>
+		/// <param name='currentSavePoint'>The current save point</param>
+		/// <param name='maxUndoRedoCount'>How big is the undo/redo list</param>
+		/// <param name='width'>Width of the image</param>
+		/// <param name='height'>Height of the image</param>
+		public ImageStateData(
+			int firstSavePoint, 
+		    int lastSavePoint, 
+			int currentSavePoint, 
+			int maxUndoRedoCount,
+			int width,
+			int height)
 		{
 			this.MaxUndoRedoCount = maxUndoRedoCount;
 			this.FirstSavePoint = firstSavePoint;
 			this.LastSavePoint = lastSavePoint;
 			this.CurrentSavePoint = currentSavePoint;
+			this.Width = width;
+			this.Height = height;
 		}
 
 		/// <summary>
@@ -51,6 +70,24 @@ namespace Paint
 		/// The maximum number of times we can undo/redo a change.
 		/// </summary>
 		public int MaxUndoRedoCount
+		{
+			get;
+			private set;
+		}
+		
+		/// <summary>
+		/// Gets the Image width.
+		/// </summary>
+		public int Width  
+		{
+			get;
+			private set;
+		}
+		
+		/// <summary>
+		/// Gets the image height.
+		/// </summary>
+		public int Height  
 		{
 			get;
 			private set;

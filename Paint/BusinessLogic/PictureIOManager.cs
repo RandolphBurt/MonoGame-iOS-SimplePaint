@@ -31,13 +31,13 @@ namespace Paint
 		}
 		
 		/// <summary>
-		/// Saves all image data to disk
+		/// Saves all the undoRedoRenderTargets to disk and the imageStateData
 		/// </summary>
 		/// <param name='imageStateData'>Image state data.</param>
 		/// <param name='undoRedoRenderTargets'>Sequence of images representing the undo/redo chain</param>
 		public void SaveData(ImageStateData imageStateData, RenderTarget2D[] undoRedoRenderTargets)
 		{
-			this.WriteImageStateData(imageStateData);
+			this.SaveImageStateData(imageStateData);
 			
 			int end = imageStateData.FirstSavePoint == 0 ? imageStateData.LastSavePoint : imageStateData.MaxUndoRedoCount - 1;
 			
@@ -51,29 +51,38 @@ namespace Paint
 					renderTarget.Height);
 			}
 			
-			
 			// TODO - write out real image and also thumbnail images
 		}
 		
 		/// <summary>
-		/// Loads existing image data from disk.
+		///  Loads existing image data from disk into the undoRedoRenderTargets 
 		/// </summary>
-		/// <param name='device'>Graphics device required for rendering</param>
-		/// <param name='spriteBatch'>Sprite Batch for rendering the images into the rendertargets</param>
-		/// <param name='undoRedoRenderTargets'>Sequence of images representing the undo/redo chain</param>
-		/// <param name='backgroundColor'>background color for all rendering</param>
-		/// <returns>ImageStateData</returns>
-		public ImageStateData LoadData(
+		/// <param name='device'>
+		/// Graphics device required for rendering
+		/// </param>
+		/// <param name='spriteBatch'>
+		/// Sprite Batch for rendering the images into the rendertargets
+		/// </param>
+		/// <param name='undoRedoRenderTargets'>
+		/// Sequence of images representing the undo/redo chain
+		/// </param>
+		/// <param name='backgroundColor'>
+		/// background color for all rendering
+		/// </param>
+		/// <returns>
+		/// ImageStateData
+		/// </returns>
+		public void LoadUndoRedoRenderTargets(
 			GraphicsDevice device, 
 			SpriteBatch spriteBatch, 
 			RenderTarget2D[] undoRedoRenderTargets,
 			Color backgroundColor)
 		{
-			var imageStateData = ReadImageStateData();
+			var imageStateData = this.LoadImageStateData();
 			
 			int end = imageStateData.FirstSavePoint == 0 ? imageStateData.LastSavePoint : imageStateData.MaxUndoRedoCount - 1;
 			
-			// First write out all the undo/redo render target images
+			// Don't read more than we need to - hence above we are calculating whether we have used all the renderTarets
 			for (int count = 0; count <= end; count++)
 			{
 				using(var imageTexture= Texture2D.FromFile(
@@ -87,24 +96,22 @@ namespace Paint
 					spriteBatch.End();
 				}
 			}
-
-			return imageStateData;
 		}		
 		
 		/// <summary>
-		/// Reads the image state data.
+		///  Loads the imageStateData from disk 
 		/// </summary>
 		/// <returns>
 		/// The image state data.
 		/// </returns>
-		private ImageStateData ReadImageStateData()
+		public ImageStateData LoadImageStateData()
 		{
 			var informationFile = this.filenameResolver.ImageInfoFilename();
 			var dataList = new List<int>();
 			
 			using (var stream = File.OpenRead(informationFile))
 			{
-				for (short count = 0; count < 4; count++)
+				for (short count = 0; count < 6; count++)
 				{
 					dataList.Add(
 						stream.ReadByte() |
@@ -114,23 +121,29 @@ namespace Paint
 				}
 			}
 			
-			return new ImageStateData(dataList[0], dataList[1], dataList[2], dataList[3]);				
+			return new ImageStateData(
+				dataList[0], 
+				dataList[1], 
+				dataList[2], 
+				dataList[3],
+				dataList[4],
+				dataList[5]);
 		}
 		
 		/// <summary>
-		/// Writes the image state data.
+		///  Saves the imageStateData to disk
 		/// </summary>
-		/// <param name='imageStateData'>
-		/// Image state data.
-		/// </param>
-		private void WriteImageStateData(ImageStateData imageStateData)
+		/// <param name='imageStateData'>Image state data.</param>
+		private void SaveImageStateData(ImageStateData imageStateData)
 		{
 			// Next write out the information file
 			var dataArray = new int[] {
 				imageStateData.FirstSavePoint,
 				imageStateData.LastSavePoint,
 				imageStateData.CurrentSavePoint,
-				imageStateData.MaxUndoRedoCount
+				imageStateData.MaxUndoRedoCount,
+				imageStateData.Width,
+				imageStateData.Height
 			};
 			
 			var informationFile = this.filenameResolver.ImageInfoFilename();

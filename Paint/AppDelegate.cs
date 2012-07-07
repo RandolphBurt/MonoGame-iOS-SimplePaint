@@ -18,6 +18,11 @@ namespace Paint
 	[Register ("AppDelegate")]
 	public partial class AppDelegate : UIApplicationDelegate
 	{
+		/// <summary>
+		/// Maximum number of changes we can undo
+		/// </summary>
+		private const int UndoRedoBufferSize = 10;
+
 		// class-level declarations
 		UIWindow window;
 
@@ -67,23 +72,40 @@ namespace Paint
 
 		//PaintApp paintApp  = null;
 		
+		int count = 1;
+		
 		/// <summary>
 		/// Edits a specific image.
 		/// </summary>
 		private void EditImage ()
 		{
-			Guid pictureId = Guid.NewGuid();
-			pictureId = new Guid("{0fc348d2-83a2-4487-9536-98887c42aa8d}");
+			// For new image we create new imageStateData(0,0,0,MaxUndoRedo, width, height) and pass in
+			Guid pictureId = new Guid("{0fc348d2-83a2-4487-9536-98887c42aa8d}");
+			ImageStateData imageStateData = null;
 			
-			// Simply instantiate the class derived from monogame:game and away we go...
 			/*
-			if (paintApp != null)
+			if (count++%2 == 0)
 			{
-				paintApp.Dispose();
+				pictureId = new Guid("{1fc348d2-83a2-4487-9536-98887c42aa8d}");
 			}
+			else
+			{
+				pictureId = new Guid("{0fc348d2-83a2-4487-9536-98887c42aa8d}");
+			}*/
+
+			var filenameResolver = new FilenameResolver(pictureId);
+			var pictureIOManager = new PictureIOManager(filenameResolver);
 			
-			paintApp  = null; */
-			PaintApp paintApp  = new PaintApp(pictureId);
+			imageStateData = pictureIOManager.LoadImageStateData();
+			
+			if (imageStateData.IsNewImage())
+			{
+				// new image - so ensure directory structure is in place
+				Directory.CreateDirectory(filenameResolver.DataFolder);
+			}			
+		
+			// Simply instantiate the class derived from monogame:game and away we go...
+			PaintApp paintApp  = new PaintApp(pictureIOManager, filenameResolver, imageStateData);
 			paintApp.Exiting += PaintAppExiting;
 			paintApp.Run();
 		}
