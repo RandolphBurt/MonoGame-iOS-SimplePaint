@@ -217,7 +217,7 @@ namespace Paint
 		/// <param name='gameTime' >
 		/// Allows you to monitor time passed since last draw
 		/// </param>
-		protected override void Draw (GameTime gameTime)
+		protected override void Draw(GameTime gameTime)
 		{
 			GraphicsDevice device = this.graphicsDeviceManager.GraphicsDevice;
 									
@@ -257,7 +257,7 @@ namespace Paint
 		/// <param name='gameTime'>
 		/// Allows you to monitor time passed since last draw
 		/// </param>
-		protected override void Update (GameTime gameTime)
+		protected override void Update(GameTime gameTime)
 		{
 			this.HandleInput();
 			
@@ -311,7 +311,14 @@ namespace Paint
 			{
 				toolboxPosition = new Vector2(0, inMemoryToolboxRenderTarget.Height - this.toolBox.ToolboxHeight);
 			}
-				
+			
+			// Blank the square where the toolbox will go - this ensures that none of the canvas shows through where
+			// there is transparency.
+			this.graphicsDisplay.DrawGraphic(
+				ImageType.EmptySquare, 
+				new Rectangle((int)toolboxPosition.X, (int)toolboxPosition.Y, toolboxBounds.Width, toolboxBounds.Height), 
+				this.BackgroundColor);
+			
 			this.spriteBatch.Draw(this.inMemoryToolboxRenderTarget, toolboxPosition, toolboxBounds, this.BackgroundColor);
 		}
 				
