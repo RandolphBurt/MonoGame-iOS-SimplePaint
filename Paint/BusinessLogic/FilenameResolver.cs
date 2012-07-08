@@ -40,13 +40,12 @@ namespace Paint
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Paint.FilenameResolver"/> class.
 		/// </summary>
-		/// <param name='pictureId'>
-		/// Picture identifier.
-		/// </param>
-		public FilenameResolver(Guid pictureId)
+		/// <param name='pictureId'>Picture identifier.</param>
+		/// <param name='applicationBasePath'>Application base path.</param>
+		public FilenameResolver(Guid pictureId, string applicationBasePath)
 		{
 			this.pictureId = pictureId;
-			this.basePath =  Environment.GetFolderPath (Environment.SpecialFolder.Personal);
+			this.basePath =  applicationBasePath;
 			this.DataFolder = Path.Combine(this.basePath, this.pictureId.ToString());
 		}
 		

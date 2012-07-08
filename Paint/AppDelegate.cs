@@ -93,7 +93,7 @@ namespace Paint
 				pictureId = new Guid("{0fc348d2-83a2-4487-9536-98887c42aa8d}");
 			}*/
 
-			var filenameResolver = new FilenameResolver(pictureId);
+			var filenameResolver = new FilenameResolver(pictureId, Environment.GetFolderPath(Environment.SpecialFolder.Personal));
 			var pictureIOManager = new PictureIOManager(filenameResolver);
 			
 			imageStateData = pictureIOManager.LoadImageStateData();
