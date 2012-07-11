@@ -25,6 +25,7 @@ namespace Paint
 
 		// class-level declarations
 		UIWindow window;
+		HomeScreen viewController;
 
 		//
 		// This method is invoked when the application has loaded and is ready to run. In this 
@@ -35,9 +36,15 @@ namespace Paint
 		//
 		public override bool FinishedLaunching (UIApplication app, NSDictionary options)
 		{
-//			window = new UIWindow (UIScreen.MainScreen.Bounds);
-//			window.MakeKeyAndVisible ();
-			
+			this.window = new UIWindow (UIScreen.MainScreen.Bounds);
+			this.viewController = new HomeScreen();
+			this.viewController.PaintSelected += (sender, e) => {
+				this.EditImage();
+			};
+
+			this.window.RootViewController = viewController;
+			this.window.MakeKeyAndVisible ();
+/*			
 			var basePath =  Environment.GetFolderPath (Environment.SpecialFolder.Personal);
 			var dir = Path.Combine(basePath, "0fc348d2-83a2-4487-9536-98887c42aa8d");
 			if (Directory.Exists(dir))
@@ -50,7 +57,7 @@ namespace Paint
 			                           
 			// TODO - launch initial page to select image
 			this.EditImage();
-			
+*/			
 			return true;
 		}
 		

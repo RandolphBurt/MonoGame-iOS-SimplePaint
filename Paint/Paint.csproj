@@ -125,6 +125,10 @@
     <Compile Include="BusinessLogic\PictureIOManager.cs" />
     <Compile Include="BusinessLogic\ImageStateData.cs" />
     <Compile Include="BusinessLogic\IPictureIOManager.cs" />
+    <Compile Include="MonoTouch\HomeScreen.cs" />
+    <Compile Include="MonoTouch\HomeScreen.designer.cs">
+      <DependentUpon>HomeScreen.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -136,6 +140,7 @@
     <Folder Include="RecordAndPlaybackInterfaces\" />
     <Folder Include="GraphicsInterfaces\" />
     <Folder Include="Graphics\" />
+    <Folder Include="MonoTouch\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\graphics.png" />
@@ -145,5 +150,8 @@
       <Project>{DB8508BB-9849-4CC2-BC0F-8EB5DACB3C47}</Project>
       <Name>MonoGame.Framework.iOS</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <InterfaceDefinition Include="MonoTouch\HomeScreen.xib" />
   </ItemGroup>
 </Project>
