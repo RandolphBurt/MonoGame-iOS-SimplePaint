@@ -85,7 +85,7 @@ namespace Paint
 			this.Content.RootDirectory = "Content";
 			
 			// TODO - probably pass in the filename
-  			var documents = Environment.GetFolderPath (Environment.SpecialFolder.Personal);
+  			var documents = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "..", "Library");
 			string pictureFile = Path.Combine(documents, "image.rec");
 			this.canvasPlayback = new CanvasPlayback(pictureFile);
 		}

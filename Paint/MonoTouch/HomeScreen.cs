@@ -35,7 +35,8 @@ namespace Paint
 				
 			this.btnPaint.SetBackgroundImage(UIImage.FromBundle("Content/graphics.png"),UIControlState.Normal);
 		
-			var folder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), "0fc348d2-83a2-4487-9536-98887c42aa8d");			
+			var libraryPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "..", "Library");
+			var folder = Path.Combine(libraryPath, "0fc348d2-83a2-4487-9536-98887c42aa8d");			
 			this.fileList = Directory.GetFiles(folder, "*.PNG");
 			this.fileListLength = this.fileList.Length;
 			

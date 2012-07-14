@@ -44,8 +44,9 @@ namespace Paint
 
 			this.window.RootViewController = viewController;
 			this.window.MakeKeyAndVisible ();
-/*			
-			var basePath =  Environment.GetFolderPath (Environment.SpecialFolder.Personal);
+			
+			/*			
+			var basePath =  Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "..", "Library");
 			var dir = Path.Combine(basePath, "0fc348d2-83a2-4487-9536-98887c42aa8d");
 			if (Directory.Exists(dir))
 			{
@@ -100,7 +101,8 @@ namespace Paint
 				pictureId = new Guid("{0fc348d2-83a2-4487-9536-98887c42aa8d}");
 			}*/
 
-			var filenameResolver = new FilenameResolver(pictureId, Environment.GetFolderPath(Environment.SpecialFolder.Personal));
+			var libraryPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "..", "Library");
+			var filenameResolver = new FilenameResolver(pictureId, libraryPath);
 			var pictureIOManager = new PictureIOManager(filenameResolver);
 			
 			imageStateData = pictureIOManager.LoadImageStateData();
