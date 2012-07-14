@@ -26,6 +26,7 @@ namespace Paint
 		// class-level declarations
 		UIWindow window;
 		HomeScreen viewController;
+		PaintApp paintApp;
 
 		//
 		// This method is invoked when the application has loaded and is ready to run. In this 
@@ -114,9 +115,9 @@ namespace Paint
 			}			
 		
 			// Simply instantiate the class derived from monogame:game and away we go...
-			PaintApp paintApp  = new PaintApp(pictureIOManager, filenameResolver, imageStateData);
-			paintApp.Exiting += PaintAppExiting;
-			paintApp.Run();
+			this.paintApp  = new PaintApp(pictureIOManager, filenameResolver, imageStateData);
+			this.paintApp.Exiting += PaintAppExiting;
+			this.paintApp.Run();
 		}
 		
 		/// <summary>
@@ -157,10 +158,11 @@ namespace Paint
 		private void PaintAppExiting (object sender, EventArgs e)
 		{
 			// TODO - Go back to main screen
-			PaintApp paintApp = sender as PaintApp;
-			if (paintApp != null)
+			if (this.paintApp != null)
 			{
-				paintApp.Exiting -= PaintAppExiting;
+				this.paintApp.Exiting -= PaintAppExiting;
+				this.paintApp.Dispose();
+				this.paintApp = null;
 			}
 			
 			// TODO - temporary code until main screen developed
