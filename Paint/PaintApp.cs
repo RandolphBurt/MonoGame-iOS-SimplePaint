@@ -134,7 +134,9 @@ namespace Paint
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Paint.PaintApp"/> class.
 		/// Instantiate our GraphicsDeviceManager and establish where the content folder is
-		/// <param name='pictureId'></param>
+		/// <param name='pictureIOManager'>Picture IO Manager</param>
+		/// <param name='filenameResolver'>Filename Resolver</param>
+		/// <param name='imageStateData'>ImageSaveData</param>
 		/// </summary>
 		public PaintApp(
 			IPictureIOManager pictureIOManager, 
@@ -184,7 +186,6 @@ namespace Paint
 		protected override void LoadContent()
 		{
 			this.spriteBatch = new SpriteBatch(graphicsDeviceManager.GraphicsDevice);
-			//this.screenHeight = this.graphicsDeviceManager.GraphicsDevice.PresentationParameters.BackBufferHeight;
 			
 			bool highResolution = Math.Max(this.imageStateData.Height, this.imageStateData.Width) > 1024;
 			var graphicsTextureMap = Content.Load<Texture2D> ("graphics.png");
@@ -330,8 +331,8 @@ namespace Paint
 			this.canvas = new Canvas(this.graphicsDisplay);
 
 			var device = this.graphicsDeviceManager.GraphicsDevice;
-			var width = this.imageStateData.Width; // device.PresentationParameters.BackBufferWidth;
-			var height = this.imageStateData.Height; // device.PresentationParameters.BackBufferHeight;
+			var width = this.imageStateData.Width;
+			var height = this.imageStateData.Height;
 			
 			List<RenderTarget2D> renderTargetList = new List<RenderTarget2D>();
 			
@@ -342,14 +343,37 @@ namespace Paint
 						
 			this.undoRedoRenderTargets = renderTargetList.ToArray();
 			this.inMemoryCanvasRenderTarget = new RenderTarget2D(device, width, height);					
+
+			// Strange behaviour where the image used by the previous 'Game' is left in the RenderTarget2D
+			// therefore we blank the rendertarget first to ensure nothing left behind
+			this.BlankRenderTarget(this.inMemoryCanvasRenderTarget);
 		}
+		
+		/// <summary>
+		/// Blanks the render target.
+		/// </summary>
+		/// <param name='renderTarget'>
+		/// Render target.
+		/// </param>
+		private void BlankRenderTarget(RenderTarget2D renderTarget)
+		{
+			var device = this.graphicsDeviceManager.GraphicsDevice;
+			
+			device.SetRenderTarget(renderTarget);
+			
+			this.graphicsDisplay.BeginRender();
+			
+			this.graphicsDisplay.DrawGraphic(ImageType.EmptySquare, renderTarget.Bounds, this.BackgroundColor);
+			
+			this.graphicsDisplay.EndRender();
+		}		
 		
 		/// <summary>
 		/// Creates the picture state manager.
 		/// </summary>
 		private void CreatePictureStateManager()
 		{
-			if (File.Exists(this.filenameResolver.ImageInfoFilename()) == true)
+			if (File.Exists(this.filenameResolver.ImageInfoFilename) == true)
 			{
 				// existing image so we load the rendertargetlist from disk
 				this.pictureIOManager.LoadUndoRedoRenderTargets(this.graphicsDeviceManager.GraphicsDevice, this.spriteBatch, this.undoRedoRenderTargets, this.BackgroundColor);
@@ -406,8 +430,6 @@ namespace Paint
 				this.graphicsDeviceManager.GraphicsDevice, 
 				this.imageStateData.Width,
 				this.imageStateData.Height);
-			    //this.graphicsDeviceManager.GraphicsDevice.PresentationParameters.BackBufferWidth, 
-			    //this.graphicsDeviceManager.GraphicsDevice.PresentationParameters.BackBufferHeight);			
 			
 			this.toolBox.ExitSelected += (sender, e) => 
 			{
@@ -429,7 +451,7 @@ namespace Paint
 		{
 			// TODO - use a progress bar and delete one at a time per update call
 			this.pictureStateManager.Save();
-			this.pictureIOManager.SaveData(this.pictureStateManager.ImageStateData, this.undoRedoRenderTargets);
+			this.pictureIOManager.SaveData(this.pictureStateManager.ImageStateData, this.inMemoryCanvasRenderTarget, this.undoRedoRenderTargets);
 			
 			// TODO - should this be in our dispose method?
 			foreach (var renderTarget in this.undoRedoRenderTargets)

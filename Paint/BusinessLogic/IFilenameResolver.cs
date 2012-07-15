@@ -14,10 +14,17 @@ namespace Paint
 		/// <summary>
 		/// Gets the data folder.
 		/// </summary>
-		string DataFolder
-		{
-			get;
-		}
+		string DataFolder { get; }
+
+		/// <summary>
+		/// Gets the filename to use for the Image Information File
+		/// </summary>
+		string ImageInfoFilename { get; }
+				
+		/// <summary>
+		/// Gets the master image filename.
+		/// </summary>
+	 	string MasterImageFilename { get; }
 			
 		/// <summary>
 		/// Determines the filename to use for a 'save point' image (one of the undo/redo render targets)
@@ -33,12 +40,6 @@ namespace Paint
 		/// <returns>filename</returns>
 		/// <param name='savepoint'>save point id for this image - i.e location in the undo/redo chain</param>
 		string CanvasRecorderFilename(int savepoint);
-		
-		/// <summary>
-		/// Determines the filename to use for the Image Information File
-		/// </summary>
-		/// <returns>filename</returns>
-		string ImageInfoFilename();
 	}
 }
 

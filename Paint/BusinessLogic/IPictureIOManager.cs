@@ -18,8 +18,9 @@ namespace Paint
 		/// <summary>
 		/// Saves all the undoRedoRenderTargets to disk and the imageStateData
 		/// <param name='imageStateData'>Image state data.</param>
+		/// <param name='masterImageRenderTarget' Master image render target/>
 		/// <param name='undoRedoRenderTargets'>Sequence of images representing the undo/redo chain</param>
-		void SaveData(ImageStateData imageStateData, RenderTarget2D[] undoRedoRenderTargets);
+		void SaveData(ImageStateData imageStateData, RenderTarget2D masterImageRenderTarget, RenderTarget2D[] undoRedoRenderTargets);
 		
 		/// <summary>
 		/// Loads existing image data from disk into the undoRedoRenderTargets

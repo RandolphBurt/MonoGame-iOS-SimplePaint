@@ -75,13 +75,30 @@ namespace Paint
 		private List<ITouchPoint> canvasTouchPoints = new List<ITouchPoint>();
 
 		/// <summary>
+		/// The image state data. height/width of image and details of save points (undo/redo state)
+		/// </summary>
+		private ImageStateData imageStateData = null;
+		
+		/// <summary>
 		/// Initializes a new instance of the <see cref="Paint.CanvasPlaybackApp"/> class.
 		/// </summary>
-		public CanvasPlaybackApp(ICanvasPlayback canvasPlayback)
+		/// <param name='canvasPlayback'>Canvas Playback data</param>
+		/// <param name='imageStateData'>ImageSaveData</param>
+		public CanvasPlaybackApp(ICanvasPlayback canvasPlayback, ImageStateData imageStateData)
 		{
 			this.graphicsDeviceManager = new GraphicsDeviceManager(this);
 			this.graphicsDeviceManager.IsFullScreen = true;
-			
+			this.imageStateData = imageStateData;
+
+			if (imageStateData.Width > imageStateData.Height)
+			{
+				this.graphicsDeviceManager.SupportedOrientations = DisplayOrientation.LandscapeLeft | DisplayOrientation.LandscapeRight;
+			}
+			else
+			{
+				this.graphicsDeviceManager.SupportedOrientations = DisplayOrientation.Portrait | DisplayOrientation.PortraitUpsideDown;
+			}
+
 			this.Content.RootDirectory = "Content";
 			
 			this.canvasPlayback = canvasPlayback;
@@ -95,10 +112,9 @@ namespace Paint
 		{
 			this.spriteBatch = new SpriteBatch (graphicsDeviceManager.GraphicsDevice);
 			
-			var screenHeight = this.graphicsDeviceManager.GraphicsDevice.PresentationParameters.BackBufferHeight;
-
+			bool highResolution = Math.Max(this.imageStateData.Height, this.imageStateData.Width) > 1024;
 			var graphicsTextureMap = Content.Load<Texture2D> ("graphics.png");
-			this.graphicsDisplay = new GraphicsDisplay(graphicsTextureMap, this.spriteBatch, screenHeight > 1024); // TODO - check resolution!
+			this.graphicsDisplay = new GraphicsDisplay(graphicsTextureMap, this.spriteBatch, highResolution);
 						
 			this.CreateCanvas();
 		}
@@ -221,8 +237,8 @@ namespace Paint
 			
 			this.inMemoryCanvasRenderTarget = new RenderTarget2D(
 				this.graphicsDeviceManager.GraphicsDevice, 
-			    this.graphicsDeviceManager.GraphicsDevice.PresentationParameters.BackBufferWidth, 
-			    this.graphicsDeviceManager.GraphicsDevice.PresentationParameters.BackBufferHeight);		
+			    this.imageStateData.Width, 
+			    this.imageStateData.Height);		
 
 			// Strange behaviour where the image used by the previous 'Game' is left in the RenderTarget2D
 			// therefore we blank the rendertarget first to ensure nothing left behind

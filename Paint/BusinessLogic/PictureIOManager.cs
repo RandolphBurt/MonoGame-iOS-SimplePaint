@@ -34,8 +34,9 @@ namespace Paint
 		/// Saves all the undoRedoRenderTargets to disk and the imageStateData
 		/// </summary>
 		/// <param name='imageStateData'>Image state data.</param>
+		/// <param name='masterImageRenderTarget' Master image render target/>
 		/// <param name='undoRedoRenderTargets'>Sequence of images representing the undo/redo chain</param>
-		public void SaveData(ImageStateData imageStateData, RenderTarget2D[] undoRedoRenderTargets)
+		public void SaveData(ImageStateData imageStateData, RenderTarget2D masterImageRenderTarget, RenderTarget2D[] undoRedoRenderTargets)
 		{
 			this.SaveImageStateData(imageStateData);
 			
@@ -51,7 +52,10 @@ namespace Paint
 					renderTarget.Height);
 			}
 			
-			// TODO - write out real image and also thumbnail images
+			masterImageRenderTarget.SaveAsPng(
+				this.filenameResolver.MasterImageFilename,
+				masterImageRenderTarget.Width,
+				masterImageRenderTarget.Height);
 		}
 		
 		/// <summary>
@@ -106,10 +110,14 @@ namespace Paint
 		/// </returns>
 		public ImageStateData LoadImageStateData()
 		{
-			var informationFile = this.filenameResolver.ImageInfoFilename();
+			if (!File.Exists(this.filenameResolver.ImageInfoFilename))
+			{
+				throw new FileNotFoundException(String.Format("Image State Data file {0} does not exist", this.filenameResolver.ImageInfoFilename));				                             
+			}
+			
 			var dataList = new List<int>();
 			
-			using (var stream = File.OpenRead(informationFile))
+			using (var stream = File.OpenRead(this.filenameResolver.ImageInfoFilename))
 			{
 				for (short count = 0; count < 6; count++)
 				{
@@ -138,16 +146,15 @@ namespace Paint
 		{
 			// Next write out the information file
 			var dataArray = new int[] {
+				imageStateData.Width,
+				imageStateData.Height,
+				imageStateData.MaxUndoRedoCount,
 				imageStateData.FirstSavePoint,
 				imageStateData.LastSavePoint,
-				imageStateData.CurrentSavePoint,
-				imageStateData.MaxUndoRedoCount,
-				imageStateData.Width,
-				imageStateData.Height
+				imageStateData.CurrentSavePoint				
 			};
 			
-			var informationFile = this.filenameResolver.ImageInfoFilename();
-			using (var stream = File.Open(informationFile, FileMode.Create, FileAccess.Write))
+			using (var stream = File.Open(this.filenameResolver.ImageInfoFilename, FileMode.Create, FileAccess.Write))
 			{
 				foreach (int val in dataArray)
 				{

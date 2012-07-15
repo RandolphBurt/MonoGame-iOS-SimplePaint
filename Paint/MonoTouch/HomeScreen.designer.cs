@@ -17,8 +17,26 @@ namespace Paint
 		[Outlet]
 		MonoTouch.UIKit.UIButton btnPaint { get; set; }
 
+		[Outlet]
+		MonoTouch.UIKit.UIButton btnPlayback { get; set; }
+
+		[Outlet]
+		MonoTouch.UIKit.UIButton btnNewLandscape { get; set; }
+
+		[Outlet]
+		MonoTouch.UIKit.UIButton btnNewPortrait { get; set; }
+
+		[Action ("btnNewLandscape_TouchUpInside:")]
+		partial void btnNewLandscape_TouchUpInside (MonoTouch.UIKit.UIButton sender);
+
 		[Action ("btnPaint_TouchUpInside:")]
 		partial void btnPaint_TouchUpInside (MonoTouch.UIKit.UIButton sender);
+
+		[Action ("btnPlayback_TouchUpInside:")]
+		partial void btnPlayback_TouchUpInside (MonoTouch.UIKit.UIButton sender);
+
+		[Action ("btnNewPortrait_TouchUpInside:")]
+		partial void btnNewPortrait_TouchUpInside (MonoTouch.UIKit.UIButton sender);
 		
 		void ReleaseDesignerOutlets ()
 		{
@@ -30,6 +48,21 @@ namespace Paint
 			if (btnPaint != null) {
 				btnPaint.Dispose ();
 				btnPaint = null;
+			}
+
+			if (btnPlayback != null) {
+				btnPlayback.Dispose ();
+				btnPlayback = null;
+			}
+
+			if (btnNewLandscape != null) {
+				btnNewLandscape.Dispose ();
+				btnNewLandscape = null;
+			}
+
+			if (btnNewPortrait != null) {
+				btnNewPortrait.Dispose ();
+				btnNewPortrait = null;
 			}
 		}
 	}

@@ -46,13 +46,11 @@ namespace Paint
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Paint.CanvasPlayback"/> class.
 		/// </summary>
-		/// <param name='filename'>
-		/// Name of the file containing all the playback commands
-		/// </param>
-		public CanvasPlayback (string filename)
+		/// <param name='filename'>Name of the file containing all the playback commands</param>
+		public CanvasPlayback(string filename)
 		{
 			this.fileStream = File.OpenRead(filename);
-			
+						
 			this.playbackCommandTotal = 
 				fileStream.ReadByte() |
 				(fileStream.ReadByte()) << 8 |

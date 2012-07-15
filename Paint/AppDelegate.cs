@@ -2,6 +2,9 @@
 /// AppDelegate.cs
 /// Randolph Burt - January 2012
 /// </summary>
+using MonoTouch.ObjCRuntime;
+
+
 namespace Paint
 {
 	using System;
@@ -19,15 +22,50 @@ namespace Paint
 	public partial class AppDelegate : UIApplicationDelegate
 	{
 		/// <summary>
+		/// Path to the library folder
+		/// </summary>
+		private const string FolderNameLibrary = "Library";
+		
+		/// <summary>
+		/// Path to the ImageData folder
+		/// </summary>
+		private const string FolderNameImageData = "ImageData";
+		
+		/// <summary>
 		/// Maximum number of changes we can undo
 		/// </summary>
 		private const int UndoRedoBufferSize = 10;
 
-		// class-level declarations
-		UIWindow window;
-		HomeScreen viewController;
-		PaintApp paintApp;
+		/// <summary>
+		/// Orientation Setter - allows us to set the device orientation
+		/// </summary>
+		private Selector orientationSetter;
 
+		/// <summary>
+		/// Main window.
+		/// </summary>
+		private UIWindow window;
+		
+		/// <summary>
+		/// Home screen view controller.
+		/// </summary>
+		private HomeScreen viewController;
+		
+		/// <summary>
+		/// The paint app.
+		/// </summary>
+		private PaintApp paintApp;
+		
+		/// <summary>
+		/// The play back app.
+		/// </summary>
+		private CanvasPlaybackApp playBackApp;
+		
+		/// <summary>
+		/// The path to the imageData folder
+		/// </summary>
+		private string imageDataPath = null;
+		
 		//
 		// This method is invoked when the application has loaded and is ready to run. In this 
 		// method you should instantiate the window, load the UI into it and then make the window
@@ -37,29 +75,31 @@ namespace Paint
 		//
 		public override bool FinishedLaunching (UIApplication app, NSDictionary options)
 		{
+			this.imageDataPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "..", FolderNameLibrary, FolderNameImageData);
+			this.CreateDirectoryStructure();
+			
 			this.window = new UIWindow (UIScreen.MainScreen.Bounds);
 			this.viewController = new HomeScreen();
+			
 			this.viewController.PaintSelected += (sender, e) => {
-				this.EditImage();
+				this.EditImage(e.PictureId);
+			};
+			
+			this.viewController.PlaybackSelected += (sender, e) => {
+				this.PlaybackImage(e.PictureId);
+			};
+			
+			this.viewController.NewImageLandscapeSelected += (sender, e) => {					                    
+				this.NewImage(PictureOrientation.Landscape);
+			};
+			
+			this.viewController.NewImagePortraitSelected += (sender, e) => {
+				this.NewImage(PictureOrientation.Portrait);
 			};
 
 			this.window.RootViewController = viewController;
-			this.window.MakeKeyAndVisible ();
+			this.window.MakeKeyAndVisible();
 			
-			/*			
-			var basePath =  Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "..", "Library");
-			var dir = Path.Combine(basePath, "0fc348d2-83a2-4487-9536-98887c42aa8d");
-			if (Directory.Exists(dir))
-			{
-				foreach (var f in Directory.EnumerateFiles(dir))
-				{
-//					File.Delete(f);
-				}
-			}
-			                           
-			// TODO - launch initial page to select image
-			this.EditImage();
-*/			
 			return true;
 		}
 		
@@ -78,35 +118,53 @@ namespace Paint
 			// However if not fixed then we'll have to go back to monotouch front end and let them pick the picture
 			// and carry on - problem is we lose our undo/redo buffer unless we also save all of those images?!?!
 		}
-
-		//PaintApp paintApp  = null;
-		
-		int count = 1;
 		
 		/// <summary>
-		/// Edits a specific image.
+		/// Start painting a new image
 		/// </summary>
-		private void EditImage ()
+		/// <param name='orientation'>
+		/// The orientation of the new image
+		/// </param>
+		private void NewImage(PictureOrientation orientation)
 		{
-			// For new image we create new imageStateData(0,0,0,MaxUndoRedo, width, height) and pass in
-			Guid pictureId = new Guid("{0fc348d2-83a2-4487-9536-98887c42aa8d}");
+			// If the device is still mid turn then the reported width and height may be wrong - hence we are using 
+			// Math.Max and Math.Min to ensure we get the right size.  [Actually I've delayed the turning until we are 
+			// ready to display the app  (inside call to EditImage) so it wouldn't have turned yet anyway]
 			ImageStateData imageStateData = null;
+		
+			int deviceWidth = (int)UIScreen.MainScreen.Bounds.Width;
+			int deviceHeight = (int)UIScreen.MainScreen.Bounds.Height;
 			
-			/*
-			if (count++%2 == 0)
+			if (orientation == PictureOrientation.Landscape)
 			{
-				pictureId = new Guid("{1fc348d2-83a2-4487-9536-98887c42aa8d}");
+				imageStateData = new ImageStateData(Math.Max(deviceHeight, deviceWidth), Math.Min(deviceHeight, deviceWidth), 10);
 			}
 			else
 			{
-				pictureId = new Guid("{0fc348d2-83a2-4487-9536-98887c42aa8d}");
-			}*/
+				imageStateData = new ImageStateData(Math.Min(deviceHeight, deviceWidth), Math.Max(deviceHeight, deviceWidth), 10);
+			}
 
-			var libraryPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "..", "Library");
-			var filenameResolver = new FilenameResolver(pictureId, libraryPath);
+			this.EditImage(Guid.NewGuid(), imageStateData);			                 
+		}
+				
+		/// <summary>
+		/// Edits a specific image.
+		/// </summary>
+		/// <param name='pictureId'>
+		/// Unique ID referencing the specific image we want to edit
+		/// </param>
+		/// <param name='imageStateData'>
+		/// Image state data for this image - if null then it will be read from disk (so should not be null for new images)
+		/// </param>
+		private void EditImage(Guid pictureId, ImageStateData imageStateData = null)
+		{
+			var filenameResolver = this.CreateFilenameResolver(pictureId);
 			var pictureIOManager = new PictureIOManager(filenameResolver);
 			
-			imageStateData = pictureIOManager.LoadImageStateData();
+			if (imageStateData == null)
+			{
+				imageStateData = pictureIOManager.LoadImageStateData();
+			}
 			
 			if (imageStateData.IsNewImage())
 			{
@@ -114,6 +172,8 @@ namespace Paint
 				Directory.CreateDirectory(filenameResolver.DataFolder);
 			}			
 		
+			this.SetOrientationForImage(imageStateData);
+
 			// Simply instantiate the class derived from monogame:game and away we go...
 			this.paintApp  = new PaintApp(pictureIOManager, filenameResolver, imageStateData);
 			this.paintApp.Exiting += PaintAppExiting;
@@ -123,12 +183,22 @@ namespace Paint
 		/// <summary>
 		/// Playback an image.
 		/// </summary>
-		private void PlayBackImage ()
-		{
+		private void PlaybackImage(Guid pictureId)
+		{	
+			var filenameResolver = this.CreateFilenameResolver(pictureId);
+			var pictureIOManager = new PictureIOManager(filenameResolver);
+			ImageStateData imageStateData = pictureIOManager.LoadImageStateData();
+			
+			this.SetOrientationForImage(imageStateData);
+			
+			var canvasPlayback = new CanvasPlayback(filenameResolver.CanvasRecorderFilename(imageStateData.CurrentSavePoint));
+
+			this.SetOrientationForImage(imageStateData);
+
 			// Simply instantiate the class derived from monogame:game and away we go...
-			CanvasPlaybackApp playBackApp  = new CanvasPlaybackApp();
-			playBackApp.Exiting += CanvasPlaybackAppExiting;
-			playBackApp.Run();
+			this.playBackApp  = new CanvasPlaybackApp(canvasPlayback, imageStateData);
+			this.playBackApp.Exiting += CanvasPlaybackAppExiting;
+			this.playBackApp.Run();
 		}
 		
 		/// <summary>
@@ -138,17 +208,15 @@ namespace Paint
 		/// <param name='e'>Any relevant event args </param>
 		private void CanvasPlaybackAppExiting (object sender, EventArgs e)
 		{
-			// TODO - Go back to main screen
-			CanvasPlaybackApp playBackApp = sender as CanvasPlaybackApp;
-			if (playBackApp != null)
+			if (this.playBackApp != null)
 			{
-				playBackApp.Exiting -= CanvasPlaybackAppExiting;
+				this.playBackApp.Exiting -= CanvasPlaybackAppExiting;
+				this.playBackApp.Dispose();
+				this.playBackApp = null;
 			}
 			
-			// TODO - temporary code until main screen developed
-			this.PlayBackImage();
+			this.window.MakeKeyAndVisible();
 		}
-		
 		
 		/// <summary>
 		/// Called once the 'paint app' has exited.
@@ -157,7 +225,6 @@ namespace Paint
 		/// <param name='e'>Any relevant event args </param>
 		private void PaintAppExiting (object sender, EventArgs e)
 		{
-			// TODO - Go back to main screen
 			if (this.paintApp != null)
 			{
 				this.paintApp.Exiting -= PaintAppExiting;
@@ -165,9 +232,92 @@ namespace Paint
 				this.paintApp = null;
 			}
 			
-			// TODO - temporary code until main screen developed
-			this.EditImage();
+			this.window.MakeKeyAndVisible();
 		}
+		
+		/// <summary>
+		/// Sets the orientation of the device.
+		/// </summary>
+		/// <param name='requiredOrientation'>
+		/// The desired orientation.
+		/// </param>
+        private void SetOrientation(PictureOrientation requiredOrientation)
+        {
+            if (this.orientationSetter == null)
+            {
+                this.orientationSetter = new Selector ("setOrientation:");
+            }
+			
+			bool changeResolution = false;
+			UIInterfaceOrientation newOrientation = UIInterfaceOrientation.Portrait;
+			
+			if (requiredOrientation == PictureOrientation.Landscape)
+			{
+				if (UIDevice.CurrentDevice.Orientation != UIDeviceOrientation.LandscapeLeft &&
+				    UIDevice.CurrentDevice.Orientation != UIDeviceOrientation.LandscapeRight)
+				{
+					newOrientation = UIInterfaceOrientation.LandscapeLeft;
+					changeResolution = true;
+				}
+			}
+			else
+			{
+				if (UIDevice.CurrentDevice.Orientation != UIDeviceOrientation.Portrait &&
+				    UIDevice.CurrentDevice.Orientation != UIDeviceOrientation.PortraitUpsideDown)
+				{
+					newOrientation = UIInterfaceOrientation.Portrait;
+					changeResolution = true;
+				}
+			}
+			
+			if (changeResolution)
+			{
+            	Messaging.void_objc_msgSend_int (UIDevice.CurrentDevice.Handle, this.orientationSetter.Handle, (int)newOrientation);
+			}
+        }
+		
+		/// <summary>
+		/// Sets the orientation of the device based on the image dimensions.
+		/// </summary>
+		/// <param name='imageStateData'>
+		/// Image state data.
+		/// </param>
+		private void SetOrientationForImage(ImageStateData imageStateData)
+		{
+			if (imageStateData.Height > imageStateData.Width)
+			{
+				this.SetOrientation(PictureOrientation.Portrait);
+			}
+			else
+			{
+				this.SetOrientation(PictureOrientation.Landscape);
+			}
+		}
+		
+		/// <summary>
+		/// Creates the filename resolver.
+		/// </summary>
+		/// <returns>
+		/// The filename resolver.
+		/// </returns>
+		/// <param name='pictureId'>
+		/// Picture identifier.
+		/// </param>
+		private FilenameResolver CreateFilenameResolver(Guid pictureId)
+		{
+			return new FilenameResolver(pictureId, imageDataPath, Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments));	
+		}
+		
+		/// <summary>
+		/// Creates the directory structure required by this app
+		/// </summary>
+		private void CreateDirectoryStructure()
+		{
+			if (!Directory.Exists(imageDataPath))
+			{
+				Directory.CreateDirectory(imageDataPath);
+			}
+		}		
 	}
 }
 

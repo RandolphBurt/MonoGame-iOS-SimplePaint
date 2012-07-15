@@ -33,20 +33,22 @@ namespace Paint
 		private Guid pictureId;
 		
 		/// <summary>
-		/// Path to the 'home' folder for the app.
+		/// Path to where all the image data (save points and info file) should be saved
 		/// </summary>
-		private string basePath;
+		private string imageDataPath;
 		
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Paint.FilenameResolver"/> class.
 		/// </summary>
 		/// <param name='pictureId'>Picture identifier.</param>
 		/// <param name='applicationBasePath'>Application base path.</param>
-		public FilenameResolver(Guid pictureId, string applicationBasePath)
+		public FilenameResolver(Guid pictureId, string imageDataPath, string masterImageFolder)
 		{
 			this.pictureId = pictureId;
-			this.basePath =  applicationBasePath;
-			this.DataFolder = Path.Combine(this.basePath, this.pictureId.ToString());
+			this.imageDataPath =  imageDataPath;
+			this.DataFolder = Path.Combine(this.imageDataPath, this.pictureId.ToString());
+			this.ImageInfoFilename = Path.Combine(this.DataFolder, InfoFile);
+			this.MasterImageFilename = Path.Combine(masterImageFolder, String.Format("{0}.{1}", this.pictureId.ToString(), FileExtensionPNGImage));
 		}
 		
 		/// <summary>
@@ -58,6 +60,23 @@ namespace Paint
 			private set;
 		}
 		
+		/// <summary>
+		/// Gets the filename to use for the Image Information File
+		/// </summary>
+		public string ImageInfoFilename
+		{
+			get;
+			private set;
+		}
+		
+		/// <summary>
+		/// Gets the master image filename.
+		/// </summary>
+		public string MasterImageFilename
+		{
+			get;
+			private set;
+		}
 		
 		/// <summary>
 		/// Determines the filename to use for a 'save point' image (one of the undo/redo render targets)
@@ -82,15 +101,6 @@ namespace Paint
 			return Path.Combine(
 				this.DataFolder, 
 				string.Format("{0}.{1}", savepoint, FileExtensionCanvasRecorder));
-		}
-		
-		/// <summary>
-		/// Determines the filename to use for the Image Information File
-		/// </summary>
-		/// <returns>filename</returns>
-		public string ImageInfoFilename()
-		{
-			return Path.Combine(this.DataFolder, InfoFile);
 		}
 	}
 }
