@@ -16,6 +16,11 @@ namespace Paint
 	public class CanvasRecorder : ICanvasRecorder
 	{
 		/// <summary>
+		/// The number of bytes per command
+		/// </summary>
+		private const int BytesPerCommand = 5;
+		
+		/// <summary>
 		/// The current color
 		/// </summary>
 		private Color currentColor = Color.White;
@@ -72,8 +77,7 @@ namespace Paint
 		{
 			using (FileStream stream = File.Open(filename, FileMode.Create, FileAccess.Write))
 			{
-				// 5 bytes per command
-				int commandCount = this.commandList.Count / 5;
+				int commandCount = this.commandList.Count / BytesPerCommand;
 				
 				// Write the command length
 				stream.WriteByte((byte)commandCount);
@@ -125,8 +129,10 @@ namespace Paint
 				this.currentColor.G = (byte)stream.ReadByte();
 				this.currentColor.B = (byte)stream.ReadByte();
 
-				byte[] commands = new byte[playbackCommandTotal];
-				stream.Read(commands, 0, playbackCommandTotal);
+				var totalCommandBytes= playbackCommandTotal * BytesPerCommand;
+				
+				byte[] commands = new byte[totalCommandBytes];
+				stream.Read(commands, 0, totalCommandBytes);
 				
 				this.commandList = new List<byte>(commands);
 			}			

@@ -16,6 +16,11 @@ namespace Paint
 	public class CanvasPlayback : ICanvasPlayback, IDisposable
 	{
 		/// <summary>
+		/// The number of bytes per command
+		/// </summary>
+		private const int BytesPerCommand = 5;
+
+		/// <summary>
 		/// The file we will read that contains all the playback commands
 		/// </summary>
 		private FileStream fileStream = null;
@@ -36,7 +41,7 @@ namespace Paint
 		/// <summary>
 		/// Array to hold the details of the next command - populated by reading the fileStream
 		/// </summary>
-		private byte[] commandByteArray = new byte[5];
+		private byte[] commandByteArray = new byte[BytesPerCommand];
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Paint.CanvasPlayback"/> class.
@@ -100,7 +105,7 @@ namespace Paint
 		{
 			while (this.commandsReadSoFar < this.playbackCommandTotal)
 			{
-				fileStream.Read(this.commandByteArray, 0, 5);
+				fileStream.Read(this.commandByteArray, 0, BytesPerCommand);
 				
 				this.commandsReadSoFar++;
 				

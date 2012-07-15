@@ -77,17 +77,14 @@ namespace Paint
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Paint.CanvasPlaybackApp"/> class.
 		/// </summary>
-		public CanvasPlaybackApp()
+		public CanvasPlaybackApp(ICanvasPlayback canvasPlayback)
 		{
 			this.graphicsDeviceManager = new GraphicsDeviceManager(this);
 			this.graphicsDeviceManager.IsFullScreen = true;
 			
 			this.Content.RootDirectory = "Content";
 			
-			// TODO - probably pass in the filename
-  			var documents = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "..", "Library");
-			string pictureFile = Path.Combine(documents, "image.rec");
-			this.canvasPlayback = new CanvasPlayback(pictureFile);
+			this.canvasPlayback = canvasPlayback;
 		}
 
 		/// <summary>
@@ -226,6 +223,29 @@ namespace Paint
 				this.graphicsDeviceManager.GraphicsDevice, 
 			    this.graphicsDeviceManager.GraphicsDevice.PresentationParameters.BackBufferWidth, 
 			    this.graphicsDeviceManager.GraphicsDevice.PresentationParameters.BackBufferHeight);		
+
+			// Strange behaviour where the image used by the previous 'Game' is left in the RenderTarget2D
+			// therefore we blank the rendertarget first to ensure nothing left behind
+			this.BlankRenderTarget(this.inMemoryCanvasRenderTarget);
+		}
+		
+		/// <summary>
+		/// Blanks the render target.
+		/// </summary>
+		/// <param name='renderTarget'>
+		/// Render target.
+		/// </param>
+		private void BlankRenderTarget(RenderTarget2D renderTarget)
+		{
+			var device = this.graphicsDeviceManager.GraphicsDevice;
+			
+			device.SetRenderTarget(renderTarget);
+			
+			this.graphicsDisplay.BeginRender();
+			
+			this.graphicsDisplay.DrawGraphic(ImageType.EmptySquare, renderTarget.Bounds, this.BackgroundColor);
+			
+			this.graphicsDisplay.EndRender();
 		}
 	}
 }
