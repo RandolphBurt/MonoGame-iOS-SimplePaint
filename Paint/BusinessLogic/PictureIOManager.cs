@@ -89,7 +89,7 @@ namespace Paint
 			// Don't read more than we need to - hence above we are calculating whether we have used all the renderTarets
 			for (int count = 0; count <= end; count++)
 			{
-				using(var imageTexture= Texture2D.FromFile(
+				using (var imageTexture= Texture2D.FromFile(
 						device, 
 			    		this.filenameResolver.ImageSavePointFilename(count)))
 				{

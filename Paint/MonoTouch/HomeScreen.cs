@@ -1,22 +1,55 @@
-
-using System;
-using System.Drawing;
-using System.IO;
-
-using MonoTouch.Foundation;
-using MonoTouch.UIKit;
-using System.ComponentModel;
-
+/// <summary>
+/// HoemScreen.cs
+/// Randolph Burt - July 2012
+/// </summary>
 namespace Paint
 {
+	using System;
+	using System.Collections.Generic;
+	using System.ComponentModel;
+	using System.Drawing;
+	using System.IO;
+	using System.Linq;
+	
+	using MonoTouch.Foundation;
+	using MonoTouch.UIKit;
+	
+	/// <summary>
+	/// Home screen.
+	/// </summary>
 	public partial class HomeScreen : UIViewController
 	{
+		/// <summary>
+		/// The index (within the fileList array) of the currently selected file.
+		/// </summary>
 		private int currentFileIndex = 0;
-		private string[] fileList = null;
+		
+		/// <summary>
+		/// List of all the pictures we have drawn
+		/// </summary>
+		private List<string> fileList = null;
+		
+		/// <summary>
+		/// Number of files that we have drawn
+		/// </summary>
 		private int fileListLength = 0;
+		
+		/// <summary>
+		/// How far forward can the user scroll before we need to load the next image
+		/// </summary>
+		private float maxForwardScroll = 0;
+
+		/// <summary>
+		/// How far back can the user scroll before we need to load the next image
+		/// </summary>
+		private float minBackwardScroll = 0;
+
 		private UIImageView[] imageViewList = null;
 		private UIImageView animatedCircleImage;
-		
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Paint.HomeScreen"/> class.
+		/// </summary>
 		public HomeScreen() : base ("HomeScreen", null)
 		{
 		}
@@ -56,8 +89,13 @@ namespace Paint
 			
 			this.btnPaint.SetBackgroundImage(UIImage.FromBundle("Content/graphics.png"),UIControlState.Normal);
 		
-			this.fileList = Directory.GetFiles(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "*.PNG");
-			this.fileListLength = this.fileList.Length;
+			DirectoryInfo di = new DirectoryInfo(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments));
+			FileSystemInfo[] files = di.GetFileSystemInfos("*.PNG");
+			this.fileList = files.OrderBy(f => f.LastWriteTimeUtc).Select(x => x.FullName).ToList();
+	
+			this.fileListLength = this.fileList.Count;
+			
+			if (this.fileListLength < 2) return;
 			
 			this.imageViewList = new UIImageView[] {
 				new UIImageView(),
@@ -76,11 +114,17 @@ namespace Paint
 			
 			this.scrollView.ContentSize = new SizeF(this.scrollView.Frame.Width * this.imageViewList.Length, this.scrollView.Frame.Height);	
 			
-			this.scrollView.DecelerationEnded += this.scrollView_DecelerationEnded;
+			this.scrollView.Scrolled += this.scrollView_Scrolled;
 						
 			this.LoadImageWithIndex(0, this.fileListLength - 1);
 			this.LoadImageWithIndex(1, 0);
 			this.LoadImageWithIndex(2, 1);
+			
+			// As soon as the user scrolls half way through the end image then we will reload the next image
+			// [Note: We are comparing the x co-ord (left edge of the image) therefore it is only 'half a frame 
+			// when scrolling left, but a 'frame and a half when scrolling right'
+			this.maxForwardScroll = (this.scrollView.Frame.Width * (imageViewList.Length - 1)) - (this.scrollView.Frame.Width / 2);
+			this.minBackwardScroll = this.scrollView.Frame.Width / 2;
 			
 			// start in the middle
 			this.scrollView.SetContentOffset(new PointF(this.imageViewList[1].Frame.X, 0), false);
@@ -153,47 +197,48 @@ namespace Paint
 			this.imageViewList[uiViewIndex].Image = UIImage.FromFile(fileList[fileListIndex]);
 		}
  
-		private void scrollView_DecelerationEnded (object sender, EventArgs e)
+		private void scrollView_Scrolled(object sender, EventArgs e)
 		{
 			/* Based on http://www.accella.net/objective-c-using-a-uiscrollview-for-infinite-page-loops/ */
-			// All data for the documents are stored in an array (documentTitles).
-		  	// We keep track of the index that we are scrolling to so that we
-		  	// know what data to load for each page.
-		  	if (this.scrollView.ContentOffset.X > this.scrollView.Frame.Size.Width) 
+			// Code is improved to ensure no problems with delayed loading if the user scrolls too fast.
+			// Thus we are using the Scrolled method rather than the DecelerationEnded method.
+
+			float xOffset = scrollView.ContentOffset.X;
+			
+			if (xOffset > this.maxForwardScroll) 
 			{
-	    		// We are moving forward. Load the current doc data on the first page.
-				// this.LoadImageWithIndex(0, this.currentFileIndex);
+	    		// We are moving forward so move the images to the previous UIImageView
 				this.imageViewList[0].Image = this.imageViewList[1].Image;
+				this.imageViewList[1].Image = this.imageViewList[2].Image;
  
 			    // Add one to the currentIndex or reset to 0 if we have reached the end.
 			    this.currentFileIndex = (this.currentFileIndex >= this.fileListLength -1) ? 0 : this.currentFileIndex + 1;
-				// this.LoadImageWithIndex(1, this.currentFileIndex);
- 				this.imageViewList[1].Image = this.imageViewList[2].Image;
 
 			    // Load content on the last page. This is either from the next item in the array
 			    // or the first if we have reached the end.
 			    int nextIndex = (this.currentFileIndex >= this.fileListLength -1) ? 0 : this.currentFileIndex + 1;
 				this.LoadImageWithIndex(2, nextIndex);
+
+				// reset the scroll position so the user does not realise we've moved the images around
+				this.scrollView.ContentOffset = new PointF(xOffset - scrollView.Frame.Width, 0f);
 			}
-			else 
+			else if (xOffset < this.minBackwardScroll)
 			{
-    			// We are moving backward. Load the current doc data on the last page.
-				this.LoadImageWithIndex(2, this.currentFileIndex);
+    			// We are moving backwards so move the images to the next UIImageView
  				this.imageViewList[2].Image = this.imageViewList[1].Image;
+ 				this.imageViewList[1].Image = this.imageViewList[0].Image;
  
 			    // Subtract one from the currentIndex or go to the end if we have reached the beginning.
 			    this.currentFileIndex = (this.currentFileIndex == 0) ? this.fileListLength - 1 : this.currentFileIndex - 1;
-//				this.LoadImageWithIndex(1, this.currentFileIndex);
- 				this.imageViewList[1].Image = this.imageViewList[0].Image;
  
  			   	// Load content on the first page. This is either from the prev item in the array
 			    // or the last if we have reached the beginning.
 			    int prevIndex = (this.currentFileIndex == 0) ? this.fileListLength - 1 : this.currentFileIndex - 1;
 				this.LoadImageWithIndex(0, prevIndex);
+
+				// reset the scroll position so the user does not realise we've moved the images around
+				this.scrollView.ContentOffset = new PointF(xOffset + scrollView.Frame.Width, 0f);
 			}
-				
-			// Reset offset back to middle page
-			this.scrollView.SetContentOffset(new PointF(this.imageViewList[1].Frame.X, 0), false);
 		}
 		
 		partial void btnNewLandscape_TouchUpInside(MonoTouch.UIKit.UIButton sender)
@@ -255,11 +300,11 @@ namespace Paint
 		private void AddImageWithName (string imageString, int position)
 		{
 			// add image to scroll view
-			UIImage image = UIImage.FromFile (imageString);
-			UIImageView imageView = new UIImageView (image);
+			UIImage image = UIImage.FromFile(imageString);
+			UIImageView imageView = new UIImageView(image);
 			imageView.ContentMode = UIViewContentMode.ScaleAspectFit;
 			
-			imageView.Frame = new System.Drawing.RectangleF (position * this.scrollView.Frame.Width, 0, this.scrollView.Frame.Width, this.scrollView.Frame.Height);
+			imageView.Frame = new System.Drawing.RectangleF(position * this.scrollView.Frame.Width, 0, this.scrollView.Frame.Width, this.scrollView.Frame.Height);
 			
 			this.scrollView.AddSubview(imageView);
 		}
