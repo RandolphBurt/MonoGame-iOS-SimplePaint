@@ -132,6 +132,7 @@
     </Compile>
     <Compile Include="BusinessLogic\PictureOrientation.cs" />
     <Compile Include="MonoTouch\PictureSelectedEventArgs.cs" />
+    <Compile Include="MonoTouch\UIBusyAlertView.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

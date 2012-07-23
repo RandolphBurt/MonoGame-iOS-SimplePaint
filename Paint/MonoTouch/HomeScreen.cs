@@ -46,6 +46,7 @@ namespace Paint
 
 		private UIImageView[] imageViewList = null;
 		private UIImageView animatedCircleImage;
+		private UIActivityIndicatorView activityIndicatorView;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Paint.HomeScreen"/> class.
@@ -86,6 +87,17 @@ namespace Paint
 			animatedCircleImage.AnimationDuration = .5;
 			animatedCircleImage.Frame = new RectangleF(110, 20, 100, 100);
 			View.AddSubview(animatedCircleImage);
+			
+			activityIndicatorView = new UIActivityIndicatorView(new RectangleF(500, 500, 100, 100))
+			{
+				ActivityIndicatorViewStyle = UIActivityIndicatorViewStyle.Gray,
+				AutoresizingMask = UIViewAutoresizing.FlexibleLeftMargin |
+					UIViewAutoresizing.FlexibleRightMargin |
+					UIViewAutoresizing.FlexibleTopMargin |
+					UIViewAutoresizing.FlexibleBottomMargin
+			};
+			
+			View.AddSubview(activityIndicatorView);
 			
 			this.btnPaint.SetBackgroundImage(UIImage.FromBundle("Content/graphics.png"),UIControlState.Normal);
 		
@@ -254,6 +266,7 @@ namespace Paint
 		partial void btnPaint_TouchUpInside(MonoTouch.UIKit.UIButton sender)
 		{
 			this.animatedCircleImage.StartAnimating();
+			this.activityIndicatorView.StartAnimating();
 			
 			BackgroundWorker backgroundWorker = new BackgroundWorker();
 			backgroundWorker.DoWork += (s2, e2) => {
@@ -267,6 +280,7 @@ namespace Paint
         	backgroundWorker.RunWorkerCompleted += (s3, e3) =>
         	{
 				this.animatedCircleImage.StopAnimating();
+				this.activityIndicatorView.StopAnimating();
         	};
 			
 			/*

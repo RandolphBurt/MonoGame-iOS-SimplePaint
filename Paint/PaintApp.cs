@@ -52,7 +52,7 @@ namespace Paint
 		/// The color we will set the brush to start with
 		/// </summary>
 		private readonly Color StartColor = Color.Green;
-
+		
 		/// <summary>
 		/// Our monogame GrahicsDeviceManager handles all the rendering
 		/// </summary>
@@ -130,6 +130,16 @@ namespace Paint
 		/// The image state data. height/width of image and details of save points (undo/redo state)
 		/// </summary>
 		private ImageStateData imageStateData = null;
+
+		/// <summary>
+		/// What mode is the app currently running in paint, pending shutdown or actually exiting
+		/// </summary>
+		private PaintMode paintMode = PaintMode.Paint;
+		
+		/// <summary>
+		/// Pop-up UIAlertView to indicate we are saving the data
+		/// </summary>
+		private UIBusyAlertView uiBusyAlertView = null;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Paint.PaintApp"/> class.
@@ -260,9 +270,27 @@ namespace Paint
 		/// </param>
 		protected override void Update(GameTime gameTime)
 		{
-			this.HandleInput();
+			switch (this.paintMode)
+			{
+				case PaintMode.Paint:
+					this.HandleInput();
+					break;
+					
+				case PaintMode.PendingSave:
+					// Do nothing - we are waiting for the status window to finish loading
+					break;
+					
+				case PaintMode.SavingPendingExit:
+					this.paintMode = PaintMode.Exiting;
+					this.SaveAndExit();
+					break;
+					
+				case PaintMode.Exiting:					
+					// Although we've called exit we might still get an update so we just return
+					break;
+			}
 			
-			base.Update (gameTime);
+			base.Update(gameTime);
 		}
 		
 		/// <summary>
@@ -433,7 +461,7 @@ namespace Paint
 			
 			this.toolBox.ExitSelected += (sender, e) => 
 			{
-				this.SaveAndExit();
+				this.InitiateShutdown();
 			};
 			
 			this.toolBox.RedoSelected += (sender, e) => 
@@ -447,13 +475,34 @@ namespace Paint
 			};
 		}
 		
+		/// <summary>
+		/// Initiates the shutdown process.
+		/// We will display the UIAlertView with spinning progress bar and then on the next Update 
+		/// we will save all the data
+		/// 
+		/// We need to perform this in a staged process - i.e. Call show on the UIBusyAlertView will take
+		/// a while to display the view - we therefore delay the actual saving until the view has 'presented'.
+		/// </summary>
+		private void InitiateShutdown()
+		{
+			this.uiBusyAlertView = new UIBusyAlertView("Saving", "Please wait...");
+			this.uiBusyAlertView.Presented += (sender, e) => 
+			{
+				this.paintMode = PaintMode.SavingPendingExit;
+			};
+			
+			this.paintMode = PaintMode.PendingSave;	
+			this.uiBusyAlertView.Show();
+		}
+		
+		/// <summary>
+		/// Saves all the data and then exits.
+		/// </summary>
 		private void SaveAndExit()
 		{
-			// TODO - use a progress bar and delete one at a time per update call
 			this.pictureStateManager.Save();
 			this.pictureIOManager.SaveData(this.pictureStateManager.ImageStateData, this.inMemoryCanvasRenderTarget, this.undoRedoRenderTargets);
 			
-			// TODO - should this be in our dispose method?
 			foreach (var renderTarget in this.undoRedoRenderTargets)
 			{
 				if (renderTarget != null && renderTarget.IsDisposed == false)
@@ -464,6 +513,8 @@ namespace Paint
 			
 			this.undoRedoRenderTargets = null;
 			
+			this.uiBusyAlertView.Hide();
+
 			this.Exit();
 		}
 		
@@ -589,6 +640,32 @@ namespace Paint
 			}
 			
 			return TouchType.DragComplete;
+		}
+		
+		/// <summary>
+		/// What mode is the app currently in
+		/// </summary>
+		private enum PaintMode
+		{
+			/// <summary>
+			/// The user us able to paint
+			/// </summary>
+			Paint,
+			
+			/// <summary>
+			/// An exit is pending - we are about to save everything and shutdown
+			/// </summary>
+			PendingSave,
+			
+			/// <summary>
+			/// We are currently saving all data - about to exit.
+			/// </summary>
+			SavingPendingExit,
+			
+			/// <summary>
+			/// The app is now exiting
+			/// </summary>
+			Exiting
 		}
 	}
 }
