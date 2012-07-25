@@ -137,27 +137,30 @@ namespace Paint
 		private PaintMode paintMode = PaintMode.Paint;
 		
 		/// <summary>
-		/// Pop-up UIAlertView to indicate we are saving the data
+		/// view/form to present when we about to save all the data
 		/// </summary>
-		private UIBusyAlertView uiBusyAlertView = null;
-
+		private IUIBusyMessage saveBusyMessageDisplay = null;
+		
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Paint.PaintApp"/> class.
 		/// Instantiate our GraphicsDeviceManager and establish where the content folder is
 		/// <param name='pictureIOManager'>Picture IO Manager</param>
 		/// <param name='filenameResolver'>Filename Resolver</param>
 		/// <param name='imageStateData'>ImageSaveData</param>
+		/// <param name='saveBusyMessageDisplay'>Class for dsplaying the 'Busy - saving' message</param>
 		/// </summary>
 		public PaintApp(
 			IPictureIOManager pictureIOManager, 
 			IFilenameResolver filenameResolver, 
-			ImageStateData imageStateData)
+			ImageStateData imageStateData,
+			IUIBusyMessage saveBusyMessageDisplay)
 		{
 			this.graphicsDeviceManager = new GraphicsDeviceManager(this);
 			this.graphicsDeviceManager.IsFullScreen = true;
 			this.filenameResolver = filenameResolver;
 			this.pictureIOManager = pictureIOManager;
 			this.imageStateData = imageStateData;
+			this.saveBusyMessageDisplay = saveBusyMessageDisplay;
 			
 			if (imageStateData.Width > imageStateData.Height)
 			{
@@ -188,7 +191,7 @@ namespace Paint
 		{
 			this.RenderImage(this.undoRedoRenderTargets[savePoint], this.inMemoryCanvasRenderTarget);
 		}		
-				
+		
 		/// <summary>
 		/// We load any content we need at the beginning of the application life cycle.
 		/// Also anything that needs initialising is done here
@@ -276,23 +279,35 @@ namespace Paint
 					this.HandleInput();
 					break;
 					
-				case PaintMode.PendingSave:
-					// Do nothing - we are waiting for the status window to finish loading
-					break;
-					
-				case PaintMode.SavingPendingExit:
-					this.paintMode = PaintMode.Exiting;
-					this.SaveAndExit();
-					break;
-					
-				case PaintMode.Exiting:					
-					// Although we've called exit we might still get an update so we just return
+				case PaintMode.Exiting:
+					// We are in the process of exiting
 					break;
 			}
 			
 			base.Update(gameTime);
 		}
-		
+
+		/// <summary>
+		/// Saves all the data and then exits.
+		/// </summary>
+		private void SaveAndExit()
+		{
+			this.pictureStateManager.Save();
+			this.pictureIOManager.SaveData(this.pictureStateManager.ImageStateData, this.inMemoryCanvasRenderTarget, this.undoRedoRenderTargets);
+			
+			foreach (var renderTarget in this.undoRedoRenderTargets)
+			{
+				if (renderTarget != null && renderTarget.IsDisposed == false)
+				{
+					renderTarget.Dispose();
+				}
+			}
+			
+			this.undoRedoRenderTargets = null;
+			
+			this.Exit();
+		}
+
 		/// <summary>
 		/// Renders a specific source RenderTarget on to a specific target RenderTarget
 		/// </summary>
@@ -477,47 +492,15 @@ namespace Paint
 		
 		/// <summary>
 		/// Initiates the shutdown process.
-		/// We will display the UIAlertView with spinning progress bar and then on the next Update 
-		/// we will save all the data
-		/// 
-		/// We need to perform this in a staged process - i.e. Call show on the UIBusyAlertView will take
-		/// a while to display the view - we therefore delay the actual saving until the view has 'presented'.
+		/// We will display a 'busy' form/window -- we pass in a delegate/action to be run once the form 
+		/// has displayed
 		/// </summary>
 		private void InitiateShutdown()
 		{
-			this.uiBusyAlertView = new UIBusyAlertView("Saving", "Please wait...");
-			this.uiBusyAlertView.Presented += (sender, e) => 
-			{
-				this.paintMode = PaintMode.SavingPendingExit;
-			};
-			
-			this.paintMode = PaintMode.PendingSave;	
-			this.uiBusyAlertView.Show();
+			this.paintMode = PaintMode.Exiting;			
+			this.saveBusyMessageDisplay.Show(new Action(this.SaveAndExit));
 		}
-		
-		/// <summary>
-		/// Saves all the data and then exits.
-		/// </summary>
-		private void SaveAndExit()
-		{
-			this.pictureStateManager.Save();
-			this.pictureIOManager.SaveData(this.pictureStateManager.ImageStateData, this.inMemoryCanvasRenderTarget, this.undoRedoRenderTargets);
-			
-			foreach (var renderTarget in this.undoRedoRenderTargets)
-			{
-				if (renderTarget != null && renderTarget.IsDisposed == false)
-				{
-					renderTarget.Dispose();
-				}
-			}
-			
-			this.undoRedoRenderTargets = null;
-			
-			this.uiBusyAlertView.Hide();
-
-			this.Exit();
-		}
-		
+				
 		/// <summary>
 		/// Handles any user input.
 		/// Collect all gestures made since the last 'update' - stores these ready to be handled by the Canvas for drawing
@@ -653,17 +636,7 @@ namespace Paint
 			Paint,
 			
 			/// <summary>
-			/// An exit is pending - we are about to save everything and shutdown
-			/// </summary>
-			PendingSave,
-			
-			/// <summary>
-			/// We are currently saving all data - about to exit.
-			/// </summary>
-			SavingPendingExit,
-			
-			/// <summary>
-			/// The app is now exiting
+			/// The app is in the process of exiting
 			/// </summary>
 			Exiting
 		}

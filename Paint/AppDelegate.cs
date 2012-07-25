@@ -193,8 +193,11 @@ namespace Paint
 			this.SetOrientationForImage(imageStateData);
 
 			// Simply instantiate the class derived from monogame:game and away we go...
-			this.paintApp  = new PaintApp(pictureIOManager, filenameResolver, imageStateData);
-			this.paintApp.Exiting += PaintAppExiting;
+			BusyMessageDisplay busyMessageDisplay = new BusyMessageDisplay("Saving", "Please wait...");
+
+			this.paintApp  = new PaintApp(pictureIOManager, filenameResolver, imageStateData, busyMessageDisplay);
+			this.paintApp.Exiting += PaintAppExiting;			
+			
 			this.paintApp.Run();
 		}
 		
