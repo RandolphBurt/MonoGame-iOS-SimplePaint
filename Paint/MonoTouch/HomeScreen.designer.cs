@@ -26,8 +26,17 @@ namespace Paint
 		[Outlet]
 		MonoTouch.UIKit.UIButton btnNewPortrait { get; set; }
 
+		[Outlet]
+		MonoTouch.UIKit.UIButton btnCopy { get; set; }
+
+		[Outlet]
+		MonoTouch.UIKit.UIButton btnDelete { get; set; }
+
 		[Action ("btnNewLandscape_TouchUpInside:")]
 		partial void btnNewLandscape_TouchUpInside (MonoTouch.UIKit.UIButton sender);
+
+		[Action ("btnNewPortrait_TouchUpInside:")]
+		partial void btnNewPortrait_TouchUpInside (MonoTouch.UIKit.UIButton sender);
 
 		[Action ("btnPaint_TouchUpInside:")]
 		partial void btnPaint_TouchUpInside (MonoTouch.UIKit.UIButton sender);
@@ -35,8 +44,11 @@ namespace Paint
 		[Action ("btnPlayback_TouchUpInside:")]
 		partial void btnPlayback_TouchUpInside (MonoTouch.UIKit.UIButton sender);
 
-		[Action ("btnNewPortrait_TouchUpInside:")]
-		partial void btnNewPortrait_TouchUpInside (MonoTouch.UIKit.UIButton sender);
+		[Action ("btnCopy_TouchUpInside:")]
+		partial void btnCopy_TouchUpInside (MonoTouch.UIKit.UIButton sender);
+
+		[Action ("btnDelete_TouchUpInside:")]
+		partial void btnDelete_TouchUpInside (MonoTouch.UIKit.UIButton sender);
 		
 		void ReleaseDesignerOutlets ()
 		{
@@ -63,6 +75,16 @@ namespace Paint
 			if (btnNewPortrait != null) {
 				btnNewPortrait.Dispose ();
 				btnNewPortrait = null;
+			}
+
+			if (btnCopy != null) {
+				btnCopy.Dispose ();
+				btnCopy = null;
+			}
+
+			if (btnDelete != null) {
+				btnDelete.Dispose ();
+				btnDelete = null;
 			}
 		}
 	}

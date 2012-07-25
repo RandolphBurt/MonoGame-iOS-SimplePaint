@@ -103,6 +103,14 @@ namespace Paint
 				this.EditImage(e.PictureId);
 			};
 			
+			this.viewController.DeleteSelected += (sender, e) => {
+				this.DeleteImage(e.PictureId);
+			};
+			
+			this.viewController.CopySelected += (sender, e) => {
+				this.CopyImage(e.PictureId);
+			};
+			
 			this.viewController.PlaybackSelected += (sender, e) => {
 				this.PlaybackImage(e.PictureId);
 			};
@@ -164,6 +172,34 @@ namespace Paint
 
 			this.EditImage(Guid.NewGuid(), imageStateData);			                 
 		}
+		
+		/// <summary>
+		/// Deletes the image and all associated data
+		/// </summary>
+		/// <param name='pictureId'>
+		/// Identifier of the image to remove
+		/// </param>
+		private void DeleteImage(Guid pictureId)
+		{
+			var filenameResolver = this.CreateFilenameResolver(pictureId);
+			var pictureIOManager = new PictureIOManager(filenameResolver);
+			
+			pictureIOManager.DeleteImage();
+		}
+				
+		/// <summary>
+		/// Copies the image and all associated data
+		/// </summary>
+		/// <param name='pictureId'>
+		/// Identifier of the image to copy
+		/// </param>
+		private void CopyImage(Guid pictureId)
+		{
+			var filenameResolver = this.CreateFilenameResolver(pictureId);
+			var pictureIOManager = new PictureIOManager(filenameResolver);
+			
+			pictureIOManager.CopyImage(this.CreateFilenameResolver(Guid.NewGuid()));
+		}
 				
 		/// <summary>
 		/// Edits a specific image.
@@ -195,7 +231,7 @@ namespace Paint
 			// Simply instantiate the class derived from monogame:game and away we go...
 			BusyMessageDisplay busyMessageDisplay = new BusyMessageDisplay("Saving", "Please wait...");
 
-			this.paintApp  = new PaintApp(pictureIOManager, filenameResolver, imageStateData, busyMessageDisplay);
+			this.paintApp = new PaintApp(pictureIOManager, filenameResolver, imageStateData, busyMessageDisplay);
 			this.paintApp.Exiting += PaintAppExiting;			
 			
 			this.paintApp.Run();
@@ -326,7 +362,7 @@ namespace Paint
 		/// </param>
 		private FilenameResolver CreateFilenameResolver(Guid pictureId)
 		{
-			return new FilenameResolver(pictureId, imageDataPath, Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments));	
+			return new FilenameResolver(pictureId, this.imageDataPath, Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments));	
 		}
 		
 		/// <summary>
@@ -334,9 +370,9 @@ namespace Paint
 		/// </summary>
 		private void CreateDirectoryStructure()
 		{
-			if (!Directory.Exists(imageDataPath))
+			if (!Directory.Exists(this.imageDataPath))
 			{
-				Directory.CreateDirectory(imageDataPath);
+				Directory.CreateDirectory(this.imageDataPath);
 			}
 		}		
 	}

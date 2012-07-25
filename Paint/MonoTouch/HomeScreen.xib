@@ -42,7 +42,7 @@
 						<string key="NSFrameSize">{768, 800}</string>
 						<reference key="NSSuperview" ref="766721923"/>
 						<reference key="NSWindow"/>
-						<reference key="NSNextKeyView" ref="364712257"/>
+						<reference key="NSNextKeyView" ref="157374716"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<bool key="IBUIClipsSubviews">YES</bool>
 						<string key="targetRuntimeIdentifier">IBIPadFramework</string>
@@ -57,7 +57,7 @@
 					<object class="IBUIButton" id="364712257">
 						<reference key="NSNextResponder" ref="766721923"/>
 						<int key="NSvFlags">292</int>
-						<string key="NSFrame">{{14, 826}, {72, 37}}</string>
+						<string key="NSFrame">{{260, 826}, {104, 158}}</string>
 						<reference key="NSSuperview" ref="766721923"/>
 						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="758147799"/>
@@ -96,10 +96,10 @@
 					<object class="IBUIButton" id="758147799">
 						<reference key="NSNextResponder" ref="766721923"/>
 						<int key="NSvFlags">292</int>
-						<string key="NSFrame">{{110, 826}, {72, 37}}</string>
+						<string key="NSFrame">{{384, 826}, {104, 158}}</string>
 						<reference key="NSSuperview" ref="766721923"/>
 						<reference key="NSWindow"/>
-						<reference key="NSNextKeyView" ref="157374716"/>
+						<reference key="NSNextKeyView" ref="128367393"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<bool key="IBUIOpaque">NO</bool>
 						<string key="targetRuntimeIdentifier">IBIPadFramework</string>
@@ -116,10 +116,56 @@
 						<reference key="IBUIFontDescription" ref="656152047"/>
 						<reference key="IBUIFont" ref="819817158"/>
 					</object>
+					<object class="IBUIButton" id="128367393">
+						<reference key="NSNextResponder" ref="766721923"/>
+						<int key="NSvFlags">292</int>
+						<string key="NSFrame">{{506, 826}, {104, 158}}</string>
+						<reference key="NSSuperview" ref="766721923"/>
+						<reference key="NSWindow"/>
+						<reference key="NSNextKeyView" ref="868899461"/>
+						<string key="NSReuseIdentifierKey">_NS:9</string>
+						<bool key="IBUIOpaque">NO</bool>
+						<string key="targetRuntimeIdentifier">IBIPadFramework</string>
+						<int key="IBUIContentHorizontalAlignment">0</int>
+						<int key="IBUIContentVerticalAlignment">0</int>
+						<int key="IBUIButtonType">1</int>
+						<string key="IBUINormalTitle">Copy</string>
+						<reference key="IBUIHighlightedTitleColor" ref="737763101"/>
+						<object class="NSColor" key="IBUINormalTitleColor">
+							<int key="NSColorSpace">1</int>
+							<bytes key="NSRGB">MC4xOTYwNzg0MzQ2IDAuMzA5ODAzOTMyOSAwLjUyMTU2ODY1NgA</bytes>
+						</object>
+						<reference key="IBUINormalTitleShadowColor" ref="790868663"/>
+						<reference key="IBUIFontDescription" ref="656152047"/>
+						<reference key="IBUIFont" ref="819817158"/>
+					</object>
+					<object class="IBUIButton" id="868899461">
+						<reference key="NSNextResponder" ref="766721923"/>
+						<int key="NSvFlags">292</int>
+						<string key="NSFrame">{{627, 826}, {104, 158}}</string>
+						<reference key="NSSuperview" ref="766721923"/>
+						<reference key="NSWindow"/>
+						<reference key="NSNextKeyView"/>
+						<string key="NSReuseIdentifierKey">_NS:9</string>
+						<bool key="IBUIOpaque">NO</bool>
+						<string key="targetRuntimeIdentifier">IBIPadFramework</string>
+						<int key="IBUIContentHorizontalAlignment">0</int>
+						<int key="IBUIContentVerticalAlignment">0</int>
+						<int key="IBUIButtonType">1</int>
+						<string key="IBUINormalTitle">Delete</string>
+						<reference key="IBUIHighlightedTitleColor" ref="737763101"/>
+						<object class="NSColor" key="IBUINormalTitleColor">
+							<int key="NSColorSpace">1</int>
+							<bytes key="NSRGB">MC4xOTYwNzg0MzQ2IDAuMzA5ODAzOTMyOSAwLjUyMTU2ODY1NgA</bytes>
+						</object>
+						<reference key="IBUINormalTitleShadowColor" ref="790868663"/>
+						<reference key="IBUIFontDescription" ref="656152047"/>
+						<reference key="IBUIFont" ref="819817158"/>
+					</object>
 					<object class="IBUIButton" id="157374716">
 						<reference key="NSNextResponder" ref="766721923"/>
 						<int key="NSvFlags">292</int>
-						<string key="NSFrame">{{14, 887}, {72, 37}}</string>
+						<string key="NSFrame">{{14, 826}, {104, 158}}</string>
 						<reference key="NSSuperview" ref="766721923"/>
 						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="307622764"/>
@@ -142,10 +188,10 @@
 					<object class="IBUIButton" id="307622764">
 						<reference key="NSNextResponder" ref="766721923"/>
 						<int key="NSvFlags">292</int>
-						<string key="NSFrame">{{110, 887}, {89, 37}}</string>
+						<string key="NSFrame">{{138, 826}, {104, 158}}</string>
 						<reference key="NSSuperview" ref="766721923"/>
 						<reference key="NSWindow"/>
-						<reference key="NSNextKeyView"/>
+						<reference key="NSNextKeyView" ref="364712257"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<bool key="IBUIOpaque">NO</bool>
 						<string key="targetRuntimeIdentifier">IBIPadFramework</string>
@@ -232,6 +278,22 @@
 					<int key="connectionID">22</int>
 				</object>
 				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">btnCopy</string>
+						<reference key="source" ref="841351856"/>
+						<reference key="destination" ref="128367393"/>
+					</object>
+					<int key="connectionID">29</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">btnDelete</string>
+						<reference key="source" ref="841351856"/>
+						<reference key="destination" ref="868899461"/>
+					</object>
+					<int key="connectionID">30</int>
+				</object>
+				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchEventConnection" key="connection">
 						<string key="label">btnPaint_TouchUpInside:</string>
 						<reference key="source" ref="364712257"/>
@@ -267,6 +329,24 @@
 					</object>
 					<int key="connectionID">25</int>
 				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchEventConnection" key="connection">
+						<string key="label">btnCopy_TouchUpInside:</string>
+						<reference key="source" ref="128367393"/>
+						<reference key="destination" ref="841351856"/>
+						<int key="IBEventType">7</int>
+					</object>
+					<int key="connectionID">31</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchEventConnection" key="connection">
+						<string key="label">btnDelete_TouchUpInside:</string>
+						<reference key="source" ref="868899461"/>
+						<reference key="destination" ref="841351856"/>
+						<int key="IBEventType">7</int>
+					</object>
+					<int key="connectionID">32</int>
+				</object>
 			</array>
 			<object class="IBMutableOrderedSet" key="objectRecords">
 				<array key="orderedObjects">
@@ -291,9 +371,11 @@
 						<int key="objectID">2</int>
 						<reference key="object" ref="766721923"/>
 						<array class="NSMutableArray" key="children">
-							<reference ref="364712257"/>
 							<reference ref="326888690"/>
 							<reference ref="758147799"/>
+							<reference ref="128367393"/>
+							<reference ref="868899461"/>
+							<reference ref="364712257"/>
 							<reference ref="157374716"/>
 							<reference ref="307622764"/>
 						</array>
@@ -330,6 +412,18 @@
 						<reference key="parent" ref="766721923"/>
 						<string key="objectName">btnNewLandscape</string>
 					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">26</int>
+						<reference key="object" ref="128367393"/>
+						<reference key="parent" ref="766721923"/>
+						<string key="objectName">btnCopy</string>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">28</int>
+						<reference key="object" ref="868899461"/>
+						<reference key="parent" ref="766721923"/>
+						<string key="objectName">btnDelete</string>
+					</object>
 				</array>
 			</object>
 			<dictionary class="NSMutableDictionary" key="flattenedProperties">
@@ -341,6 +435,8 @@
 				<string key="19.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="2.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="20.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
+				<string key="26.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
+				<string key="28.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="4.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="6.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 			</dictionary>
@@ -348,7 +444,7 @@
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">25</int>
+			<int key="maxID">32</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -356,12 +452,22 @@
 					<string key="className">HomeScreen</string>
 					<string key="superclassName">UIViewController</string>
 					<dictionary class="NSMutableDictionary" key="actions">
+						<string key="btnCopy_TouchUpInside:">UIButton</string>
+						<string key="btnDelete_TouchUpInside:">UIButton</string>
 						<string key="btnNewLandscape_TouchUpInside:">UIButton</string>
 						<string key="btnNewPortrait_TouchUpInside:">UIButton</string>
 						<string key="btnPaint_TouchUpInside:">UIButton</string>
 						<string key="btnPlayback_TouchUpInside:">UIButton</string>
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="actionInfosByName">
+						<object class="IBActionInfo" key="btnCopy_TouchUpInside:">
+							<string key="name">btnCopy_TouchUpInside:</string>
+							<string key="candidateClassName">UIButton</string>
+						</object>
+						<object class="IBActionInfo" key="btnDelete_TouchUpInside:">
+							<string key="name">btnDelete_TouchUpInside:</string>
+							<string key="candidateClassName">UIButton</string>
+						</object>
 						<object class="IBActionInfo" key="btnNewLandscape_TouchUpInside:">
 							<string key="name">btnNewLandscape_TouchUpInside:</string>
 							<string key="candidateClassName">UIButton</string>
@@ -380,6 +486,8 @@
 						</object>
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="outlets">
+						<string key="btnCopy">UIButton</string>
+						<string key="btnDelete">UIButton</string>
 						<string key="btnNewLandscape">UIButton</string>
 						<string key="btnNewPortrait">UIButton</string>
 						<string key="btnPaint">UIButton</string>
@@ -387,6 +495,14 @@
 						<string key="scrollView">UIScrollView</string>
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="toOneOutletInfosByName">
+						<object class="IBToOneOutletInfo" key="btnCopy">
+							<string key="name">btnCopy</string>
+							<string key="candidateClassName">UIButton</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="btnDelete">
+							<string key="name">btnDelete</string>
+							<string key="candidateClassName">UIButton</string>
+						</object>
 						<object class="IBToOneOutletInfo" key="btnNewLandscape">
 							<string key="name">btnNewLandscape</string>
 							<string key="candidateClassName">UIButton</string>

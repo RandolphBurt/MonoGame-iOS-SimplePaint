@@ -40,6 +40,19 @@ namespace Paint
 		/// Loads the imageStateData from disk
 		/// </summary>
 		ImageStateData LoadImageStateData();
+		
+		/// <summary>
+		/// Deletes the image and all associated data files
+		/// </summary>
+		void DeleteImage();
+		
+		/// <summary>
+		/// Copies the image (and all associated data files) to the specified image name
+		/// </summary>
+		/// <param name='destinationImageFilenameResolver'>
+		/// Details of where we need to copy the files.
+		/// </param>
+		void CopyImage(IFilenameResolver destinationImageFilenameResolver);
 	}
 }
 

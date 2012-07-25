@@ -103,6 +103,41 @@ namespace Paint
 		}		
 		
 		/// <summary>
+		/// Deletes the image and all associated data files
+		/// </summary>
+		public void DeleteImage()
+		{
+			File.Delete(this.filenameResolver.MasterImageFilename);
+			Directory.Delete(this.filenameResolver.DataFolder, true);
+		}
+		
+		/// <summary>
+		/// Copies the image (and all associated data files) to the specified image name
+		/// </summary>
+		/// <param name='destinationImageFilenameResolver'>
+		/// Details of where we need to copy the files.
+		/// </param>
+		public void CopyImage(IFilenameResolver destinationImageFilenameResolver)
+		{
+			if (!Directory.Exists(destinationImageFilenameResolver.DataFolder))
+			{
+				Directory.CreateDirectory(destinationImageFilenameResolver.DataFolder);
+			}
+			
+			File.Copy(this.filenameResolver.ImageInfoFilename, destinationImageFilenameResolver.ImageInfoFilename);
+			File.Copy(this.filenameResolver.MasterImageFilename, destinationImageFilenameResolver.MasterImageFilename);
+			
+			var imageStateData = this.LoadImageStateData();
+			int end = imageStateData.FirstSavePoint == 0 ? imageStateData.LastSavePoint : imageStateData.MaxUndoRedoCount - 1;
+			
+			for (int count = 0; count <= end; count++)
+			{
+				File.Copy(this.filenameResolver.ImageSavePointFilename(count), destinationImageFilenameResolver.ImageSavePointFilename(count));
+				File.Copy(this.filenameResolver.CanvasRecorderFilename(count), destinationImageFilenameResolver.CanvasRecorderFilename(count));
+			}			
+		}
+		
+		/// <summary>
 		///  Loads the imageStateData from disk 
 		/// </summary>
 		/// <returns>

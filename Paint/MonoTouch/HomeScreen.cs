@@ -59,6 +59,10 @@ namespace Paint
 
 		public event EventHandler<PictureSelectedEventArgs> PlaybackSelected;
 		
+		public event EventHandler<PictureSelectedEventArgs> DeleteSelected;
+		
+		public event EventHandler<PictureSelectedEventArgs> CopySelected;
+		
 		public event EventHandler NewImagePortraitSelected;
 		
 		public event EventHandler NewImageLandscapeSelected;
@@ -188,6 +192,22 @@ namespace Paint
 			}
 		}	
 		
+		protected virtual void OnDeleteSelected(PictureSelectedEventArgs e)
+		{
+			if (this.DeleteSelected != null)
+			{
+				this.DeleteSelected(this, e);
+			}
+		}
+
+		protected virtual void OnCopySelected(PictureSelectedEventArgs e)
+		{
+			if (this.CopySelected != null)
+			{
+				this.CopySelected(this, e);
+			}
+		}
+
 		protected virtual void OnPlaybackSelected(PictureSelectedEventArgs e)
 		{
 			if (this.PlaybackSelected != null)
@@ -290,6 +310,36 @@ namespace Paint
 			
 			this.OnPaintSelected(EventArgs.Empty);
 			*/
+		}
+		
+		partial void btnCopy_TouchUpInside(MonoTouch.UIKit.UIButton sender)
+		{
+			this.OnCopySelected(new PictureSelectedEventArgs(this.PictureIdFromFile(currentFileIndex)));
+		}
+		
+		partial void btnDelete_TouchUpInside(MonoTouch.UIKit.UIButton sender)
+		{
+			UIAlertView alert = new UIAlertView()
+			{
+				Title = LanguageStrings.DeleteAlertViewTitle,
+				Message = LanguageStrings.DeleteAlertViewMessage,
+				CancelButtonIndex = 0
+			};
+			
+			alert.AddButton(LanguageStrings.DeleteAlertViewCancelButtonText);
+			alert.AddButton(LanguageStrings.DeleteAlertViewOKButtonText);
+
+			alert.Clicked += (s, e) => 
+			{
+				if (e.ButtonIndex == 1)
+				{
+					this.InvokeOnMainThread( delegate {
+	           			this.OnDeleteSelected(new PictureSelectedEventArgs(this.PictureIdFromFile(currentFileIndex)));
+					});
+				}
+			};
+			
+			alert.Show();
 		}
 		
 		partial void btnPlayback_TouchUpInside(MonoTouch.UIKit.UIButton sender)

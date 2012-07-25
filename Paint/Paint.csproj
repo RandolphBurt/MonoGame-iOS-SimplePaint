@@ -135,6 +135,7 @@
     <Compile Include="MonoTouch\UIBusyAlertView.cs" />
     <Compile Include="BusinessLogic\IUIBusyMessage.cs" />
     <Compile Include="MonoTouch\BusyMessageDisplay.cs" />
+    <Compile Include="MonoTouch\LanguageStrings.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
