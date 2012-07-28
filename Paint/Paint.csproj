@@ -165,4 +165,19 @@
   <ItemGroup>
     <InterfaceDefinition Include="MonoTouch\HomeScreen.xib" />
   </ItemGroup>
+  <ProjectExtensions>
+    <MonoDevelop>
+      <Properties>
+        <Policies>
+          <CSharpFormattingPolicy IndentSwitchBody="True" AnonymousMethodBraceStyle="NextLine" PropertyBraceStyle="NextLine" PropertyGetBraceStyle="NextLine" PropertySetBraceStyle="NextLine" EventBraceStyle="NextLine" EventAddBraceStyle="NextLine" EventRemoveBraceStyle="NextLine" StatementBraceStyle="NextLine" ElseNewLinePlacement="NewLine" ElseIfNewLinePlacement="SameLine" CatchNewLinePlacement="NewLine" FinallyNewLinePlacement="NewLine" WhileNewLinePlacement="NewLine" ArrayInitializerBraceStyle="NextLine" BeforeMethodDeclarationParentheses="False" BeforeMethodCallParentheses="False" BeforeConstructorDeclarationParentheses="False" BeforeDelegateDeclarationParentheses="False" AfterDelegateDeclarationParameterComma="True" NewParentheses="False" SpacesBeforeBrackets="False" inheritsSet="Mono" inheritsScope="text/x-csharp" scope="text/x-csharp" />
+          <TextStylePolicy TabsToSpaces="False" inheritsSet="VisualStudio" inheritsScope="text/plain" scope="text/x-csharp" />
+          <TextStylePolicy FileWidth="120" TabWidth="4" RemoveTrailingWhitespace="False" inheritsSet="Mono" inheritsScope="text/plain" scope="text/plain" />
+          <TextStylePolicy inheritsSet="null" scope="application/vnd.apple-interface-builder" />
+          <XmlFormattingPolicy inheritsSet="null" scope="application/vnd.apple-interface-builder" />
+          <TextStylePolicy inheritsSet="null" scope="application/xml" />
+          <XmlFormattingPolicy inheritsSet="Mono" inheritsScope="application/xml" scope="application/xml" />
+        </Policies>
+      </Properties>
+    </MonoDevelop>
+  </ProjectExtensions>
 </Project>

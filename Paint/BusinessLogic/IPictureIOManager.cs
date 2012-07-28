@@ -24,13 +24,14 @@ namespace Paint
 		
 		/// <summary>
 		/// Loads existing image data from disk into the undoRedoRenderTargets
+		/// and copies latest canvas recorder files into the 'working folder' 
 		/// </summary>
 		/// <param name='device'>Graphics device required for rendering</param>
 		/// <param name='spriteBatch'>Sprite Batch for rendering the images into the rendertargets</param>
 		/// <param name='undoRedoRenderTargets'>Sequence of images representing the undo/redo chain</param>
 		/// <param name='backgroundColor'>background color for all rendering</param>
 		/// <returns>ImageStateData</returns>
-		void LoadUndoRedoRenderTargets(
+		void LoadData(
 			GraphicsDevice device, 
 			SpriteBatch spriteBatch, 
 			RenderTarget2D[] undoRedoRenderTargets,
@@ -53,6 +54,11 @@ namespace Paint
 		/// Details of where we need to copy the files.
 		/// </param>
 		void CopyImage(IFilenameResolver destinationImageFilenameResolver);
+
+		/// <summary>
+		/// Creates the directory structure for this image to be saved to disk
+		/// </summary>
+		void CreateDirectoryStructure();
 	}
 }
 

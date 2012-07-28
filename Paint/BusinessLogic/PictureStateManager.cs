@@ -21,7 +21,7 @@ namespace Paint
 		/// then they are counted as one change for the purposes of the undo/redo buffer tracker
 		/// </summary>
 		private readonly TimeSpan MinTimeGapBeforeSave = new TimeSpan(TimeSpan.TicksPerSecond / 2);
-				
+		
 		/// <summary>
 		/// Is the undo option enabled.
 		/// </summary>
@@ -69,7 +69,7 @@ namespace Paint
 		/// <summary>
 		/// Gets a value indicating whether the undo option is enabled.
 		/// </summary>
-		public bool UndoEnabled 
+		public bool UndoEnabled
 		{
 			get
 			{
@@ -89,7 +89,7 @@ namespace Paint
 		/// <summary>
 		/// Gets a value indicating whether the redo option is enabled.
 		/// </summary>
-		public bool RedoEnabled  
+		public bool RedoEnabled
 		{
 			get
 			{
@@ -319,10 +319,10 @@ namespace Paint
 			
 			this.lastSavePoint = this.currentSavePoint;
 		}*/
-		
+
 		private void StoreSavePointData()
 		{
-			var canvasRecorderFile = this.filenameResolver.CanvasRecorderFilename(this.ImageStateData.CurrentSavePoint);
+			var canvasRecorderFile = this.filenameResolver.WorkingCanvasRecorderFilename(this.ImageStateData.CurrentSavePoint);
 			this.canvasRecorder.Save(canvasRecorderFile);
 			
 			this.renderTargetHandler.StoreSavePoint(this.ImageStateData.CurrentSavePoint);
@@ -330,7 +330,7 @@ namespace Paint
 		
 		private void LoadSavePointData()
 		{
-			var canvasRecorderFile = this.filenameResolver.CanvasRecorderFilename(this.ImageStateData.CurrentSavePoint);
+			var canvasRecorderFile = this.filenameResolver.WorkingCanvasRecorderFilename(this.ImageStateData.CurrentSavePoint);
 			this.canvasRecorder.Load(canvasRecorderFile);
 			
 			this.renderTargetHandler.RestoreSavePoint(this.ImageStateData.CurrentSavePoint);

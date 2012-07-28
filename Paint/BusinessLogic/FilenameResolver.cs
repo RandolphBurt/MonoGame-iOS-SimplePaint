@@ -26,6 +26,14 @@ namespace Paint
 		/// The file extension to use for the image files.
 		/// </summary>
 		private const string FileExtensionPNGImage = "PNG";
+
+		/// <summary>
+		/// The folder where we store the canvas recorder files whilst we are editing a picture.
+		/// Intention is to only save them to the DataFolder when we save at the end when we save all the images.  
+		/// Thus if the app crashes then we have not overridden all the canvas recorder files in the data folder
+		/// hence no longer matching the image files
+		/// </summary>
+		private const string CanvasRecorderWorkingFolderName = "REC_FILES";
 		
 		/// <summary>
 		/// Unique identifier for this picture
@@ -45,8 +53,9 @@ namespace Paint
 		public FilenameResolver(Guid pictureId, string imageDataPath, string masterImageFolder)
 		{
 			this.pictureId = pictureId;
-			this.imageDataPath =  imageDataPath;
+			this.imageDataPath = imageDataPath;
 			this.DataFolder = Path.Combine(this.imageDataPath, this.pictureId.ToString());
+			this.CanvasRecorderWorkingFolder = Path.Combine(this.DataFolder, CanvasRecorderWorkingFolderName);
 			this.ImageInfoFilename = Path.Combine(this.DataFolder, InfoFile);
 			this.MasterImageFilename = Path.Combine(masterImageFolder, String.Format("{0}.{1}", this.pictureId.ToString(), FileExtensionPNGImage));
 		}
@@ -54,7 +63,16 @@ namespace Paint
 		/// <summary>
 		/// Gets the data folder.
 		/// </summary>
-		public string DataFolder  
+		public string DataFolder
+		{
+			get;
+			private set;
+		}
+
+		/// <summary>
+		/// Gets the Canvas Recorder Working folder.
+		/// </summary>
+		public string CanvasRecorderWorkingFolder
 		{
 			get;
 			private set;
@@ -94,9 +112,22 @@ namespace Paint
 		/// Determines the filename to use for a 'save point' playback file associated 
 		/// with one of the undo/redo render targets
 		/// </summary>
-		/// <returns>filename</returns>
 		/// <param name='savepoint'>save point id for this image - i.e location in the undo/redo chain</param>
-		public string CanvasRecorderFilename(int savepoint)
+		/// <returns>filename</returns>
+		public string WorkingCanvasRecorderFilename(int savepoint)
+		{
+			return Path.Combine(
+				this.CanvasRecorderWorkingFolder, 
+				string.Format("{0}.{1}", savepoint, FileExtensionCanvasRecorder));
+		}
+
+		/// <summary>
+		/// Determines the filename to use for a 'save point' playback file associated 
+		/// with one of the undo/redo render targets
+		/// </summary>
+		/// <param name='savepoint'>save point id for this image - i.e location in the undo/redo chain</param>
+		/// <returns>filename</returns>
+		public string MasterCanvasRecorderFilename(int savepoint)
 		{
 			return Path.Combine(
 				this.DataFolder, 

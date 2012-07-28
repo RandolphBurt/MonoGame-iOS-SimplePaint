@@ -73,7 +73,7 @@ namespace Paint
 		//
 		// You have 17 seconds to return from this method, or iOS will terminate your application.
 		//
-		public override bool FinishedLaunching (UIApplication app, NSDictionary options)
+		public override bool FinishedLaunching(UIApplication app, NSDictionary options)
 		{
 			this.imageDataPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "..", FolderNameLibrary, FolderNameImageData);
 			
@@ -96,7 +96,7 @@ namespace Paint
 			
 			this.CreateDirectoryStructure();
 			
-			this.window = new UIWindow (UIScreen.MainScreen.Bounds);
+			this.window = new UIWindow(UIScreen.MainScreen.Bounds);
 			this.viewController = new HomeScreen();
 			
 			this.viewController.PaintSelected += (sender, e) => {
@@ -214,17 +214,12 @@ namespace Paint
 		{
 			var filenameResolver = this.CreateFilenameResolver(pictureId);
 			var pictureIOManager = new PictureIOManager(filenameResolver);
+			pictureIOManager.CreateDirectoryStructure();
 			
 			if (imageStateData == null)
 			{
 				imageStateData = pictureIOManager.LoadImageStateData();
 			}
-			
-			if (imageStateData.IsNewImage())
-			{
-				// new image - so ensure directory structure is in place
-				Directory.CreateDirectory(filenameResolver.DataFolder);
-			}			
 		
 			this.SetOrientationForImage(imageStateData);
 
@@ -248,12 +243,12 @@ namespace Paint
 			
 			this.SetOrientationForImage(imageStateData);
 			
-			var canvasPlayback = new CanvasPlayback(filenameResolver.CanvasRecorderFilename(imageStateData.CurrentSavePoint));
+			var canvasPlayback = new CanvasPlayback(filenameResolver.MasterCanvasRecorderFilename(imageStateData.CurrentSavePoint));
 
 			this.SetOrientationForImage(imageStateData);
 
 			// Simply instantiate the class derived from monogame:game and away we go...
-			this.playBackApp  = new CanvasPlaybackApp(canvasPlayback, imageStateData);
+			this.playBackApp = new CanvasPlaybackApp(canvasPlayback, imageStateData);
 			this.playBackApp.Exiting += CanvasPlaybackAppExiting;
 			this.playBackApp.Run();
 		}
@@ -263,7 +258,7 @@ namespace Paint
 		/// </summary>
 		/// <param name='sender'>Sender</param>
 		/// <param name='e'>Any relevant event args </param>
-		private void CanvasPlaybackAppExiting (object sender, EventArgs e)
+		private void CanvasPlaybackAppExiting(object sender, EventArgs e)
 		{
 			if (this.playBackApp != null)
 			{
@@ -280,7 +275,7 @@ namespace Paint
 		/// </summary>
 		/// <param name='sender'>Sender</param>
 		/// <param name='e'>Any relevant event args </param>
-		private void PaintAppExiting (object sender, EventArgs e)
+		private void PaintAppExiting(object sender, EventArgs e)
 		{
 			if (this.paintApp != null)
 			{
@@ -298,12 +293,12 @@ namespace Paint
 		/// <param name='requiredOrientation'>
 		/// The desired orientation.
 		/// </param>
-        private void SetOrientation(PictureOrientation requiredOrientation)
-        {
-            if (this.orientationSetter == null)
-            {
-                this.orientationSetter = new Selector ("setOrientation:");
-            }
+		private void SetOrientation(PictureOrientation requiredOrientation)
+		{
+			if (this.orientationSetter == null)
+			{
+				this.orientationSetter = new Selector("setOrientation:");
+			}
 			
 			bool changeResolution = false;
 			UIInterfaceOrientation newOrientation = UIInterfaceOrientation.Portrait;
@@ -311,7 +306,7 @@ namespace Paint
 			if (requiredOrientation == PictureOrientation.Landscape)
 			{
 				if (UIDevice.CurrentDevice.Orientation != UIDeviceOrientation.LandscapeLeft &&
-				    UIDevice.CurrentDevice.Orientation != UIDeviceOrientation.LandscapeRight)
+					UIDevice.CurrentDevice.Orientation != UIDeviceOrientation.LandscapeRight)
 				{
 					newOrientation = UIInterfaceOrientation.LandscapeLeft;
 					changeResolution = true;
@@ -320,7 +315,7 @@ namespace Paint
 			else
 			{
 				if (UIDevice.CurrentDevice.Orientation != UIDeviceOrientation.Portrait &&
-				    UIDevice.CurrentDevice.Orientation != UIDeviceOrientation.PortraitUpsideDown)
+					UIDevice.CurrentDevice.Orientation != UIDeviceOrientation.PortraitUpsideDown)
 				{
 					newOrientation = UIInterfaceOrientation.Portrait;
 					changeResolution = true;
@@ -329,9 +324,9 @@ namespace Paint
 			
 			if (changeResolution)
 			{
-            	Messaging.void_objc_msgSend_int (UIDevice.CurrentDevice.Handle, this.orientationSetter.Handle, (int)newOrientation);
+				Messaging.void_objc_msgSend_int(UIDevice.CurrentDevice.Handle, this.orientationSetter.Handle, (int)newOrientation);
 			}
-        }
+		}
 		
 		/// <summary>
 		/// Sets the orientation of the device based on the image dimensions.

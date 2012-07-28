@@ -165,8 +165,7 @@ namespace Paint
 			if (imageStateData.Width > imageStateData.Height)
 			{
 				this.graphicsDeviceManager.SupportedOrientations = DisplayOrientation.LandscapeLeft | DisplayOrientation.LandscapeRight;
-			}
-			else
+			} else
 			{
 				this.graphicsDeviceManager.SupportedOrientations = DisplayOrientation.Portrait | DisplayOrientation.PortraitUpsideDown;
 			}
@@ -180,7 +179,7 @@ namespace Paint
 		/// <param name='savePoint'>specific save point we wish to restore</param>
 		public void RestoreSavePoint(int savePoint)
 		{
-			this.RenderImage(this.inMemoryCanvasRenderTarget, this.undoRedoRenderTargets[savePoint]);
+			this.RenderImage(this.inMemoryCanvasRenderTarget, this.undoRedoRenderTargets [savePoint]);
 		}
 		
 		/// <summary>
@@ -189,7 +188,7 @@ namespace Paint
 		/// <param name='savePoint'>specific save point we wish to use to store the canvas</param>
 		public void StoreSavePoint(int savePoint)
 		{
-			this.RenderImage(this.undoRedoRenderTargets[savePoint], this.inMemoryCanvasRenderTarget);
+			this.RenderImage(this.undoRedoRenderTargets [savePoint], this.inMemoryCanvasRenderTarget);
 		}		
 		
 		/// <summary>
@@ -201,7 +200,7 @@ namespace Paint
 			this.spriteBatch = new SpriteBatch(graphicsDeviceManager.GraphicsDevice);
 			
 			bool highResolution = Math.Max(this.imageStateData.Height, this.imageStateData.Width) > 1024;
-			var graphicsTextureMap = Content.Load<Texture2D> ("graphics.png");
+			var graphicsTextureMap = Content.Load<Texture2D>("graphics.png");
 			this.graphicsDisplay = new GraphicsDisplay(graphicsTextureMap, this.spriteBatch, highResolution);
 			
 			// TODO - are the three things below in the correct place?  Maybe should be in initialise
@@ -214,16 +213,16 @@ namespace Paint
 		/// Enable the capturing of gestures on the device
 		/// </summary>
 		protected override void Initialize()
-        {
-            // Enable the gestures we care about. You must set EnabledGestures before
-            // you can use any of the other gesture APIs.
-            TouchPanel.EnabledGestures =
+		{
+			// Enable the gestures we care about. You must set EnabledGestures before
+			// you can use any of the other gesture APIs.
+			TouchPanel.EnabledGestures =
                 GestureType.Tap | 
-                GestureType.FreeDrag |
+				GestureType.FreeDrag |
 				GestureType.DragComplete;
 			
-            base.Initialize();
-        }
+			base.Initialize();
+		}
 		
 		/// <summary>
 		/// Called everytime we need to redraw the screen
@@ -246,7 +245,7 @@ namespace Paint
 			this.toolBox.Draw(this.initialDraw);
 			
 			// Thes switch back to drawing onto the screen where we copy our image on to the screen
-			device.SetRenderTarget (null);
+			device.SetRenderTarget(null);
 			device.Clear(this.BackgroundColor);
 			
 			this.graphicsDisplay.BeginRender();
@@ -419,7 +418,7 @@ namespace Paint
 			if (File.Exists(this.filenameResolver.ImageInfoFilename) == true)
 			{
 				// existing image so we load the rendertargetlist from disk
-				this.pictureIOManager.LoadUndoRedoRenderTargets(this.graphicsDeviceManager.GraphicsDevice, this.spriteBatch, this.undoRedoRenderTargets, this.BackgroundColor);
+				this.pictureIOManager.LoadData(this.graphicsDeviceManager.GraphicsDevice, this.spriteBatch, this.undoRedoRenderTargets, this.BackgroundColor);
 			}
 			
 			this.pictureStateManager = new PictureStateManager(this.filenameResolver, this, this.imageStateData);			
@@ -508,9 +507,9 @@ namespace Paint
 		private void HandleInput()
 		{	
 			while (TouchPanel.IsGestureAvailable)
-            {
-                // read the next gesture from the queue
-                GestureSample gesture = TouchPanel.ReadGesture();
+			{
+				// read the next gesture from the queue
+				GestureSample gesture = TouchPanel.ReadGesture();
 				
 				TouchType touchType = this.ConvertGestureType(gesture.GestureType);
 				
@@ -567,8 +566,7 @@ namespace Paint
 				{
 					touchInToolbox = true;
 				}
-			}
-			else 
+			} else
 			{
 				if (touchPoint.Position.Y <= this.toolBox.ToolboxHeight)
 				{
@@ -609,11 +607,10 @@ namespace Paint
 					return TouchType.Tap;
 				
 				case GestureType.FreeDrag:
-					if (this.previousTouchType != TouchType.FreeDrag && this.previousTouchType != TouchType.StartDrag) 
+					if (this.previousTouchType != TouchType.FreeDrag && this.previousTouchType != TouchType.StartDrag)
 					{
 						return TouchType.StartDrag;
-					}
-					else 
+					} else
 					{
 						return TouchType.FreeDrag;
 					}

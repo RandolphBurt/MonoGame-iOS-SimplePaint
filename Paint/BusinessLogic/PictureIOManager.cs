@@ -44,12 +44,19 @@ namespace Paint
 			
 			for (int count = 0; count <= end; count++)
 			{
-				var renderTarget = undoRedoRenderTargets[count];
-				
+				var renderTarget = undoRedoRenderTargets [count];
+
+				// Save the render target to disk
 				renderTarget.SaveAsPng(
 					this.filenameResolver.ImageSavePointFilename(count),
 					renderTarget.Width,
 					renderTarget.Height);
+
+				// copy the working canvas recorder file into the master folder.
+				File.Copy(
+					this.filenameResolver.WorkingCanvasRecorderFilename(count), 
+					this.filenameResolver.MasterCanvasRecorderFilename(count),
+					true);
 			}
 			
 			masterImageRenderTarget.SaveAsPng(
@@ -59,7 +66,8 @@ namespace Paint
 		}
 		
 		/// <summary>
-		///  Loads existing image data from disk into the undoRedoRenderTargets 
+		/// Loads existing image data from disk into the undoRedoRenderTargets 
+		/// and copies latest canvas recorder files into the 'working folder' 
 		/// </summary>
 		/// <param name='device'>
 		/// Graphics device required for rendering
@@ -76,7 +84,7 @@ namespace Paint
 		/// <returns>
 		/// ImageStateData
 		/// </returns>
-		public void LoadUndoRedoRenderTargets(
+		public void LoadData(
 			GraphicsDevice device, 
 			SpriteBatch spriteBatch, 
 			RenderTarget2D[] undoRedoRenderTargets,
@@ -89,18 +97,28 @@ namespace Paint
 			// Don't read more than we need to - hence above we are calculating whether we have used all the renderTarets
 			for (int count = 0; count <= end; count++)
 			{
+				// Load the render target image
 				using (var imageTexture= Texture2D.FromFile(
 						device, 
 			    		this.filenameResolver.ImageSavePointFilename(count)))
 				{
-					device.SetRenderTarget(undoRedoRenderTargets[count]);
+					device.SetRenderTarget(undoRedoRenderTargets [count]);
 					spriteBatch.Begin();
 					device.Clear(backgroundColor);
 					spriteBatch.Draw(imageTexture, Vector2.Zero, backgroundColor);
 					spriteBatch.End();
 				}
+
+				// copy the master canvas recorder file into the working folder.
+				// We will then read/write to/from the working folder until the final save at the end,
+				// thus avoiding problem where render targets and playback files are out of sync if the 
+				// app exists early
+				File.Copy(
+					this.filenameResolver.MasterCanvasRecorderFilename(count), 
+					this.filenameResolver.WorkingCanvasRecorderFilename(count),
+					true);
 			}
-		}		
+		}
 		
 		/// <summary>
 		/// Deletes the image and all associated data files
@@ -133,7 +151,7 @@ namespace Paint
 			for (int count = 0; count <= end; count++)
 			{
 				File.Copy(this.filenameResolver.ImageSavePointFilename(count), destinationImageFilenameResolver.ImageSavePointFilename(count));
-				File.Copy(this.filenameResolver.CanvasRecorderFilename(count), destinationImageFilenameResolver.CanvasRecorderFilename(count));
+				File.Copy(this.filenameResolver.MasterCanvasRecorderFilename(count), destinationImageFilenameResolver.MasterCanvasRecorderFilename(count));
 			}			
 		}
 		
@@ -160,19 +178,36 @@ namespace Paint
 						stream.ReadByte() |
 						(stream.ReadByte()) << 8 |
 						(stream.ReadByte()) << 16 |
-						(stream.ReadByte()) << 24);
+						(stream.ReadByte()) << 24
+					);
 				}
 			}
-			
+
 			return new ImageStateData(
-				dataList[0], 
-				dataList[1], 
-				dataList[2], 
-				dataList[3],
-				dataList[4],
-				dataList[5]);
+				dataList [0], 
+				dataList [1], 
+				dataList [2], 
+				dataList [3],
+				dataList [4],
+				dataList [5]);
 		}
-		
+
+		/// <summary>
+		/// Creates the directory structure for this image to be saved to disk
+		/// </summary>
+		public void CreateDirectoryStructure()
+		{
+			if (!Directory.Exists(this.filenameResolver.DataFolder))
+			{
+				Directory.CreateDirectory(this.filenameResolver.DataFolder);
+			}
+
+			if (!Directory.Exists(this.filenameResolver.CanvasRecorderWorkingFolder))
+			{
+				Directory.CreateDirectory(this.filenameResolver.CanvasRecorderWorkingFolder);
+			}
+		}
+
 		/// <summary>
 		///  Saves the imageStateData to disk
 		/// </summary>
@@ -202,4 +237,3 @@ namespace Paint
 		}
 	}
 }
-

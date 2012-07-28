@@ -17,6 +17,11 @@ namespace Paint
 		string DataFolder { get; }
 
 		/// <summary>
+		/// Gets the Canvas Recorder Working folder.
+		/// </summary>
+		string CanvasRecorderWorkingFolder { get; }
+
+		/// <summary>
 		/// Gets the filename to use for the Image Information File
 		/// </summary>
 		string ImageInfoFilename { get; }
@@ -24,7 +29,7 @@ namespace Paint
 		/// <summary>
 		/// Gets the master image filename.
 		/// </summary>
-	 	string MasterImageFilename { get; }
+		string MasterImageFilename { get; }
 			
 		/// <summary>
 		/// Determines the filename to use for a 'save point' image (one of the undo/redo render targets)
@@ -34,12 +39,20 @@ namespace Paint
 		string ImageSavePointFilename(int savepoint);
 
 		/// <summary>
-		/// Determines the filename to use for a 'save point' playback file associated 
-		/// with one of the undo/redo render targets
+		/// Determines the filename to use for a 'save point' playback file (stored in the working folder) 
+		/// associated with one of the undo/redo render targets
 		/// </summary>
-		/// <returns>filename</returns>
 		/// <param name='savepoint'>save point id for this image - i.e location in the undo/redo chain</param>
-		string CanvasRecorderFilename(int savepoint);
+		/// <returns>filename</returns>
+		string WorkingCanvasRecorderFilename(int savepoint);
+
+		/// <summary>
+		/// Determines the filename to use for a 'save point' playback file (stored in the master folder) 
+		/// associated with one of the undo/redo render targets
+		/// </summary>
+		/// <param name='savepoint'>save point id for this image - i.e location in the undo/redo chain</param>
+		/// <returns>filename</returns>
+		string MasterCanvasRecorderFilename(int savepoint);
 	}
 }
 
