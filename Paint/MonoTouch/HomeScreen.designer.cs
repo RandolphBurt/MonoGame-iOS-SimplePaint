@@ -12,7 +12,16 @@ namespace Paint
 	partial class HomeScreen
 	{
 		[Outlet]
+		MonoTouch.UIKit.UIButton btnEmail { get; set; }
+
+		[Outlet]
 		MonoTouch.UIKit.UIScrollView scrollView { get; set; }
+
+		[Outlet]
+		MonoTouch.UIKit.UIButton btnTwitter { get; set; }
+
+		[Outlet]
+		MonoTouch.UIKit.UIButton btnExportPhoto { get; set; }
 
 		[Outlet]
 		MonoTouch.UIKit.UIButton btnPaint { get; set; }
@@ -41,20 +50,44 @@ namespace Paint
 		[Action ("btnPaint_TouchUpInside:")]
 		partial void btnPaint_TouchUpInside (MonoTouch.UIKit.UIButton sender);
 
-		[Action ("btnPlayback_TouchUpInside:")]
-		partial void btnPlayback_TouchUpInside (MonoTouch.UIKit.UIButton sender);
-
 		[Action ("btnCopy_TouchUpInside:")]
 		partial void btnCopy_TouchUpInside (MonoTouch.UIKit.UIButton sender);
 
 		[Action ("btnDelete_TouchUpInside:")]
 		partial void btnDelete_TouchUpInside (MonoTouch.UIKit.UIButton sender);
+
+		[Action ("btnPlayback_TouchUpInside:")]
+		partial void btnPlayback_TouchUpInside (MonoTouch.UIKit.UIButton sender);
+
+		[Action ("btnEmail_TouchUpInside:")]
+		partial void btnEmail_TouchUpInside (MonoTouch.UIKit.UIButton sender);
+
+		[Action ("btnExportPhoto_TouchUpInside:")]
+		partial void btnExportPhoto_TouchUpInside (MonoTouch.UIKit.UIButton sender);
+
+		[Action ("btnTwitter_TouchUpInside:")]
+		partial void btnTwitter_TouchUpInside (MonoTouch.UIKit.UIButton sender);
 		
 		void ReleaseDesignerOutlets ()
 		{
+			if (btnEmail != null) {
+				btnEmail.Dispose ();
+				btnEmail = null;
+			}
+
 			if (scrollView != null) {
 				scrollView.Dispose ();
 				scrollView = null;
+			}
+
+			if (btnTwitter != null) {
+				btnTwitter.Dispose ();
+				btnTwitter = null;
+			}
+
+			if (btnExportPhoto != null) {
+				btnExportPhoto.Dispose ();
+				btnExportPhoto = null;
 			}
 
 			if (btnPaint != null) {

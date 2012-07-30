@@ -1,19 +1,15 @@
-/// <summary>
+	/// <summary>
 /// AppDelegate.cs
 /// Randolph Burt - January 2012
 /// </summary>
-using MonoTouch.ObjCRuntime;
-
-
 namespace Paint
 {
 	using System;
-	using System.Collections.Generic;
 	using System.IO;
-	using System.Linq;
 	
 	using MonoTouch.Foundation;
 	using MonoTouch.UIKit;
+	using MonoTouch.ObjCRuntime;
 	
 	// The UIApplicationDelegate for the application. This class is responsible for launching the 
 	// User Interface of the application, as well as listening (and optionally responding) to 
@@ -65,7 +61,12 @@ namespace Paint
 		/// The path to the imageData folder
 		/// </summary>
 		private string imageDataPath = null;
-		
+
+		/// <summary>
+		/// Path to where all the master images are stored
+		/// </summary>
+		private string masterImagePath;
+
 		//
 		// This method is invoked when the application has loaded and is ready to run. In this 
 		// method you should instantiate the window, load the UI into it and then make the window
@@ -76,6 +77,7 @@ namespace Paint
 		public override bool FinishedLaunching(UIApplication app, NSDictionary options)
 		{
 			this.imageDataPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "..", FolderNameLibrary, FolderNameImageData);
+			this.masterImagePath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
 			
 			// Temp code below for total clear down 
 			/*
@@ -84,7 +86,7 @@ namespace Paint
 				Directory.Delete(imageDataPath, true);
 			}
 	
-			var fileList=  Directory.EnumerateFiles(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)).ToArray();
+			var fileList=  Directory.EnumerateFiles(this.masterImagePath).ToArray();
 			if (fileList != null && fileList.Length > 0)
 			{
 				foreach (var file in fileList)
@@ -97,24 +99,16 @@ namespace Paint
 			this.CreateDirectoryStructure();
 			
 			this.window = new UIWindow(UIScreen.MainScreen.Bounds);
-			this.viewController = new HomeScreen();
+			this.viewController = new HomeScreen(this.imageDataPath, this.masterImagePath);
 			
 			this.viewController.PaintSelected += (sender, e) => {
 				this.EditImage(e.PictureId);
 			};
 			
-			this.viewController.DeleteSelected += (sender, e) => {
-				this.DeleteImage(e.PictureId);
-			};
-			
-			this.viewController.CopySelected += (sender, e) => {
-				this.CopyImage(e.PictureId);
-			};
-			
 			this.viewController.PlaybackSelected += (sender, e) => {
 				this.PlaybackImage(e.PictureId);
 			};
-			
+
 			this.viewController.NewImageLandscapeSelected += (sender, e) => {					                    
 				this.NewImage(PictureOrientation.Landscape);
 			};
@@ -172,35 +166,7 @@ namespace Paint
 
 			this.EditImage(Guid.NewGuid(), imageStateData);			                 
 		}
-		
-		/// <summary>
-		/// Deletes the image and all associated data
-		/// </summary>
-		/// <param name='pictureId'>
-		/// Identifier of the image to remove
-		/// </param>
-		private void DeleteImage(Guid pictureId)
-		{
-			var filenameResolver = this.CreateFilenameResolver(pictureId);
-			var pictureIOManager = new PictureIOManager(filenameResolver);
-			
-			pictureIOManager.DeleteImage();
-		}
-				
-		/// <summary>
-		/// Copies the image and all associated data
-		/// </summary>
-		/// <param name='pictureId'>
-		/// Identifier of the image to copy
-		/// </param>
-		private void CopyImage(Guid pictureId)
-		{
-			var filenameResolver = this.CreateFilenameResolver(pictureId);
-			var pictureIOManager = new PictureIOManager(filenameResolver);
-			
-			pictureIOManager.CopyImage(this.CreateFilenameResolver(Guid.NewGuid()));
-		}
-				
+								
 		/// <summary>
 		/// Edits a specific image.
 		/// </summary>
@@ -357,7 +323,7 @@ namespace Paint
 		/// </param>
 		private FilenameResolver CreateFilenameResolver(Guid pictureId)
 		{
-			return new FilenameResolver(pictureId, this.imageDataPath, Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments));	
+			return new FilenameResolver(pictureId, this.imageDataPath, this.masterImagePath);	
 		}
 		
 		/// <summary>

@@ -43,6 +43,16 @@ namespace Paint
 		/// How far back can the user scroll before we need to load the next image
 		/// </summary>
 		private float minBackwardScroll = 0;
+		
+		/// <summary>
+		/// Path to where all the image data (save points and info file) should be saved
+		/// </summary>
+		private string imageDataPath;
+
+		/// <summary>
+		/// Path to where all the master images are stored
+		/// </summary>
+		private string masterImagePath;
 
 		private UIImageView[] imageViewList = null;
 		private UIImageView animatedCircleImage;
@@ -51,8 +61,16 @@ namespace Paint
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Paint.HomeScreen"/> class.
 		/// </summary>
-		public HomeScreen() : base ("HomeScreen", null)
+		/// <param name='imageDataPath'>
+		/// Path to where all the image data (save points and info file) should be saved
+		/// </param>
+		/// <param name='masterImagePath'>
+		/// Path to where all the master images are stor
+		/// </param>
+		public HomeScreen(string imageDataPath, string masterImagePath) : base ("HomeScreen", null)
 		{
+			this.masterImagePath = masterImagePath;
+			this.imageDataPath = imageDataPath;
 		}
 		
 		public event EventHandler<PictureSelectedEventArgs> PaintSelected;
@@ -62,7 +80,7 @@ namespace Paint
 		public event EventHandler<PictureSelectedEventArgs> DeleteSelected;
 		
 		public event EventHandler<PictureSelectedEventArgs> CopySelected;
-		
+
 		public event EventHandler NewImagePortraitSelected;
 		
 		public event EventHandler NewImageLandscapeSelected;
@@ -82,11 +100,11 @@ namespace Paint
 			// an animating image
 			animatedCircleImage = new UIImageView();
 			animatedCircleImage.AnimationImages = new UIImage[] {
-				  UIImage.FromBundle ("Content/Spinning Circle_1.png")
-				, UIImage.FromBundle ("Content/Spinning Circle_2.png")
-				, UIImage.FromBundle ("Content/Spinning Circle_3.png")
-				, UIImage.FromBundle ("Content/Spinning Circle_4.png")
-			} ;
+				  UIImage.FromBundle("Content/Spinning Circle_1.png")
+				, UIImage.FromBundle("Content/Spinning Circle_2.png")
+				, UIImage.FromBundle("Content/Spinning Circle_3.png")
+				, UIImage.FromBundle("Content/Spinning Circle_4.png")
+			};
 			animatedCircleImage.AnimationRepeatCount = 0;
 			animatedCircleImage.AnimationDuration = .5;
 			animatedCircleImage.Frame = new RectangleF(110, 20, 100, 100);
@@ -103,15 +121,16 @@ namespace Paint
 			
 			View.AddSubview(activityIndicatorView);
 			
-			this.btnPaint.SetBackgroundImage(UIImage.FromBundle("Content/graphics.png"),UIControlState.Normal);
+			this.btnPaint.SetBackgroundImage(UIImage.FromBundle("Content/graphics.png"), UIControlState.Normal);
 		
-			DirectoryInfo di = new DirectoryInfo(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments));
+			DirectoryInfo di = new DirectoryInfo(this.masterImagePath);
 			FileSystemInfo[] files = di.GetFileSystemInfos("*.PNG");
 			this.fileList = files.OrderBy(f => f.LastWriteTimeUtc).Select(x => x.FullName).ToList();
 	
 			this.fileListLength = this.fileList.Count;
 			
-			if (this.fileListLength < 2) return;
+			if (this.fileListLength < 2)
+				return;
 			
 			this.imageViewList = new UIImageView[] {
 				new UIImageView(),
@@ -191,22 +210,6 @@ namespace Paint
 				this.NewImagePortraitSelected(this, EventArgs.Empty);
 			}
 		}	
-		
-		protected virtual void OnDeleteSelected(PictureSelectedEventArgs e)
-		{
-			if (this.DeleteSelected != null)
-			{
-				this.DeleteSelected(this, e);
-			}
-		}
-
-		protected virtual void OnCopySelected(PictureSelectedEventArgs e)
-		{
-			if (this.CopySelected != null)
-			{
-				this.CopySelected(this, e);
-			}
-		}
 
 		protected virtual void OnPlaybackSelected(PictureSelectedEventArgs e)
 		{
@@ -237,18 +240,18 @@ namespace Paint
 
 			float xOffset = scrollView.ContentOffset.X;
 			
-			if (xOffset > this.maxForwardScroll) 
+			if (xOffset > this.maxForwardScroll)
 			{
-	    		// We are moving forward so move the images to the previous UIImageView
+				// We are moving forward so move the images to the previous UIImageView
 				this.imageViewList[0].Image = this.imageViewList[1].Image;
 				this.imageViewList[1].Image = this.imageViewList[2].Image;
  
-			    // Add one to the currentIndex or reset to 0 if we have reached the end.
-			    this.currentFileIndex = (this.currentFileIndex >= this.fileListLength -1) ? 0 : this.currentFileIndex + 1;
+				// Add one to the currentIndex or reset to 0 if we have reached the end.
+				this.currentFileIndex = (this.currentFileIndex >= this.fileListLength - 1) ? 0 : this.currentFileIndex + 1;
 
-			    // Load content on the last page. This is either from the next item in the array
-			    // or the first if we have reached the end.
-			    int nextIndex = (this.currentFileIndex >= this.fileListLength -1) ? 0 : this.currentFileIndex + 1;
+				// Load content on the last page. This is either from the next item in the array
+				// or the first if we have reached the end.
+				int nextIndex = (this.currentFileIndex >= this.fileListLength - 1) ? 0 : this.currentFileIndex + 1;
 				this.LoadImageWithIndex(2, nextIndex);
 
 				// reset the scroll position so the user does not realise we've moved the images around
@@ -256,16 +259,16 @@ namespace Paint
 			}
 			else if (xOffset < this.minBackwardScroll)
 			{
-    			// We are moving backwards so move the images to the next UIImageView
- 				this.imageViewList[2].Image = this.imageViewList[1].Image;
- 				this.imageViewList[1].Image = this.imageViewList[0].Image;
+				// We are moving backwards so move the images to the next UIImageView
+				this.imageViewList[2].Image = this.imageViewList[1].Image;
+				this.imageViewList[1].Image = this.imageViewList[0].Image;
  
-			    // Subtract one from the currentIndex or go to the end if we have reached the beginning.
-			    this.currentFileIndex = (this.currentFileIndex == 0) ? this.fileListLength - 1 : this.currentFileIndex - 1;
+				// Subtract one from the currentIndex or go to the end if we have reached the beginning.
+				this.currentFileIndex = (this.currentFileIndex == 0) ? this.fileListLength - 1 : this.currentFileIndex - 1;
  
- 			   	// Load content on the first page. This is either from the prev item in the array
-			    // or the last if we have reached the beginning.
-			    int prevIndex = (this.currentFileIndex == 0) ? this.fileListLength - 1 : this.currentFileIndex - 1;
+				// Load content on the first page. This is either from the prev item in the array
+				// or the last if we have reached the beginning.
+				int prevIndex = (this.currentFileIndex == 0) ? this.fileListLength - 1 : this.currentFileIndex - 1;
 				this.LoadImageWithIndex(0, prevIndex);
 
 				// reset the scroll position so the user does not realise we've moved the images around
@@ -290,18 +293,20 @@ namespace Paint
 			
 			BackgroundWorker backgroundWorker = new BackgroundWorker();
 			backgroundWorker.DoWork += (s2, e2) => {
-				this.InvokeOnMainThread( delegate {
-           			this.OnPaintSelected(new PictureSelectedEventArgs(this.PictureIdFromFile(currentFileIndex)));
-				});
+				this.InvokeOnMainThread(delegate
+				{
+					this.OnPaintSelected(this.SelectedPictureEventArgs());
+				}
+				);
 			};
 
-        	backgroundWorker.RunWorkerAsync();
+			backgroundWorker.RunWorkerAsync();
 
-        	backgroundWorker.RunWorkerCompleted += (s3, e3) =>
-        	{
+			backgroundWorker.RunWorkerCompleted += (s3, e3) =>
+			{
 				this.animatedCircleImage.StopAnimating();
 				this.activityIndicatorView.StopAnimating();
-        	};
+			};
 			
 			/*
 			var a = this.InterfaceOrientation;
@@ -311,10 +316,25 @@ namespace Paint
 			this.OnPaintSelected(EventArgs.Empty);
 			*/
 		}
-		
+
+		partial void btnTwitter_TouchUpInside(MonoTouch.UIKit.UIButton sender)
+		{
+			this.TweetImage(this.PictureIdFromFile(currentFileIndex));
+		}
+
+		partial void btnEmail_TouchUpInside(MonoTouch.UIKit.UIButton sender)
+		{
+			this.SendEmail(this.PictureIdFromFile(currentFileIndex));
+		}
+
+		partial void btnExportPhoto_TouchUpInside(MonoTouch.UIKit.UIButton sender)
+		{
+			this.ExportImageToPhotoGallery(this.PictureIdFromFile(currentFileIndex));
+		}
+
 		partial void btnCopy_TouchUpInside(MonoTouch.UIKit.UIButton sender)
 		{
-			this.OnCopySelected(new PictureSelectedEventArgs(this.PictureIdFromFile(currentFileIndex)));
+			this.CopyImage(this.PictureIdFromFile(currentFileIndex));
 		}
 		
 		partial void btnDelete_TouchUpInside(MonoTouch.UIKit.UIButton sender)
@@ -326,16 +346,21 @@ namespace Paint
 				CancelButtonIndex = 0
 			};
 			
-			alert.AddButton(LanguageStrings.DeleteAlertViewCancelButtonText);
-			alert.AddButton(LanguageStrings.DeleteAlertViewOKButtonText);
+			alert.AddButton(LanguageStrings.CancelButtonText);
+			alert.AddButton(LanguageStrings.OKButtonText);
 
 			alert.Clicked += (s, e) => 
 			{
 				if (e.ButtonIndex == 1)
 				{
-					this.InvokeOnMainThread( delegate {
-	           			this.OnDeleteSelected(new PictureSelectedEventArgs(this.PictureIdFromFile(currentFileIndex)));
-					});
+					this.InvokeOnMainThread(delegate
+					{
+						var filenameResolver = this.CreateFilenameResolver(this.PictureIdFromFile(currentFileIndex));
+						var pictureIOManager = new PictureIOManager(filenameResolver);
+						
+						pictureIOManager.DeleteImage();
+					}
+					);
 				}
 			};
 			
@@ -348,20 +373,22 @@ namespace Paint
 			
 			BackgroundWorker backgroundWorker = new BackgroundWorker();
 			backgroundWorker.DoWork += (s2, e2) => {
-				this.InvokeOnMainThread( delegate {
-           			this.OnPlaybackSelected(new PictureSelectedEventArgs(this.PictureIdFromFile(currentFileIndex)));
-				});
+				this.InvokeOnMainThread(delegate
+				{
+					this.OnPlaybackSelected(this.SelectedPictureEventArgs());
+				}
+				);
 			};
 
-        	backgroundWorker.RunWorkerAsync();
+			backgroundWorker.RunWorkerAsync();
 
-        	backgroundWorker.RunWorkerCompleted += (s3, e3) =>
-        	{
+			backgroundWorker.RunWorkerCompleted += (s3, e3) =>
+			{
 				this.animatedCircleImage.StopAnimating();
-        	};
+			};
 		}
 		
-		private void AddImageWithName (string imageString, int position)
+		private void AddImageWithName(string imageString, int position)
 		{
 			// add image to scroll view
 			UIImage image = UIImage.FromFile(imageString);
@@ -385,6 +412,84 @@ namespace Paint
 		private Guid PictureIdFromFile(int selectedFile)
 		{
 			return new Guid(Path.GetFileNameWithoutExtension(this.fileList[selectedFile]));
+		}
+
+		/// <summary>
+		/// Returns a PictureSelectedEventArgs containing a reference to the selected picture
+		/// </summary>
+		/// <returns>
+		/// EventsArgs for the currently selected picture
+		/// </returns>
+		private PictureSelectedEventArgs SelectedPictureEventArgs()
+		{
+			return new PictureSelectedEventArgs(this.PictureIdFromFile(currentFileIndex));
+		}
+
+		/// <summary>
+		/// Offers the option to tweet the image.
+		/// </summary>
+		/// <param name='pictureId'>
+		/// ID of the picture we wish to email
+		/// </param>
+		private void TweetImage(Guid pictureId)
+		{
+			var filenameResolver = this.CreateFilenameResolver(pictureId);
+			var tweetSender = new TweetSender(this);
+			tweetSender.TweetImage(filenameResolver.MasterImageFilename);
+		}
+
+		/// <summary>
+		/// Offers the option to email the image to someone
+		/// </summary>
+		/// <param name='pictureId'>
+		/// ID of the picture we wish to email
+		/// </param>
+		private void SendEmail(Guid pictureId)
+		{
+			var filenameResolver = this.CreateFilenameResolver(pictureId);
+			var emailSender = new EmailSender(this);
+			emailSender.SendImage(filenameResolver.MasterImageFilename);
+		}
+
+		/// <summary>
+		/// Exports the image to the photo gallery.
+		/// </summary>
+		/// <param name='pictureId'>
+		/// ID of the photo we wish to export
+		/// </param>
+		private void ExportImageToPhotoGallery(Guid pictureId)
+		{
+			var filenameResolver = this.CreateFilenameResolver(pictureId);
+			var photoGallery = new PhotoGallery();
+			photoGallery.SaveImage(filenameResolver.MasterImageFilename);
+		}
+
+		/// <summary>
+		/// Copies the image and all associated data
+		/// </summary>
+		/// <param name='pictureId'>
+		/// Identifier of the image to copy
+		/// </param>
+		private void CopyImage(Guid pictureId)
+		{
+			var filenameResolver = this.CreateFilenameResolver(pictureId);
+			var pictureIOManager = new PictureIOManager(filenameResolver);
+			
+			pictureIOManager.CopyImage(this.CreateFilenameResolver(Guid.NewGuid()));
+		}
+
+		/// <summary>
+		/// Creates the filename resolver.
+		/// </summary>
+		/// <returns>
+		/// The filename resolver.
+		/// </returns>
+		/// <param name='pictureId'>
+		/// Picture identifier.
+		/// </param>
+		private FilenameResolver CreateFilenameResolver(Guid pictureId)
+		{
+			return new FilenameResolver(pictureId, this.imageDataPath, Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments));	
 		}
 	}
 }

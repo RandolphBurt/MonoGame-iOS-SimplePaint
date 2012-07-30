@@ -136,6 +136,9 @@
     <Compile Include="BusinessLogic\IUIBusyMessage.cs" />
     <Compile Include="MonoTouch\BusyMessageDisplay.cs" />
     <Compile Include="MonoTouch\LanguageStrings.cs" />
+    <Compile Include="MonoTouch\PhotoGallery.cs" />
+    <Compile Include="MonoTouch\EmailSender.cs" />
+    <Compile Include="MonoTouch\TweetSender.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

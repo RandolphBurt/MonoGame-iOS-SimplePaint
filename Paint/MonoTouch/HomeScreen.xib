@@ -57,7 +57,7 @@
 					<object class="IBUIButton" id="364712257">
 						<reference key="NSNextResponder" ref="766721923"/>
 						<int key="NSvFlags">292</int>
-						<string key="NSFrame">{{260, 826}, {104, 158}}</string>
+						<string key="NSFrame">{{265, 826}, {104, 158}}</string>
 						<reference key="NSSuperview" ref="766721923"/>
 						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="758147799"/>
@@ -96,10 +96,10 @@
 					<object class="IBUIButton" id="758147799">
 						<reference key="NSNextResponder" ref="766721923"/>
 						<int key="NSvFlags">292</int>
-						<string key="NSFrame">{{384, 826}, {104, 158}}</string>
+						<string key="NSFrame">{{395, 826}, {104, 158}}</string>
 						<reference key="NSSuperview" ref="766721923"/>
 						<reference key="NSWindow"/>
-						<reference key="NSNextKeyView" ref="128367393"/>
+						<reference key="NSNextKeyView" ref="299413440"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<bool key="IBUIOpaque">NO</bool>
 						<string key="targetRuntimeIdentifier">IBIPadFramework</string>
@@ -119,10 +119,10 @@
 					<object class="IBUIButton" id="128367393">
 						<reference key="NSNextResponder" ref="766721923"/>
 						<int key="NSvFlags">292</int>
-						<string key="NSFrame">{{506, 826}, {104, 158}}</string>
+						<string key="NSFrame">{{144, 826}, {84, 74}}</string>
 						<reference key="NSSuperview" ref="766721923"/>
 						<reference key="NSWindow"/>
-						<reference key="NSNextKeyView" ref="868899461"/>
+						<reference key="NSNextKeyView" ref="364712257"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<bool key="IBUIOpaque">NO</bool>
 						<string key="targetRuntimeIdentifier">IBIPadFramework</string>
@@ -139,13 +139,82 @@
 						<reference key="IBUIFontDescription" ref="656152047"/>
 						<reference key="IBUIFont" ref="819817158"/>
 					</object>
-					<object class="IBUIButton" id="868899461">
+					<object class="IBUIButton" id="299413440">
 						<reference key="NSNextResponder" ref="766721923"/>
 						<int key="NSvFlags">292</int>
-						<string key="NSFrame">{{627, 826}, {104, 158}}</string>
+						<string key="NSFrame">{{539, 826}, {84, 74}}</string>
+						<reference key="NSSuperview" ref="766721923"/>
+						<reference key="NSWindow"/>
+						<reference key="NSNextKeyView" ref="484791042"/>
+						<string key="NSReuseIdentifierKey">_NS:9</string>
+						<bool key="IBUIOpaque">NO</bool>
+						<string key="targetRuntimeIdentifier">IBIPadFramework</string>
+						<int key="IBUIContentHorizontalAlignment">0</int>
+						<int key="IBUIContentVerticalAlignment">0</int>
+						<int key="IBUIButtonType">1</int>
+						<string key="IBUINormalTitle">Photo</string>
+						<reference key="IBUIHighlightedTitleColor" ref="737763101"/>
+						<object class="NSColor" key="IBUINormalTitleColor">
+							<int key="NSColorSpace">1</int>
+							<bytes key="NSRGB">MC4xOTYwNzg0MzQ2IDAuMzA5ODAzOTMyOSAwLjUyMTU2ODY1NgA</bytes>
+						</object>
+						<reference key="IBUINormalTitleShadowColor" ref="790868663"/>
+						<reference key="IBUIFontDescription" ref="656152047"/>
+						<reference key="IBUIFont" ref="819817158"/>
+					</object>
+					<object class="IBUIButton" id="719108982">
+						<reference key="NSNextResponder" ref="766721923"/>
+						<int key="NSvFlags">292</int>
+						<string key="NSFrame">{{539, 910}, {84, 74}}</string>
 						<reference key="NSSuperview" ref="766721923"/>
 						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView"/>
+						<string key="NSReuseIdentifierKey">_NS:9</string>
+						<bool key="IBUIOpaque">NO</bool>
+						<string key="targetRuntimeIdentifier">IBIPadFramework</string>
+						<int key="IBUIContentHorizontalAlignment">0</int>
+						<int key="IBUIContentVerticalAlignment">0</int>
+						<int key="IBUIButtonType">1</int>
+						<string key="IBUINormalTitle">Email</string>
+						<reference key="IBUIHighlightedTitleColor" ref="737763101"/>
+						<object class="NSColor" key="IBUINormalTitleColor">
+							<int key="NSColorSpace">1</int>
+							<bytes key="NSRGB">MC4xOTYwNzg0MzQ2IDAuMzA5ODAzOTMyOSAwLjUyMTU2ODY1NgA</bytes>
+						</object>
+						<reference key="IBUINormalTitleShadowColor" ref="790868663"/>
+						<reference key="IBUIFontDescription" ref="656152047"/>
+						<reference key="IBUIFont" ref="819817158"/>
+					</object>
+					<object class="IBUIButton" id="484791042">
+						<reference key="NSNextResponder" ref="766721923"/>
+						<int key="NSvFlags">292</int>
+						<string key="NSFrame">{{655, 826}, {84, 74}}</string>
+						<reference key="NSSuperview" ref="766721923"/>
+						<reference key="NSWindow"/>
+						<reference key="NSNextKeyView" ref="307622764"/>
+						<string key="NSReuseIdentifierKey">_NS:9</string>
+						<bool key="IBUIOpaque">NO</bool>
+						<string key="targetRuntimeIdentifier">IBIPadFramework</string>
+						<int key="IBUIContentHorizontalAlignment">0</int>
+						<int key="IBUIContentVerticalAlignment">0</int>
+						<int key="IBUIButtonType">1</int>
+						<string key="IBUINormalTitle">Twitter</string>
+						<reference key="IBUIHighlightedTitleColor" ref="737763101"/>
+						<object class="NSColor" key="IBUINormalTitleColor">
+							<int key="NSColorSpace">1</int>
+							<bytes key="NSRGB">MC4xOTYwNzg0MzQ2IDAuMzA5ODAzOTMyOSAwLjUyMTU2ODY1NgA</bytes>
+						</object>
+						<reference key="IBUINormalTitleShadowColor" ref="790868663"/>
+						<reference key="IBUIFontDescription" ref="656152047"/>
+						<reference key="IBUIFont" ref="819817158"/>
+					</object>
+					<object class="IBUIButton" id="868899461">
+						<reference key="NSNextResponder" ref="766721923"/>
+						<int key="NSvFlags">292</int>
+						<string key="NSFrame">{{144, 910}, {84, 74}}</string>
+						<reference key="NSSuperview" ref="766721923"/>
+						<reference key="NSWindow"/>
+						<reference key="NSNextKeyView" ref="719108982"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<bool key="IBUIOpaque">NO</bool>
 						<string key="targetRuntimeIdentifier">IBIPadFramework</string>
@@ -165,10 +234,10 @@
 					<object class="IBUIButton" id="157374716">
 						<reference key="NSNextResponder" ref="766721923"/>
 						<int key="NSvFlags">292</int>
-						<string key="NSFrame">{{14, 826}, {104, 158}}</string>
+						<string key="NSFrame">{{26, 826}, {84, 74}}</string>
 						<reference key="NSSuperview" ref="766721923"/>
 						<reference key="NSWindow"/>
-						<reference key="NSNextKeyView" ref="307622764"/>
+						<reference key="NSNextKeyView" ref="128367393"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<bool key="IBUIOpaque">NO</bool>
 						<string key="targetRuntimeIdentifier">IBIPadFramework</string>
@@ -188,10 +257,10 @@
 					<object class="IBUIButton" id="307622764">
 						<reference key="NSNextResponder" ref="766721923"/>
 						<int key="NSvFlags">292</int>
-						<string key="NSFrame">{{138, 826}, {104, 158}}</string>
+						<string key="NSFrame">{{26, 910}, {84, 74}}</string>
 						<reference key="NSSuperview" ref="766721923"/>
 						<reference key="NSWindow"/>
-						<reference key="NSNextKeyView" ref="364712257"/>
+						<reference key="NSNextKeyView" ref="868899461"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<bool key="IBUIOpaque">NO</bool>
 						<string key="targetRuntimeIdentifier">IBIPadFramework</string>
@@ -294,6 +363,30 @@
 					<int key="connectionID">30</int>
 				</object>
 				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">btnEmail</string>
+						<reference key="source" ref="841351856"/>
+						<reference key="destination" ref="719108982"/>
+					</object>
+					<int key="connectionID">39</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">btnExportPhoto</string>
+						<reference key="source" ref="841351856"/>
+						<reference key="destination" ref="299413440"/>
+					</object>
+					<int key="connectionID">41</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">btnTwitter</string>
+						<reference key="source" ref="841351856"/>
+						<reference key="destination" ref="484791042"/>
+					</object>
+					<int key="connectionID">47</int>
+				</object>
+				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchEventConnection" key="connection">
 						<string key="label">btnPaint_TouchUpInside:</string>
 						<reference key="source" ref="364712257"/>
@@ -347,6 +440,33 @@
 					</object>
 					<int key="connectionID">32</int>
 				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchEventConnection" key="connection">
+						<string key="label">btnExportPhoto_TouchUpInside:</string>
+						<reference key="source" ref="299413440"/>
+						<reference key="destination" ref="841351856"/>
+						<int key="IBEventType">7</int>
+					</object>
+					<int key="connectionID">44</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchEventConnection" key="connection">
+						<string key="label">btnEmail_TouchUpInside:</string>
+						<reference key="source" ref="719108982"/>
+						<reference key="destination" ref="841351856"/>
+						<int key="IBEventType">7</int>
+					</object>
+					<int key="connectionID">42</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchEventConnection" key="connection">
+						<string key="label">btnTwitter_TouchUpInside:</string>
+						<reference key="source" ref="484791042"/>
+						<reference key="destination" ref="841351856"/>
+						<int key="IBEventType">7</int>
+					</object>
+					<int key="connectionID">46</int>
+				</object>
 			</array>
 			<object class="IBMutableOrderedSet" key="objectRecords">
 				<array key="orderedObjects">
@@ -372,12 +492,15 @@
 						<reference key="object" ref="766721923"/>
 						<array class="NSMutableArray" key="children">
 							<reference ref="326888690"/>
+							<reference ref="299413440"/>
+							<reference ref="719108982"/>
 							<reference ref="758147799"/>
+							<reference ref="364712257"/>
 							<reference ref="128367393"/>
 							<reference ref="868899461"/>
-							<reference ref="364712257"/>
 							<reference ref="157374716"/>
 							<reference ref="307622764"/>
+							<reference ref="484791042"/>
 						</array>
 						<reference key="parent" ref="0"/>
 					</object>
@@ -424,6 +547,24 @@
 						<reference key="parent" ref="766721923"/>
 						<string key="objectName">btnDelete</string>
 					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">33</int>
+						<reference key="object" ref="299413440"/>
+						<reference key="parent" ref="766721923"/>
+						<string key="objectName">btnExportPhoto</string>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">35</int>
+						<reference key="object" ref="719108982"/>
+						<reference key="parent" ref="766721923"/>
+						<string key="objectName">btnEmail</string>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">37</int>
+						<reference key="object" ref="484791042"/>
+						<reference key="parent" ref="766721923"/>
+						<string key="objectName">btnTwitter</string>
+					</object>
 				</array>
 			</object>
 			<dictionary class="NSMutableDictionary" key="flattenedProperties">
@@ -437,6 +578,9 @@
 				<string key="20.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="26.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="28.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
+				<string key="33.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
+				<string key="35.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
+				<string key="37.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="4.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="6.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 			</dictionary>
@@ -444,7 +588,7 @@
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">32</int>
+			<int key="maxID">47</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -454,10 +598,13 @@
 					<dictionary class="NSMutableDictionary" key="actions">
 						<string key="btnCopy_TouchUpInside:">UIButton</string>
 						<string key="btnDelete_TouchUpInside:">UIButton</string>
+						<string key="btnEmail_TouchUpInside:">UIButton</string>
+						<string key="btnExportPhoto_TouchUpInside:">UIButton</string>
 						<string key="btnNewLandscape_TouchUpInside:">UIButton</string>
 						<string key="btnNewPortrait_TouchUpInside:">UIButton</string>
 						<string key="btnPaint_TouchUpInside:">UIButton</string>
 						<string key="btnPlayback_TouchUpInside:">UIButton</string>
+						<string key="btnTwitter_TouchUpInside:">UIButton</string>
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="actionInfosByName">
 						<object class="IBActionInfo" key="btnCopy_TouchUpInside:">
@@ -466,6 +613,14 @@
 						</object>
 						<object class="IBActionInfo" key="btnDelete_TouchUpInside:">
 							<string key="name">btnDelete_TouchUpInside:</string>
+							<string key="candidateClassName">UIButton</string>
+						</object>
+						<object class="IBActionInfo" key="btnEmail_TouchUpInside:">
+							<string key="name">btnEmail_TouchUpInside:</string>
+							<string key="candidateClassName">UIButton</string>
+						</object>
+						<object class="IBActionInfo" key="btnExportPhoto_TouchUpInside:">
+							<string key="name">btnExportPhoto_TouchUpInside:</string>
 							<string key="candidateClassName">UIButton</string>
 						</object>
 						<object class="IBActionInfo" key="btnNewLandscape_TouchUpInside:">
@@ -484,14 +639,21 @@
 							<string key="name">btnPlayback_TouchUpInside:</string>
 							<string key="candidateClassName">UIButton</string>
 						</object>
+						<object class="IBActionInfo" key="btnTwitter_TouchUpInside:">
+							<string key="name">btnTwitter_TouchUpInside:</string>
+							<string key="candidateClassName">UIButton</string>
+						</object>
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="outlets">
 						<string key="btnCopy">UIButton</string>
 						<string key="btnDelete">UIButton</string>
+						<string key="btnEmail">UIButton</string>
+						<string key="btnExportPhoto">UIButton</string>
 						<string key="btnNewLandscape">UIButton</string>
 						<string key="btnNewPortrait">UIButton</string>
 						<string key="btnPaint">UIButton</string>
 						<string key="btnPlayback">UIButton</string>
+						<string key="btnTwitter">UIButton</string>
 						<string key="scrollView">UIScrollView</string>
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="toOneOutletInfosByName">
@@ -501,6 +663,14 @@
 						</object>
 						<object class="IBToOneOutletInfo" key="btnDelete">
 							<string key="name">btnDelete</string>
+							<string key="candidateClassName">UIButton</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="btnEmail">
+							<string key="name">btnEmail</string>
+							<string key="candidateClassName">UIButton</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="btnExportPhoto">
+							<string key="name">btnExportPhoto</string>
 							<string key="candidateClassName">UIButton</string>
 						</object>
 						<object class="IBToOneOutletInfo" key="btnNewLandscape">
@@ -517,6 +687,10 @@
 						</object>
 						<object class="IBToOneOutletInfo" key="btnPlayback">
 							<string key="name">btnPlayback</string>
+							<string key="candidateClassName">UIButton</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="btnTwitter">
+							<string key="name">btnTwitter</string>
 							<string key="candidateClassName">UIButton</string>
 						</object>
 						<object class="IBToOneOutletInfo" key="scrollView">
