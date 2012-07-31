@@ -17,15 +17,22 @@ namespace Paint
 		string DataFolder { get; }
 
 		/// <summary>
-		/// Gets the Canvas Recorder Working folder.
+		/// Gets the Working folder.
 		/// </summary>
-		string CanvasRecorderWorkingFolder { get; }
+		string WorkingFolder { get; }
 
 		/// <summary>
-		/// Gets the filename to use for the Image Information File
+		/// Gets the filename to use for the Master Image Information File
+		/// This is written out at the end when we save the image
 		/// </summary>
-		string ImageInfoFilename { get; }
-				
+		string MasterImageInfoFilename { get; }
+
+		/// <summary>
+		/// Gets the filename to use for the Image Information File (stored in the working folder)
+		/// i.e. Is updated as we are drawing the image
+		/// </summary>
+		string WorkingImageInfoFilename { get; }
+
 		/// <summary>
 		/// Gets the master image filename.
 		/// </summary>

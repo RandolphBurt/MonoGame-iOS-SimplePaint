@@ -165,7 +165,8 @@ namespace Paint
 			if (imageStateData.Width > imageStateData.Height)
 			{
 				this.graphicsDeviceManager.SupportedOrientations = DisplayOrientation.LandscapeLeft | DisplayOrientation.LandscapeRight;
-			} else
+			}
+			else
 			{
 				this.graphicsDeviceManager.SupportedOrientations = DisplayOrientation.Portrait | DisplayOrientation.PortraitUpsideDown;
 			}
@@ -179,7 +180,7 @@ namespace Paint
 		/// <param name='savePoint'>specific save point we wish to restore</param>
 		public void RestoreSavePoint(int savePoint)
 		{
-			this.RenderImage(this.inMemoryCanvasRenderTarget, this.undoRedoRenderTargets [savePoint]);
+			this.RenderImage(this.inMemoryCanvasRenderTarget, this.undoRedoRenderTargets[savePoint]);
 		}
 		
 		/// <summary>
@@ -188,7 +189,7 @@ namespace Paint
 		/// <param name='savePoint'>specific save point we wish to use to store the canvas</param>
 		public void StoreSavePoint(int savePoint)
 		{
-			this.RenderImage(this.undoRedoRenderTargets [savePoint], this.inMemoryCanvasRenderTarget);
+			this.RenderImage(this.undoRedoRenderTargets[savePoint], this.inMemoryCanvasRenderTarget);
 		}		
 		
 		/// <summary>
@@ -415,13 +416,13 @@ namespace Paint
 		/// </summary>
 		private void CreatePictureStateManager()
 		{
-			if (File.Exists(this.filenameResolver.ImageInfoFilename) == true)
+			if (File.Exists(this.filenameResolver.MasterImageInfoFilename) == true)
 			{
 				// existing image so we load the rendertargetlist from disk
 				this.pictureIOManager.LoadData(this.graphicsDeviceManager.GraphicsDevice, this.spriteBatch, this.undoRedoRenderTargets, this.BackgroundColor);
 			}
 			
-			this.pictureStateManager = new PictureStateManager(this.filenameResolver, this, this.imageStateData);			
+			this.pictureStateManager = new PictureStateManager(this.filenameResolver, this.pictureIOManager, this, this.imageStateData);			
 			this.pictureStateManager.RedoEnabledChanged += (sender, e) => 
 			{
 				this.toolBox.RedoEnabled = this.pictureStateManager.RedoEnabled;
@@ -566,7 +567,8 @@ namespace Paint
 				{
 					touchInToolbox = true;
 				}
-			} else
+			}
+			else
 			{
 				if (touchPoint.Position.Y <= this.toolBox.ToolboxHeight)
 				{
@@ -610,7 +612,8 @@ namespace Paint
 					if (this.previousTouchType != TouchType.FreeDrag && this.previousTouchType != TouchType.StartDrag)
 					{
 						return TouchType.StartDrag;
-					} else
+					}
+					else
 					{
 						return TouchType.FreeDrag;
 					}

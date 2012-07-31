@@ -59,6 +59,13 @@ namespace Paint
 		/// Creates the directory structure for this image to be saved to disk
 		/// </summary>
 		void CreateDirectoryStructure();
+	
+		/// <summary>
+		///  Saves the imageStateData to disk
+		/// </summary>
+		/// <param name='filename'>File to save the image data</param>
+		/// <param name='imageStateData'>Image state data.</param>
+		void SaveImageStateData(string filename, ImageStateData imageStateData);
 	}
 }
 

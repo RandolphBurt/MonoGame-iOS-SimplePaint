@@ -38,13 +38,13 @@ namespace Paint
 		/// <param name='undoRedoRenderTargets'>Sequence of images representing the undo/redo chain</param>
 		public void SaveData(ImageStateData imageStateData, RenderTarget2D masterImageRenderTarget, RenderTarget2D[] undoRedoRenderTargets)
 		{
-			this.SaveImageStateData(imageStateData);
+			this.SaveImageStateData(this.filenameResolver.MasterImageInfoFilename, imageStateData);
 			
 			int end = imageStateData.FirstSavePoint == 0 ? imageStateData.LastSavePoint : imageStateData.MaxUndoRedoCount - 1;
 			
 			for (int count = 0; count <= end; count++)
 			{
-				var renderTarget = undoRedoRenderTargets [count];
+				var renderTarget = undoRedoRenderTargets[count];
 
 				// Save the render target to disk
 				renderTarget.SaveAsPng(
@@ -53,16 +53,22 @@ namespace Paint
 					renderTarget.Height);
 
 				// copy the working canvas recorder file into the master folder.
-				File.Copy(
-					this.filenameResolver.WorkingCanvasRecorderFilename(count), 
-					this.filenameResolver.MasterCanvasRecorderFilename(count),
-					true);
+				var masterCanvasRecorderFile = this.filenameResolver.MasterCanvasRecorderFilename(count);
+
+				if (File.Exists(masterCanvasRecorderFile))
+				{
+					File.Delete(masterCanvasRecorderFile);
+				}
+
+				File.Move(this.filenameResolver.WorkingCanvasRecorderFilename(count), masterCanvasRecorderFile);
 			}
 			
 			masterImageRenderTarget.SaveAsPng(
 				this.filenameResolver.MasterImageFilename,
 				masterImageRenderTarget.Width,
 				masterImageRenderTarget.Height);
+
+			File.Delete(this.filenameResolver.WorkingImageInfoFilename);
 		}
 		
 		/// <summary>
@@ -102,7 +108,7 @@ namespace Paint
 						device, 
 			    		this.filenameResolver.ImageSavePointFilename(count)))
 				{
-					device.SetRenderTarget(undoRedoRenderTargets [count]);
+					device.SetRenderTarget(undoRedoRenderTargets[count]);
 					spriteBatch.Begin();
 					device.Clear(backgroundColor);
 					spriteBatch.Draw(imageTexture, Vector2.Zero, backgroundColor);
@@ -142,7 +148,7 @@ namespace Paint
 				Directory.CreateDirectory(destinationImageFilenameResolver.DataFolder);
 			}
 			
-			File.Copy(this.filenameResolver.ImageInfoFilename, destinationImageFilenameResolver.ImageInfoFilename);
+			File.Copy(this.filenameResolver.MasterImageInfoFilename, destinationImageFilenameResolver.MasterImageInfoFilename);
 			File.Copy(this.filenameResolver.MasterImageFilename, destinationImageFilenameResolver.MasterImageFilename);
 			
 			var imageStateData = this.LoadImageStateData();
@@ -163,14 +169,14 @@ namespace Paint
 		/// </returns>
 		public ImageStateData LoadImageStateData()
 		{
-			if (!File.Exists(this.filenameResolver.ImageInfoFilename))
+			if (!File.Exists(this.filenameResolver.MasterImageInfoFilename))
 			{
-				throw new FileNotFoundException(String.Format("Image State Data file {0} does not exist", this.filenameResolver.ImageInfoFilename));				                             
+				throw new FileNotFoundException(String.Format("Image State Data file {0} does not exist", this.filenameResolver.MasterImageInfoFilename));				                             
 			}
 			
 			var dataList = new List<int>();
 			
-			using (var stream = File.OpenRead(this.filenameResolver.ImageInfoFilename))
+			using (var stream = File.OpenRead(this.filenameResolver.MasterImageInfoFilename))
 			{
 				for (short count = 0; count < 6; count++)
 				{
@@ -184,12 +190,12 @@ namespace Paint
 			}
 
 			return new ImageStateData(
-				dataList [0], 
-				dataList [1], 
-				dataList [2], 
-				dataList [3],
-				dataList [4],
-				dataList [5]);
+				dataList[0], 
+				dataList[1], 
+				dataList[2], 
+				dataList[3],
+				dataList[4],
+				dataList[5]);
 		}
 
 		/// <summary>
@@ -202,17 +208,18 @@ namespace Paint
 				Directory.CreateDirectory(this.filenameResolver.DataFolder);
 			}
 
-			if (!Directory.Exists(this.filenameResolver.CanvasRecorderWorkingFolder))
+			if (!Directory.Exists(this.filenameResolver.WorkingFolder))
 			{
-				Directory.CreateDirectory(this.filenameResolver.CanvasRecorderWorkingFolder);
+				Directory.CreateDirectory(this.filenameResolver.WorkingFolder);
 			}
 		}
 
 		/// <summary>
 		///  Saves the imageStateData to disk
 		/// </summary>
+		/// <param name='filename'>File to save the image data</param>
 		/// <param name='imageStateData'>Image state data.</param>
-		private void SaveImageStateData(ImageStateData imageStateData)
+		public void SaveImageStateData(string filename, ImageStateData imageStateData)
 		{
 			// Next write out the information file
 			var dataArray = new int[] {
@@ -224,7 +231,7 @@ namespace Paint
 				imageStateData.CurrentSavePoint				
 			};
 			
-			using (var stream = File.Open(this.filenameResolver.ImageInfoFilename, FileMode.Create, FileAccess.Write))
+			using (var stream = File.Open(filename, FileMode.Create, FileAccess.Write))
 			{
 				foreach (int val in dataArray)
 				{

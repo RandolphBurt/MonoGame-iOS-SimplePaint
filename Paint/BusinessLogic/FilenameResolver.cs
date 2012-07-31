@@ -28,12 +28,13 @@ namespace Paint
 		private const string FileExtensionPNGImage = "PNG";
 
 		/// <summary>
-		/// The folder where we store the canvas recorder files whilst we are editing a picture.
+		/// The folder where we store the canvas recorder files whilst we are editing a picture
+		/// along with the current copy of the ImageDataFile
 		/// Intention is to only save them to the DataFolder when we save at the end when we save all the images.  
 		/// Thus if the app crashes then we have not overridden all the canvas recorder files in the data folder
 		/// hence no longer matching the image files
 		/// </summary>
-		private const string CanvasRecorderWorkingFolderName = "REC_FILES";
+		private const string WorkingFolderName = "WORKING";
 		
 		/// <summary>
 		/// Unique identifier for this picture
@@ -55,8 +56,9 @@ namespace Paint
 			this.pictureId = pictureId;
 			this.imageDataPath = imageDataPath;
 			this.DataFolder = Path.Combine(this.imageDataPath, this.pictureId.ToString());
-			this.CanvasRecorderWorkingFolder = Path.Combine(this.DataFolder, CanvasRecorderWorkingFolderName);
-			this.ImageInfoFilename = Path.Combine(this.DataFolder, InfoFile);
+			this.WorkingFolder = Path.Combine(this.DataFolder, WorkingFolderName);
+			this.MasterImageInfoFilename = Path.Combine(this.DataFolder, InfoFile);
+			this.WorkingImageInfoFilename = Path.Combine(this.DataFolder, this.WorkingFolder, InfoFile); 
 			this.MasterImageFilename = Path.Combine(masterImageFolder, String.Format("{0}.{1}", this.pictureId.ToString(), FileExtensionPNGImage));
 		}
 		
@@ -72,7 +74,7 @@ namespace Paint
 		/// <summary>
 		/// Gets the Canvas Recorder Working folder.
 		/// </summary>
-		public string CanvasRecorderWorkingFolder
+		public string WorkingFolder
 		{
 			get;
 			private set;
@@ -81,7 +83,17 @@ namespace Paint
 		/// <summary>
 		/// Gets the filename to use for the Image Information File
 		/// </summary>
-		public string ImageInfoFilename
+		public string MasterImageInfoFilename
+		{
+			get;
+			private set;
+		}
+
+		/// <summary>
+		/// Gets the filename to use for the Image Information File (stored in the working folder) i.e. Is updated as we are
+		/// drawing the image 
+		/// </summary>
+		public string WorkingImageInfoFilename
 		{
 			get;
 			private set;
@@ -117,7 +129,7 @@ namespace Paint
 		public string WorkingCanvasRecorderFilename(int savepoint)
 		{
 			return Path.Combine(
-				this.CanvasRecorderWorkingFolder, 
+				this.WorkingFolder, 
 				string.Format("{0}.{1}", savepoint, FileExtensionCanvasRecorder));
 		}
 

@@ -56,6 +56,11 @@ namespace Paint
 		/// The filename resolver.
 		/// </summary>
 		private IFilenameResolver filenameResolver;
+
+		/// <summary>
+		/// Handles the saving of the imageStateData
+		/// </summary>
+		private IPictureIOManager pictureIOManager;
 		
 		/// <summary>
 		/// Current, first and last save points - current status of the image
@@ -119,14 +124,16 @@ namespace Paint
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Paint.PictureStateManager"/> class.		
 		/// <param name='filenameResolver' Determines the filename for all files saved/loaded />
+		/// <param name='pictureIOManager' Handles the saving of the imageStateData />
 		/// <param name='renderTargetHandler' Handles the rendering of the appropriate render target when undo/redoing a change />
 		/// <param name='imageStateData' Current save point, max undo/redo count etc />
 		/// </summary>
-		public PictureStateManager(IFilenameResolver filenameResolver, IRenderTargertHandler renderTargetHandler, ImageStateData imageStateData)
+		public PictureStateManager(IFilenameResolver filenameResolver, IPictureIOManager pictureIOManager, IRenderTargertHandler renderTargetHandler, ImageStateData imageStateData)
 		{
 			this.canvasRecorder = new CanvasRecorder();
 			this.renderTargetHandler = renderTargetHandler;
 			this.filenameResolver = filenameResolver;
+			this.pictureIOManager = pictureIOManager;
 			this.ImageStateData = imageStateData;
 		}
 		
@@ -200,6 +207,7 @@ namespace Paint
 				
 //				this.RemoveFutureSavePoints();
 				this.ImageStateData.ResetLastSavePoint();
+				this.StoreWorkingImageStateData();
 
 				this.UndoEnabled = true;
 			}
@@ -226,8 +234,9 @@ namespace Paint
 			}
 
 			this.ImageStateData.DecrementSavePoint();
+			this.StoreWorkingImageStateData();
 			this.LoadSavePointData();
-			
+
 			this.RedoEnabled = true;
 			
 			if (this.ImageStateData.CurrentSavePoint == this.ImageStateData.FirstSavePoint)
@@ -253,7 +262,8 @@ namespace Paint
 			
 			this.UndoEnabled = true;
 			this.ImageStateData.IncrementSavePoint();
-			
+			this.StoreWorkingImageStateData();
+	
 			if (this.ImageStateData.CurrentSavePoint == this.ImageStateData.LastSavePoint)
 			{
 				this.RedoEnabled = false;
@@ -262,6 +272,25 @@ namespace Paint
 			this.LoadSavePointData();
 		}
 		
+		/// <summary>
+		/// Save the image in its current state
+		/// </summary>
+		public void Save()
+		{			
+			if (this.changesMadeSinceLastSave == true)
+			{
+				this.ImageStateData.IncrementSavePoint();
+				this.StoreSavePointData();
+			}
+			
+			this.RedoEnabled = false;
+			this.changesMadeSinceLastSave = false;
+
+//			this.RemoveFutureSavePoints();
+			this.ImageStateData.ResetLastSavePoint();
+			this.StoreWorkingImageStateData();
+		}
+
 		/// <summary>
 		/// Raises the undo ebabled changed event.
 		/// </summary>
@@ -290,24 +319,6 @@ namespace Paint
 			}
 		}
 
-		/// <summary>
-		/// Save the image in its current state
-		/// </summary>
-		public void Save()
-		{			
-			if (this.changesMadeSinceLastSave == true)
-			{
-				this.ImageStateData.IncrementSavePoint();
-				this.StoreSavePointData();
-			}
-			
-			this.RedoEnabled = false;
-			this.changesMadeSinceLastSave = false;
-
-//			this.RemoveFutureSavePoints();
-			this.ImageStateData.ResetLastSavePoint();
-		}
-
 		/*
 		private void RemoveFutureSavePoints()
 		{
@@ -320,6 +331,19 @@ namespace Paint
 			this.lastSavePoint = this.currentSavePoint;
 		}*/
 
+		/// <summary>
+		/// Persists the working image state data to disk
+		/// </summary>
+		private void StoreWorkingImageStateData()
+		{
+			this.pictureIOManager.SaveImageStateData(this.filenameResolver.WorkingImageInfoFilename, this.ImageStateData);
+		}
+
+		/// <summary>
+		/// Stores the save point data.
+		/// Saves the CanvasRecorder file to disk in the working folder
+		/// Saves the current image into an in memory RenderTarget
+		/// </summary>
 		private void StoreSavePointData()
 		{
 			var canvasRecorderFile = this.filenameResolver.WorkingCanvasRecorderFilename(this.ImageStateData.CurrentSavePoint);
@@ -327,7 +351,12 @@ namespace Paint
 			
 			this.renderTargetHandler.StoreSavePoint(this.ImageStateData.CurrentSavePoint);
 		}
-		
+
+		/// <summary>
+		/// Loads the save point data.
+		/// Loads the CanvasRecorder file from the working folder
+		/// Gets the image from the specific in memory rendertarget and draws that to the master canvas (rendertarget)
+		/// </summary>
 		private void LoadSavePointData()
 		{
 			var canvasRecorderFile = this.filenameResolver.WorkingCanvasRecorderFilename(this.ImageStateData.CurrentSavePoint);
