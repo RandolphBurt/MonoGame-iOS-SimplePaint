@@ -50,6 +50,15 @@ namespace Paint
 		[Action ("btnPaint_TouchUpInside:")]
 		partial void btnPaint_TouchUpInside (MonoTouch.UIKit.UIButton sender);
 
+		[Action ("btnTwitter_TouchUpInside:")]
+		partial void btnTwitter_TouchUpInside (MonoTouch.UIKit.UIButton sender);
+
+		[Action ("btnEmail_TouchUpInside:")]
+		partial void btnEmail_TouchUpInside (MonoTouch.UIKit.UIButton sender);
+
+		[Action ("btnExportPhoto_TouchUpInside:")]
+		partial void btnExportPhoto_TouchUpInside (MonoTouch.UIKit.UIButton sender);
+
 		[Action ("btnCopy_TouchUpInside:")]
 		partial void btnCopy_TouchUpInside (MonoTouch.UIKit.UIButton sender);
 
@@ -58,15 +67,6 @@ namespace Paint
 
 		[Action ("btnPlayback_TouchUpInside:")]
 		partial void btnPlayback_TouchUpInside (MonoTouch.UIKit.UIButton sender);
-
-		[Action ("btnEmail_TouchUpInside:")]
-		partial void btnEmail_TouchUpInside (MonoTouch.UIKit.UIButton sender);
-
-		[Action ("btnExportPhoto_TouchUpInside:")]
-		partial void btnExportPhoto_TouchUpInside (MonoTouch.UIKit.UIButton sender);
-
-		[Action ("btnTwitter_TouchUpInside:")]
-		partial void btnTwitter_TouchUpInside (MonoTouch.UIKit.UIButton sender);
 		
 		void ReleaseDesignerOutlets ()
 		{

@@ -77,10 +77,6 @@ namespace Paint
 
 		public event EventHandler<PictureSelectedEventArgs> PlaybackSelected;
 		
-		public event EventHandler<PictureSelectedEventArgs> DeleteSelected;
-		
-		public event EventHandler<PictureSelectedEventArgs> CopySelected;
-
 		public event EventHandler NewImagePortraitSelected;
 		
 		public event EventHandler NewImageLandscapeSelected;
@@ -137,23 +133,37 @@ namespace Paint
 				new UIImageView(),
 				new UIImageView()
 			};
-			
-			int count = 0;
+
 			foreach (var imageView in this.imageViewList)
 			{
-				imageView.Frame = new System.Drawing.RectangleF(count * this.scrollView.Frame.Width, 0, this.scrollView.Frame.Width, this.scrollView.Frame.Height);
-				imageView.ContentMode = UIViewContentMode.ScaleAspectFit;
 				this.scrollView.AddSubview(imageView);
-				count++;
 			}
-			
-			this.scrollView.ContentSize = new SizeF(this.scrollView.Frame.Width * this.imageViewList.Length, this.scrollView.Frame.Height);	
-			
+
+			this.PositionScrollViewContent();
+
 			this.scrollView.Scrolled += this.scrollView_Scrolled;
 						
 			this.LoadImageWithIndex(0, this.fileListLength - 1);
 			this.LoadImageWithIndex(1, 0);
 			this.LoadImageWithIndex(2, 1);
+			
+			// Perform any additional setup after loading the view, typically from a nib.
+		}
+
+		/// <summary>
+		/// Sets the scroll view ContentSize to be the correct size along with all the images inside it.
+		/// </summary>
+		private void PositionScrollViewContent()
+		{
+			int count = 0;
+			foreach (var imageView in this.imageViewList)
+			{
+				imageView.Frame = new System.Drawing.RectangleF(count * this.scrollView.Frame.Width, 0, this.scrollView.Frame.Width, this.scrollView.Frame.Height);
+				imageView.ContentMode = UIViewContentMode.ScaleAspectFit;
+				count++;
+			}
+			
+			this.scrollView.ContentSize = new SizeF(this.scrollView.Frame.Width * this.imageViewList.Length, this.scrollView.Frame.Height);	
 			
 			// As soon as the user scrolls half way through the end image then we will reload the next image
 			// [Note: We are comparing the x co-ord (left edge of the image) therefore it is only 'half a frame 
@@ -161,19 +171,8 @@ namespace Paint
 			this.maxForwardScroll = (this.scrollView.Frame.Width * (imageViewList.Length - 1)) - (this.scrollView.Frame.Width / 2);
 			this.minBackwardScroll = this.scrollView.Frame.Width / 2;
 			
-			// start in the middle
+			// start in the middle of the screen
 			this.scrollView.SetContentOffset(new PointF(this.imageViewList[1].Frame.X, 0), false);
-
-			/*
-			count = 0;
-			foreach (var file in fileList)
-			{
-				this.AddImageWithName(file, count++);
-			}
-
-			this.scrollView.ContentSize = new SizeF(this.scrollView.Frame.Width * fileList.Length, this.scrollView.Frame.Height);
-			*/
-			// Perform any additional setup after loading the view, typically from a nib.
 		}
 
 		public override void ViewDidUnload()
@@ -187,7 +186,13 @@ namespace Paint
 
 			ReleaseDesignerOutlets();
 		}
-		
+
+		public override void WillAnimateRotation(UIInterfaceOrientation toInterfaceOrientation, double duration)
+		{
+			base.WillAnimateRotation(toInterfaceOrientation, duration);
+
+			this.PositionScrollViewContent();
+		}
 
 		public override bool ShouldAutorotateToInterfaceOrientation(UIInterfaceOrientation toInterfaceOrientation)
 		{
@@ -386,18 +391,6 @@ namespace Paint
 			{
 				this.animatedCircleImage.StopAnimating();
 			};
-		}
-		
-		private void AddImageWithName(string imageString, int position)
-		{
-			// add image to scroll view
-			UIImage image = UIImage.FromFile(imageString);
-			UIImageView imageView = new UIImageView(image);
-			imageView.ContentMode = UIViewContentMode.ScaleAspectFit;
-			
-			imageView.Frame = new System.Drawing.RectangleF(position * this.scrollView.Frame.Width, 0, this.scrollView.Frame.Width, this.scrollView.Frame.Height);
-			
-			this.scrollView.AddSubview(imageView);
 		}
 
 		/// <summary>
