@@ -12,6 +12,7 @@ namespace Paint
 	using System.Linq;
 	
 	using MonoTouch.Foundation;
+	using MonoTouch.Social;
 	using MonoTouch.UIKit;
 	
 	/// <summary>
@@ -322,9 +323,14 @@ namespace Paint
 			*/
 		}
 
+		partial void btnFacebook_TouchUpInside(MonoTouch.UIKit.UIButton sender)
+		{
+			this.PostImageToSocialNetwork(this.PictureIdFromFile(currentFileIndex), SLServiceKind.Facebook);
+		}
+
 		partial void btnTwitter_TouchUpInside(MonoTouch.UIKit.UIButton sender)
 		{
-			this.TweetImage(this.PictureIdFromFile(currentFileIndex));
+			this.PostImageToSocialNetwork(this.PictureIdFromFile(currentFileIndex), SLServiceKind.Twitter);
 		}
 
 		partial void btnEmail_TouchUpInside(MonoTouch.UIKit.UIButton sender)
@@ -419,16 +425,19 @@ namespace Paint
 		}
 
 		/// <summary>
-		/// Offers the option to tweet the image.
+		/// Offers the option to post the image to facebook or twitter
 		/// </summary>
 		/// <param name='pictureId'>
-		/// ID of the picture we wish to email
+		/// ID of the picture we wish to post
 		/// </param>
-		private void TweetImage(Guid pictureId)
+		/// <param name='socialNetwork'>
+		/// Type of social network we wish to post to
+		/// </param>
+		private void PostImageToSocialNetwork(Guid pictureId, SLServiceKind socialNetwork)
 		{
 			var filenameResolver = this.CreateFilenameResolver(pictureId);
-			var tweetSender = new TweetSender(this);
-			tweetSender.TweetImage(filenameResolver.MasterImageFilename);
+			var socialNetworkMessenger = new SocialNetworkMessenger(this, socialNetwork);
+			socialNetworkMessenger.PostImage(filenameResolver.MasterImageFilename);
 		}
 
 		/// <summary>

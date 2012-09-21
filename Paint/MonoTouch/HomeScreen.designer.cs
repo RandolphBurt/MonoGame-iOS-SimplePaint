@@ -41,6 +41,9 @@ namespace Paint
 		[Outlet]
 		MonoTouch.UIKit.UIButton btnDelete { get; set; }
 
+		[Outlet]
+		MonoTouch.UIKit.UIButton btnFacebook { get; set; }
+
 		[Action ("btnNewLandscape_TouchUpInside:")]
 		partial void btnNewLandscape_TouchUpInside (MonoTouch.UIKit.UIButton sender);
 
@@ -67,6 +70,9 @@ namespace Paint
 
 		[Action ("btnPlayback_TouchUpInside:")]
 		partial void btnPlayback_TouchUpInside (MonoTouch.UIKit.UIButton sender);
+
+		[Action ("btnFacebook_TouchUpInside:")]
+		partial void btnFacebook_TouchUpInside (MonoTouch.UIKit.UIButton sender);
 		
 		void ReleaseDesignerOutlets ()
 		{
@@ -118,6 +124,11 @@ namespace Paint
 			if (btnDelete != null) {
 				btnDelete.Dispose ();
 				btnDelete = null;
+			}
+
+			if (btnFacebook != null) {
+				btnFacebook.Dispose ();
+				btnFacebook = null;
 			}
 		}
 	}

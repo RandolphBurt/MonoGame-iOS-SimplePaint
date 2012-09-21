@@ -23,9 +23,13 @@ namespace Paint
 
 		public const string TweetMessage = "Check out this awesome picture I created using iPaint for the iPad! #iPaint";
 
-		public const string TweetDisabledAlertViewTitle = "Unable to Tweet";
+		public const string PostFacebookMessage = "Check out this awesome picture I created using iPaint for the iPad!";
+
+		public const string SocialNetworkDisabledAlertViewTitle = "Unable to post message";
 
 		public const string TweetDisabledAlertViewMessage = "Twitter may not be configured in Settings";
+
+		public const string FacebookDisabledAlertViewMessage = "Facebook may not be configured in Settings";
 	}
 }
 
