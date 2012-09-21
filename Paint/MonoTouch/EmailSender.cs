@@ -44,10 +44,12 @@ namespace Paint
 			this.emailComposerView.AddAttachmentData(img.AsPNG(), "image/png", "image.png");
 
 			this.emailComposerView.Finished += (sender, e) => {
-				e.Controller.DismissModalViewControllerAnimated(true);
+				e.Controller.InvokeOnMainThread(() => {
+					e.Controller.DismissViewController(true, null);
+				});
 			};
 
-			this.parentController.PresentModalViewController(this.emailComposerView, true);
+			this.parentController.PresentViewController(this.emailComposerView, true, null);
 		}
 	}
 }
