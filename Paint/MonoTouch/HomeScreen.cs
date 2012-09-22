@@ -151,6 +151,15 @@ namespace Paint
 			// Perform any additional setup after loading the view, typically from a nib.
 		}
 
+		public override void ViewDidAppear(bool animated)
+		{
+			base.ViewDidAppear(animated);
+
+			// Since ios6 if we started in landscape mode then the scrollview did not resize properly befre ViewDidLoad
+			// was called.  However, if we hook into ViewDidAppear and then resize/check everything then all is good!
+			this.PositionScrollViewContent();
+		}
+
 		/// <summary>
 		/// Sets the scroll view ContentSize to be the correct size along with all the images inside it.
 		/// </summary>
@@ -195,11 +204,16 @@ namespace Paint
 			this.PositionScrollViewContent();
 		}
 
+		public override bool ShouldAutorotate()
+		{
+			return true;
+		}
+		/*
 		public override bool ShouldAutorotateToInterfaceOrientation(UIInterfaceOrientation toInterfaceOrientation)
 		{
 			// Return true for supported orientations
 			return true;
-		}
+		}*/
 		
 		protected virtual void OnNewImageLandscapeSelected(EventArgs e)
 		{
