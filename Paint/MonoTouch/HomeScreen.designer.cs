@@ -12,6 +12,9 @@ namespace Paint
 	partial class HomeScreen
 	{
 		[Outlet]
+		MonoTouch.UIKit.UIActivityIndicatorView activityIndicatorView { get; set; }
+
+		[Outlet]
 		MonoTouch.UIKit.UIButton btnEmail { get; set; }
 
 		[Outlet]
@@ -53,6 +56,9 @@ namespace Paint
 		[Action ("btnPaint_TouchUpInside:")]
 		partial void btnPaint_TouchUpInside (MonoTouch.UIKit.UIButton sender);
 
+		[Action ("btnFacebook_TouchUpInside:")]
+		partial void btnFacebook_TouchUpInside (MonoTouch.UIKit.UIButton sender);
+
 		[Action ("btnTwitter_TouchUpInside:")]
 		partial void btnTwitter_TouchUpInside (MonoTouch.UIKit.UIButton sender);
 
@@ -70,12 +76,14 @@ namespace Paint
 
 		[Action ("btnPlayback_TouchUpInside:")]
 		partial void btnPlayback_TouchUpInside (MonoTouch.UIKit.UIButton sender);
-
-		[Action ("btnFacebook_TouchUpInside:")]
-		partial void btnFacebook_TouchUpInside (MonoTouch.UIKit.UIButton sender);
 		
 		void ReleaseDesignerOutlets ()
 		{
+			if (activityIndicatorView != null) {
+				activityIndicatorView.Dispose ();
+				activityIndicatorView = null;
+			}
+
 			if (btnEmail != null) {
 				btnEmail.Dispose ();
 				btnEmail = null;

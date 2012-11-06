@@ -57,7 +57,6 @@ namespace Paint
 
 		private UIImageView[] imageViewList = null;
 		private UIImageView animatedCircleImage;
-		private UIActivityIndicatorView activityIndicatorView;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Paint.HomeScreen"/> class.
@@ -106,20 +105,18 @@ namespace Paint
 			animatedCircleImage.AnimationDuration = .5;
 			animatedCircleImage.Frame = new RectangleF(110, 20, 100, 100);
 			View.AddSubview(animatedCircleImage);
-			
-			activityIndicatorView = new UIActivityIndicatorView(new RectangleF(500, 500, 100, 100))
-			{
-				ActivityIndicatorViewStyle = UIActivityIndicatorViewStyle.Gray,
-				AutoresizingMask = UIViewAutoresizing.FlexibleLeftMargin |
-					UIViewAutoresizing.FlexibleRightMargin |
-					UIViewAutoresizing.FlexibleTopMargin |
-					UIViewAutoresizing.FlexibleBottomMargin
-			};
-			
-			View.AddSubview(activityIndicatorView);
-			
-			this.btnPaint.SetBackgroundImage(UIImage.FromBundle("Content/graphics.png"), UIControlState.Normal);
-		
+
+			this.btnPaint.SetImage(UIImage.FromBundle("Content/paint.png"), UIControlState.Normal);
+			this.btnPlayback.SetImage(UIImage.FromBundle("Content/playback.png"), UIControlState.Normal);
+			this.btnFacebook.SetImage(UIImage.FromBundle("Content/facebook.png"), UIControlState.Normal);
+			this.btnTwitter.SetImage(UIImage.FromBundle("Content/twitter.png"), UIControlState.Normal);
+			this.btnDelete.SetImage(UIImage.FromBundle("Content/delete.png"), UIControlState.Normal);
+			this.btnNewPortrait.SetImage(UIImage.FromBundle("Content/portrait.png"), UIControlState.Normal);
+			this.btnNewLandscape.SetImage(UIImage.FromBundle("Content/landscape.png"), UIControlState.Normal);
+			this.btnCopy.SetImage(UIImage.FromBundle("Content/copy.png"), UIControlState.Normal);
+			this.btnEmail.SetImage(UIImage.FromBundle("Content/email.png"), UIControlState.Normal);
+			this.btnExportPhoto.SetImage(UIImage.FromBundle("Content/photo.png"), UIControlState.Normal);
+
 			DirectoryInfo di = new DirectoryInfo(this.masterImagePath);
 			FileSystemInfo[] files = di.GetFileSystemInfos("*.PNG");
 			this.fileList = files.OrderBy(f => f.LastWriteTimeUtc).Select(x => x.FullName).ToList();
@@ -185,18 +182,6 @@ namespace Paint
 			this.scrollView.SetContentOffset(new PointF(this.imageViewList[1].Frame.X, 0), false);
 		}
 
-		public override void ViewDidUnload()
-		{
-			base.ViewDidUnload();
-
-			// Clear any references to subviews of the main view in order to
-			// allow the Garbage Collector to collect them sooner.
-			//
-			// e.g. myOutlet.Dispose (); myOutlet = null;
-
-			ReleaseDesignerOutlets();
-		}
-
 		public override void WillAnimateRotation(UIInterfaceOrientation toInterfaceOrientation, double duration)
 		{
 			base.WillAnimateRotation(toInterfaceOrientation, duration);
@@ -208,13 +193,7 @@ namespace Paint
 		{
 			return true;
 		}
-		/*
-		public override bool ShouldAutorotateToInterfaceOrientation(UIInterfaceOrientation toInterfaceOrientation)
-		{
-			// Return true for supported orientations
-			return true;
-		}*/
-		
+
 		protected virtual void OnNewImageLandscapeSelected(EventArgs e)
 		{
 			if (this.NewImageLandscapeSelected != null)
@@ -298,45 +277,24 @@ namespace Paint
 		
 		partial void btnNewLandscape_TouchUpInside(MonoTouch.UIKit.UIButton sender)
 		{
-			this.OnNewImageLandscapeSelected(EventArgs.Empty);
+			this.InvokeCommandAndShowBusyIndicator(this.OnNewImageLandscapeSelected);
 		}
-		
+
 		partial void btnNewPortrait_TouchUpInside(MonoTouch.UIKit.UIButton sender)
 		{
-			this.OnNewImagePortraitSelected(EventArgs.Empty);
+			this.InvokeCommandAndShowBusyIndicator(this.OnNewImagePortraitSelected);
 		}
 		
 		partial void btnPaint_TouchUpInside(MonoTouch.UIKit.UIButton sender)
 		{
-			this.animatedCircleImage.StartAnimating();
-			this.activityIndicatorView.StartAnimating();
-			
-			BackgroundWorker backgroundWorker = new BackgroundWorker();
-			backgroundWorker.DoWork += (s2, e2) => {
-				this.InvokeOnMainThread(delegate
-				{
-					this.OnPaintSelected(this.SelectedPictureEventArgs());
-				}
-				);
-			};
-
-			backgroundWorker.RunWorkerAsync();
-
-			backgroundWorker.RunWorkerCompleted += (s3, e3) =>
-			{
-				this.animatedCircleImage.StopAnimating();
-				this.activityIndicatorView.StopAnimating();
-			};
-			
-			/*
-			var a = this.InterfaceOrientation;
-			
-			this.View.Transform.Rotate(3.14159f * 0.5f);
-			
-			this.OnPaintSelected(EventArgs.Empty);
-			*/
+			this.InvokeCommandAndShowBusyIndicator(this.OnPaintSelected);
 		}
 
+		partial void btnPlayback_TouchUpInside(MonoTouch.UIKit.UIButton sender)
+		{
+			this.InvokeCommandAndShowBusyIndicator(this.OnPlaybackSelected);
+		}
+		
 		partial void btnFacebook_TouchUpInside(MonoTouch.UIKit.UIButton sender)
 		{
 			this.PostImageToSocialNetwork(this.PictureIdFromFile(currentFileIndex), SLServiceKind.Facebook);
@@ -392,24 +350,45 @@ namespace Paint
 			alert.Show();
 		}
 		
-		partial void btnPlayback_TouchUpInside(MonoTouch.UIKit.UIButton sender)
+		private void InvokeCommandAndShowBusyIndicator(Action<EventArgs> command)
 		{
-			this.animatedCircleImage.StartAnimating();
+			this.activityIndicatorView.StartAnimating();
+			
+			BackgroundWorker backgroundWorker = new BackgroundWorker();
+			backgroundWorker.DoWork += (s2, e2) => {
+				this.InvokeOnMainThread(delegate
+			    {
+					command(EventArgs.Empty);
+				}
+				);
+			};
+			
+			backgroundWorker.RunWorkerAsync();
+			
+			backgroundWorker.RunWorkerCompleted += (s3, e3) =>
+			{
+				this.activityIndicatorView.StopAnimating();
+			};
+		}
+
+		private void InvokeCommandAndShowBusyIndicator(Action<PictureSelectedEventArgs> command)
+		{
+			this.activityIndicatorView.StartAnimating();
 			
 			BackgroundWorker backgroundWorker = new BackgroundWorker();
 			backgroundWorker.DoWork += (s2, e2) => {
 				this.InvokeOnMainThread(delegate
 				{
-					this.OnPlaybackSelected(this.SelectedPictureEventArgs());
+					command(this.SelectedPictureEventArgs());
 				}
 				);
 			};
-
+			
 			backgroundWorker.RunWorkerAsync();
-
+			
 			backgroundWorker.RunWorkerCompleted += (s3, e3) =>
 			{
-				this.animatedCircleImage.StopAnimating();
+				this.activityIndicatorView.StopAnimating();
 			};
 		}
 
