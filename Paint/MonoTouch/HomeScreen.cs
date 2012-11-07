@@ -55,8 +55,10 @@ namespace Paint
 		/// </summary>
 		private string masterImagePath;
 
+		/// <summary>
+		/// Array of the images we will display in our scroll view
+		/// </summary>
 		private UIImageView[] imageViewList = null;
-		private UIImageView animatedCircleImage;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Paint.HomeScreen"/> class.
@@ -72,13 +74,25 @@ namespace Paint
 			this.masterImagePath = masterImagePath;
 			this.imageDataPath = imageDataPath;
 		}
-		
+
+		/// <summary>
+		/// Occurs when an image has been selected for editing/painting
+		/// </summary>
 		public event EventHandler<PictureSelectedEventArgs> PaintSelected;
 
+		/// <summary>
+		/// Occurs when an image has been selected for playback
+		/// </summary>
 		public event EventHandler<PictureSelectedEventArgs> PlaybackSelected;
-		
+
+		/// <summary>
+		/// Occurs when a new portrait image needs to be created.
+		/// </summary>
 		public event EventHandler NewImagePortraitSelected;
-		
+
+		/// <summary>
+		/// Occurs when a new landscape image needs to be created.
+		/// </summary>
 		public event EventHandler NewImageLandscapeSelected;
 
 		public override void DidReceiveMemoryWarning()
@@ -89,23 +103,16 @@ namespace Paint
 			// Release any cached data, images, etc that aren't in use.
 		}
 
+		/// <Docs>
+		/// Called after the controller’s view is loaded into memory.
+		/// </Docs>
+		/// <summary>
+		/// Basic form initialization
+		/// </summary>/
 		public override void ViewDidLoad()
 		{
 			base.ViewDidLoad();
 				
-			// an animating image
-			animatedCircleImage = new UIImageView();
-			animatedCircleImage.AnimationImages = new UIImage[] {
-				  UIImage.FromBundle("Content/Spinning Circle_1.png")
-				, UIImage.FromBundle("Content/Spinning Circle_2.png")
-				, UIImage.FromBundle("Content/Spinning Circle_3.png")
-				, UIImage.FromBundle("Content/Spinning Circle_4.png")
-			};
-			animatedCircleImage.AnimationRepeatCount = 0;
-			animatedCircleImage.AnimationDuration = .5;
-			animatedCircleImage.Frame = new RectangleF(110, 20, 100, 100);
-			View.AddSubview(animatedCircleImage);
-
 			this.btnPaint.SetImage(UIImage.FromBundle("Content/paint.png"), UIControlState.Normal);
 			this.btnPlayback.SetImage(UIImage.FromBundle("Content/playback.png"), UIControlState.Normal);
 			this.btnFacebook.SetImage(UIImage.FromBundle("Content/facebook.png"), UIControlState.Normal);
@@ -117,15 +124,6 @@ namespace Paint
 			this.btnEmail.SetImage(UIImage.FromBundle("Content/email.png"), UIControlState.Normal);
 			this.btnExportPhoto.SetImage(UIImage.FromBundle("Content/photo.png"), UIControlState.Normal);
 
-			DirectoryInfo di = new DirectoryInfo(this.masterImagePath);
-			FileSystemInfo[] files = di.GetFileSystemInfos("*.PNG");
-			this.fileList = files.OrderBy(f => f.LastWriteTimeUtc).Select(x => x.FullName).ToList();
-	
-			this.fileListLength = this.fileList.Count;
-			
-			if (this.fileListLength < 2)
-				return;
-			
 			this.imageViewList = new UIImageView[] {
 				new UIImageView(),
 				new UIImageView(),
@@ -140,14 +138,16 @@ namespace Paint
 			this.PositionScrollViewContent();
 
 			this.scrollView.Scrolled += this.scrollView_Scrolled;
-						
-			this.LoadImageWithIndex(0, this.fileListLength - 1);
-			this.LoadImageWithIndex(1, 0);
-			this.LoadImageWithIndex(2, 1);
-			
-			// Perform any additional setup after loading the view, typically from a nib.
+
+			this.LoadAndDisplayImages();
 		}
 
+		/// <summary>
+		/// Basic form initialization
+		/// </summary>
+		/// <param name='animated'>
+		/// If set to <c>true</c> animated.
+		/// </param>
 		public override void ViewDidAppear(bool animated)
 		{
 			base.ViewDidAppear(animated);
@@ -155,6 +155,39 @@ namespace Paint
 			// Since ios6 if we started in landscape mode then the scrollview did not resize properly befre ViewDidLoad
 			// was called.  However, if we hook into ViewDidAppear and then resize/check everything then all is good!
 			this.PositionScrollViewContent();
+		}
+
+		public override void WillAnimateRotation(UIInterfaceOrientation toInterfaceOrientation, double duration)
+		{
+			base.WillAnimateRotation(toInterfaceOrientation, duration);
+			
+			this.PositionScrollViewContent();
+		}
+
+		public override bool ShouldAutorotate()
+		{
+			return true;
+		}
+
+		/// <summary>
+		/// Loads all of our images and displays them on screen ready for editing
+		/// </summary>
+		public void LoadAndDisplayImages()
+		{
+			DirectoryInfo di = new DirectoryInfo(this.masterImagePath);
+			FileSystemInfo[] files = di.GetFileSystemInfos("*.PNG");
+			this.fileList = files.OrderByDescending(f => f.LastWriteTimeUtc).Select(x => x.FullName).ToList();
+			
+			this.fileListLength = this.fileList.Count;
+			
+			if (this.fileListLength > 0)
+			{
+				this.LoadImageWithIndex(0, this.fileListLength - 1);
+				this.LoadImageWithIndex(1, 0);
+				this.LoadImageWithIndex(2, Math.Min(this.fileListLength - 1, 1));
+			}
+			
+			this.currentFileIndex = 0;
 		}
 
 		/// <summary>
@@ -182,18 +215,6 @@ namespace Paint
 			this.scrollView.SetContentOffset(new PointF(this.imageViewList[1].Frame.X, 0), false);
 		}
 
-		public override void WillAnimateRotation(UIInterfaceOrientation toInterfaceOrientation, double duration)
-		{
-			base.WillAnimateRotation(toInterfaceOrientation, duration);
-
-			this.PositionScrollViewContent();
-		}
-
-		public override bool ShouldAutorotate()
-		{
-			return true;
-		}
-
 		protected virtual void OnNewImageLandscapeSelected(EventArgs e)
 		{
 			if (this.NewImageLandscapeSelected != null)
@@ -208,7 +229,7 @@ namespace Paint
 			{
 				this.NewImagePortraitSelected(this, EventArgs.Empty);
 			}
-		}	
+		}
 
 		protected virtual void OnPlaybackSelected(PictureSelectedEventArgs e)
 		{
@@ -236,6 +257,11 @@ namespace Paint
 			/* Based on http://www.accella.net/objective-c-using-a-uiscrollview-for-infinite-page-loops/ */
 			// Code is improved to ensure no problems with delayed loading if the user scrolls too fast.
 			// Thus we are using the Scrolled method rather than the DecelerationEnded method.
+
+			if (this.fileListLength == 0)
+			{
+				return;
+			}
 
 			float xOffset = scrollView.ContentOffset.X;
 			
@@ -277,51 +303,107 @@ namespace Paint
 		
 		partial void btnNewLandscape_TouchUpInside(MonoTouch.UIKit.UIButton sender)
 		{
-			this.InvokeCommandAndShowBusyIndicator(this.OnNewImageLandscapeSelected);
+			this.InvokeCommandAndShowBusyIndicator(() =>
+			{
+				this.OnNewImageLandscapeSelected(EventArgs.Empty);
+			});
 		}
 
 		partial void btnNewPortrait_TouchUpInside(MonoTouch.UIKit.UIButton sender)
 		{
-			this.InvokeCommandAndShowBusyIndicator(this.OnNewImagePortraitSelected);
+			this.InvokeCommandAndShowBusyIndicator(() =>
+			{
+				this.OnNewImagePortraitSelected(EventArgs.Empty);
+			});
 		}
 		
 		partial void btnPaint_TouchUpInside(MonoTouch.UIKit.UIButton sender)
 		{
-			this.InvokeCommandAndShowBusyIndicator(this.OnPaintSelected);
+			if (this.fileListLength == 0)
+			{
+				return;
+			}
+
+			this.InvokeCommandAndShowBusyIndicator(() =>
+			{
+				this.OnPaintSelected(this.SelectedPictureEventArgs());
+			});
 		}
 
 		partial void btnPlayback_TouchUpInside(MonoTouch.UIKit.UIButton sender)
 		{
-			this.InvokeCommandAndShowBusyIndicator(this.OnPlaybackSelected);
+			if (this.fileListLength == 0)
+			{
+				return;
+			}
+
+			this.InvokeCommandAndShowBusyIndicator(() =>
+			{
+				this.OnPlaybackSelected(this.SelectedPictureEventArgs());
+			});
 		}
 		
 		partial void btnFacebook_TouchUpInside(MonoTouch.UIKit.UIButton sender)
 		{
+			if (this.fileListLength == 0)
+			{
+				return;
+			}
+
 			this.PostImageToSocialNetwork(this.PictureIdFromFile(currentFileIndex), SLServiceKind.Facebook);
 		}
 
 		partial void btnTwitter_TouchUpInside(MonoTouch.UIKit.UIButton sender)
 		{
+			if (this.fileListLength == 0)
+			{
+				return;
+			}
+
 			this.PostImageToSocialNetwork(this.PictureIdFromFile(currentFileIndex), SLServiceKind.Twitter);
 		}
 
 		partial void btnEmail_TouchUpInside(MonoTouch.UIKit.UIButton sender)
 		{
+			if (this.fileListLength == 0)
+			{
+				return;
+			}
+
 			this.SendEmail(this.PictureIdFromFile(currentFileIndex));
 		}
 
 		partial void btnExportPhoto_TouchUpInside(MonoTouch.UIKit.UIButton sender)
 		{
+			if (this.fileListLength == 0)
+			{
+				return;
+			}
+
 			this.ExportImageToPhotoGallery(this.PictureIdFromFile(currentFileIndex));
 		}
 
 		partial void btnCopy_TouchUpInside(MonoTouch.UIKit.UIButton sender)
 		{
-			this.CopyImage(this.PictureIdFromFile(currentFileIndex));
+			if (this.fileListLength == 0)
+			{
+				return;
+			}
+
+			this.InvokeCommandAndShowBusyIndicator(() => 
+			{
+				var newFile = this.CopyImage(this.PictureIdFromFile(currentFileIndex));
+				this.AddImageToFileListAndScrollToDisplay(newFile);
+			});
 		}
-		
+
 		partial void btnDelete_TouchUpInside(MonoTouch.UIKit.UIButton sender)
 		{
+			if (this.fileListLength == 0)
+			{
+				return;
+			}
+
 			UIAlertView alert = new UIAlertView()
 			{
 				Title = LanguageStrings.DeleteAlertViewTitle,
@@ -336,31 +418,27 @@ namespace Paint
 			{
 				if (e.ButtonIndex == 1)
 				{
-					this.InvokeOnMainThread(delegate
+					this.InvokeCommandAndShowBusyIndicator(() =>
 					{
-						var filenameResolver = this.CreateFilenameResolver(this.PictureIdFromFile(currentFileIndex));
-						var pictureIOManager = new PictureIOManager(filenameResolver);
-						
-						pictureIOManager.DeleteImage();
-					}
-					);
+						this.DeleteCurrentImageFromFileListAndUpdateDisplay();
+					});
 				}
 			};
 			
 			alert.Show();
 		}
-		
-		private void InvokeCommandAndShowBusyIndicator(Action<EventArgs> command)
+	
+		private void InvokeCommandAndShowBusyIndicator(Action command)
 		{
 			this.activityIndicatorView.StartAnimating();
 			
 			BackgroundWorker backgroundWorker = new BackgroundWorker();
-			backgroundWorker.DoWork += (s2, e2) => {
-				this.InvokeOnMainThread(delegate
-			    {
-					command(EventArgs.Empty);
-				}
-				);
+			backgroundWorker.DoWork += (s2, e2) => 
+			{
+				this.InvokeOnMainThread(() =>
+				{
+					command();
+				});
 			};
 			
 			backgroundWorker.RunWorkerAsync();
@@ -371,25 +449,53 @@ namespace Paint
 			};
 		}
 
-		private void InvokeCommandAndShowBusyIndicator(Action<PictureSelectedEventArgs> command)
+		/// <summary>
+		/// Adds the image to the file list and then scrolls the screen to display that image
+		/// </summary>
+		/// <param name='imageFilename'>
+		/// Image to add and then display.
+		/// </param>
+		private void AddImageToFileListAndScrollToDisplay(string imageFilename)
 		{
-			this.activityIndicatorView.StartAnimating();
+			int newFileLocation = this.currentFileIndex + 1;
+
+			this.fileListLength++;
+			this.fileList.Insert(newFileLocation, imageFilename);
+			this.LoadImageWithIndex(2, newFileLocation);
+			this.scrollView.SetContentOffset(new PointF(this.imageViewList[2].Frame.X, 0), true);
+		}
+
+		/// <summary>
+		/// Deletes the current image from the file list and updates the display.
+		/// </summary>
+		private void DeleteCurrentImageFromFileListAndUpdateDisplay()
+		{
+			var filenameResolver = this.CreateFilenameResolver(this.PictureIdFromFile(this.currentFileIndex));
+			var pictureIOManager = new PictureIOManager(filenameResolver);
 			
-			BackgroundWorker backgroundWorker = new BackgroundWorker();
-			backgroundWorker.DoWork += (s2, e2) => {
-				this.InvokeOnMainThread(delegate
-				{
-					command(this.SelectedPictureEventArgs());
-				}
-				);
-			};
-			
-			backgroundWorker.RunWorkerAsync();
-			
-			backgroundWorker.RunWorkerCompleted += (s3, e3) =>
+			pictureIOManager.DeleteImage();
+
+			this.fileList.RemoveAt(this.currentFileIndex);
+			this.fileListLength--;
+
+			if (this.fileListLength == 0)
 			{
-				this.activityIndicatorView.StopAnimating();
-			};
+				// we've just deleted the last image!
+				foreach (var image in this.imageViewList)
+				{
+					image.Image = null;
+				}
+			}
+			else
+			{
+				// remove the current image from screen.
+				// copy the first image into the middle (current) image
+				// then scroll to the next image
+				int previousImageIndex = (this.currentFileIndex == 0) ? this.fileListLength - 1 : this.currentFileIndex - 1;
+				this.LoadImageWithIndex(1, previousImageIndex);
+				this.currentFileIndex = previousImageIndex;
+				this.scrollView.SetContentOffset(new PointF(this.imageViewList[2].Frame.X, 0), true);
+			}
 		}
 
 		/// <summary>
@@ -462,15 +568,20 @@ namespace Paint
 		/// <summary>
 		/// Copies the image and all associated data
 		/// </summary>
+		/// <returns>Filename for the newly created image</returns>
 		/// <param name='pictureId'>
 		/// Identifier of the image to copy
 		/// </param>
-		private void CopyImage(Guid pictureId)
+		private string CopyImage(Guid pictureId)
 		{
-			var filenameResolver = this.CreateFilenameResolver(pictureId);
-			var pictureIOManager = new PictureIOManager(filenameResolver);
-			
-			pictureIOManager.CopyImage(this.CreateFilenameResolver(Guid.NewGuid()));
+			var existingFileFilenameResolver = this.CreateFilenameResolver(pictureId);
+			var pictureIOManager = new PictureIOManager(existingFileFilenameResolver);
+
+			var newFileFilenameResolver = this.CreateFilenameResolver(Guid.NewGuid());
+
+			pictureIOManager.CopyImage(newFileFilenameResolver);
+
+			return newFileFilenameResolver.MasterImageFilename;
 		}
 
 		/// <summary>

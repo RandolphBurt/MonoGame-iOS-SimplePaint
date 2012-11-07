@@ -250,6 +250,21 @@ namespace Paint
 				this.paintApp = null;
 			}
 			
+			this.BackToHomeScreenAfterEdit();
+		}
+
+		/// <summary>
+		/// Re-initialise the home screen after our editing
+		/// </summary>
+		private void BackToHomeScreenAfterEdit()
+		{
+			HomeScreen homeScreen = this.viewController as HomeScreen;
+
+			if (homeScreen != null)
+			{
+				homeScreen.LoadAndDisplayImages();
+			}
+
 			this.window.MakeKeyAndVisible();
 		}
 		
