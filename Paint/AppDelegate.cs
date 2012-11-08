@@ -97,7 +97,7 @@ namespace Paint
 			// Temp code above for total clear down
 			
 			this.CreateDirectoryStructure();
-			
+
 			this.window = new UIWindow(UIScreen.MainScreen.Bounds);
 			this.viewController = new HomeScreen(this.imageDataPath, this.masterImagePath);
 			
@@ -152,8 +152,8 @@ namespace Paint
 			// ready to display the app  (inside call to EditImage) so it wouldn't have turned yet anyway]
 			ImageStateData imageStateData = null;
 		
-			int deviceWidth = (int)UIScreen.MainScreen.Bounds.Width;
-			int deviceHeight = (int)UIScreen.MainScreen.Bounds.Height;
+			int deviceWidth = (int)(UIScreen.MainScreen.Bounds.Width * UIScreen.MainScreen.Scale);
+			int deviceHeight = (int)(UIScreen.MainScreen.Bounds.Height * UIScreen.MainScreen.Scale);
 			
 			if (orientation == PictureOrientation.Landscape)
 			{
