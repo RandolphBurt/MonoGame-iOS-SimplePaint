@@ -137,6 +137,10 @@ namespace Paint
 			// foreground and we'll be able to carry on.  
 			// However if not fixed then we'll have to go back to monotouch front end and let them pick the picture
 			// and carry on - problem is we lose our undo/redo buffer unless we also save all of those images?!?!
+			if (this.paintApp != null)
+			{
+				this.paintApp.ForceSaveAndExit();
+			}
 		}
 		
 		/// <summary>

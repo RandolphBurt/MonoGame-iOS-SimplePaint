@@ -173,7 +173,21 @@ namespace Paint
 			
 			this.Content.RootDirectory = "Content";
 		}
-		
+
+		/// <summary>
+		/// Forces the immediate Shutdown and saving of state on this thread
+		/// We must not change thread because we are probably going into the background and therefore the main UI thread will not
+		/// come alive again until the app is back in teh foreground again
+		/// </summary>
+		public void ForceSaveAndExit()
+		{
+			if (this.paintMode != PaintMode.Exiting)
+			{
+				this.paintMode = PaintMode.Exiting;
+				this.SaveAndExit();
+			}
+		}
+	
 		/// <summary>
 		/// Restore the image held in the specified save point to the canvas/display
 		/// </summary>
@@ -489,7 +503,7 @@ namespace Paint
 				this.pictureStateManager.Undo();
 			};
 		}
-		
+
 		/// <summary>
 		/// Initiates the shutdown process.
 		/// We will display a 'busy' form/window -- we pass in a delegate/action to be run once the form 
@@ -497,10 +511,13 @@ namespace Paint
 		/// </summary>
 		private void InitiateShutdown()
 		{
-			this.paintMode = PaintMode.Exiting;			
-			this.saveBusyMessageDisplay.Show(new Action(this.SaveAndExit));
+			if (this.paintMode != PaintMode.Exiting)
+			{
+				this.paintMode = PaintMode.Exiting;			
+				this.saveBusyMessageDisplay.Show(new Action(this.SaveAndExit));
+			}
 		}
-				
+
 		/// <summary>
 		/// Handles any user input.
 		/// Collect all gestures made since the last 'update' - stores these ready to be handled by the Canvas for drawing
