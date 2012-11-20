@@ -112,8 +112,18 @@ namespace Paint
 		{
 			this.spriteBatch = new SpriteBatch (graphicsDeviceManager.GraphicsDevice);
 			
+			Texture2D graphicsTextureMap = null;
 			bool highResolution = Math.Max(this.imageStateData.Height, this.imageStateData.Width) > 1024;
-			var graphicsTextureMap = Content.Load<Texture2D> ("graphics.png");
+			
+			if (highResolution)
+			{
+				graphicsTextureMap = Content.Load<Texture2D>("graphics@2x.png");
+			}
+			else
+			{
+				graphicsTextureMap = Content.Load<Texture2D>("graphics.png");
+			}
+
 			this.graphicsDisplay = new GraphicsDisplay(graphicsTextureMap, this.spriteBatch, highResolution);
 						
 			this.CreateCanvas();

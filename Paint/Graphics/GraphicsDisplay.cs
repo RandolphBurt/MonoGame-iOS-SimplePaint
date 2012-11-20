@@ -23,7 +23,7 @@ namespace Paint
 		/// <summary>
 		/// Icon size for Retina displays
 		/// </summary>
-		private const int IconSizeRetina = 100;
+		private const int IconSizeRetina = 72;
 		
 		/// <summary>
 		/// How many columns of icons are there in the sprite map
