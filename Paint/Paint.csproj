@@ -80,6 +80,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Info.plist" />
+    <None Include="BusinessLogic\ToolboxLayoutDefinition.xsd" />
+    <None Include="Content\PaintToolboxPortraitLayout.xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Main.cs" />
@@ -140,6 +142,7 @@
     <Compile Include="MonoTouch\PhotoGallery.cs" />
     <Compile Include="MonoTouch\EmailSender.cs" />
     <Compile Include="MonoTouch\SocialNetworkMessenger.cs" />
+    <Compile Include="BusinessLogic\ToolboxLayoutDefinition.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

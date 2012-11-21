@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:element name="ToolboxLayoutDefinition">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="Border" type="BorderType"/>
+				<xs:element name="MaximizedHeight" type="xs:int"/>
+				<xs:element name="MinimizedHeight" type="xs:int" minOccurs="0"/>
+				<xs:element name="BackgroundColor" type="xs:string"/>
+				<xs:element name="Controls" minOccurs="0">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="ColorSetter" minOccurs="0">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="Region" type="RegionType"/>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="BrushSizeSelector" minOccurs="0">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="Region" type="RegionType"/>
+										<xs:element name="BrushSize">
+											<xs:complexType>
+												<xs:sequence>
+													<xs:element name="Minimum" type="xs:int"/>
+													<xs:element name="Maximum" type="xs:int"/>
+													<xs:element name="Initial" type="xs:int"/>
+												</xs:sequence>
+											</xs:complexType>
+										</xs:element>
+										<xs:element name="Gauge" type="GaugeType"/>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="ColorSelector" minOccurs="0">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="Region" type="RegionType"/>
+										<xs:element name="Gauge" type="GaugeType">
+											<xs:annotation>
+												<xs:documentation>These settings apply to all color gauges</xs:documentation>
+											</xs:annotation>
+										</xs:element>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="ColorPicker" minOccurs="0" maxOccurs="unbounded">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="Region" type="RegionType"/>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="Button" minOccurs="0" maxOccurs="unbounded">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="ButtonType">
+											<xs:simpleType>
+												<xs:restriction base="xs:string">
+													<xs:enumeration value="Exit"/>
+													<xs:enumeration value="Undo"/>
+													<xs:enumeration value="Redo"/>
+													<xs:enumeration value="ToggleMaxMin"/>
+													<xs:enumeration value="ToggleDock"/>
+													<xs:enumeration value="PlayPausePlayback"/>
+												</xs:restriction>
+											</xs:simpleType>
+										</xs:element>
+										<xs:element name="Region" type="RegionType"/>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:complexType name="RegionType">
+		<xs:sequence>
+			<xs:element name="Location">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="X" type="xs:int"/>
+						<xs:element name="Y" type="xs:int"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="Size">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="Width" type="xs:int"/>
+						<xs:element name="Height" type="xs:int"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="BackgroundColor" type="xs:string"/>
+			<xs:element name="Border" type="BorderType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="BorderType">
+		<xs:sequence>
+			<xs:element name="Width" type="xs:int"/>
+			<xs:element name="Color" type="xs:string"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="GaugeType">
+		<xs:sequence>
+			<xs:element name="VerticalMargin" type="xs:int"/>
+			<xs:element name="HorizontalMargin" type="xs:int"/>
+			<xs:element name="Width" type="xs:int"/>
+			<xs:element name="MarkerWidth" type="xs:int"/>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>
