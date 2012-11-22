@@ -24,8 +24,16 @@ namespace Paint
 				
 		/// <summary>
 		/// The file extension to use for the image files.
+		/// PNG files have an alpha channel which we want to keep
 		/// </summary>
 		private const string FileExtensionPNGImage = "PNG";
+
+		/// <summary>
+		/// The file extension to use for the master image file.
+		/// JPG files have no alpha channel which is ideal for displaying on the home screen where we don't
+		/// want the background image to show through the picture
+		/// </summary>
+		private const string FileExtensionJPGImage = "JPG";
 
 		/// <summary>
 		/// The folder where we store the canvas recorder files whilst we are editing a picture
@@ -59,7 +67,7 @@ namespace Paint
 			this.WorkingFolder = Path.Combine(this.DataFolder, WorkingFolderName);
 			this.MasterImageInfoFilename = Path.Combine(this.DataFolder, InfoFile);
 			this.WorkingImageInfoFilename = Path.Combine(this.DataFolder, this.WorkingFolder, InfoFile); 
-			this.MasterImageFilename = Path.Combine(masterImageFolder, String.Format("{0}.{1}", this.pictureId.ToString(), FileExtensionPNGImage));
+			this.MasterImageFilename = Path.Combine(masterImageFolder, String.Format("{0}.{1}", this.pictureId.ToString(), FileExtensionJPGImage));
 		}
 		
 		/// <summary>

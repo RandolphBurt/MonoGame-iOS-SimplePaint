@@ -175,7 +175,7 @@ namespace Paint
 		public void LoadAndDisplayImages()
 		{
 			DirectoryInfo di = new DirectoryInfo(this.masterImagePath);
-			FileSystemInfo[] files = di.GetFileSystemInfos("*.PNG");
+			FileSystemInfo[] files = di.GetFileSystemInfos("*.JPG");
 			this.fileList = files.OrderByDescending(f => f.LastWriteTimeUtc).Select(x => x.FullName).ToList();
 			
 			this.fileListLength = this.fileList.Count;

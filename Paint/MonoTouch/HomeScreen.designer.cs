@@ -56,6 +56,9 @@ namespace Paint
 		[Action ("btnPaint_TouchUpInside:")]
 		partial void btnPaint_TouchUpInside (MonoTouch.UIKit.UIButton sender);
 
+		[Action ("btnPlayback_TouchUpInside:")]
+		partial void btnPlayback_TouchUpInside (MonoTouch.UIKit.UIButton sender);
+
 		[Action ("btnFacebook_TouchUpInside:")]
 		partial void btnFacebook_TouchUpInside (MonoTouch.UIKit.UIButton sender);
 
@@ -73,9 +76,6 @@ namespace Paint
 
 		[Action ("btnDelete_TouchUpInside:")]
 		partial void btnDelete_TouchUpInside (MonoTouch.UIKit.UIButton sender);
-
-		[Action ("btnPlayback_TouchUpInside:")]
-		partial void btnPlayback_TouchUpInside (MonoTouch.UIKit.UIButton sender);
 		
 		void ReleaseDesignerOutlets ()
 		{

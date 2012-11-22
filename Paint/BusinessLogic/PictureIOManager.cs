@@ -62,8 +62,10 @@ namespace Paint
 
 				File.Move(this.filenameResolver.WorkingCanvasRecorderFilename(count), masterCanvasRecorderFile);
 			}
-			
-			masterImageRenderTarget.SaveAsPng(
+
+			// Save the Master image as a JPG as it has no alpha channel - which is ideal for displaying on the home
+			// home screen where we don't want the background image showing through
+			masterImageRenderTarget.SaveAsJpeg(
 				this.filenameResolver.MasterImageFilename,
 				masterImageRenderTarget.Width,
 				masterImageRenderTarget.Height);

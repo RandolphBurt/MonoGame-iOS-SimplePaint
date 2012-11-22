@@ -201,4 +201,7 @@
       </Properties>
     </MonoDevelop>
   </ProjectExtensions>
+  <ItemGroup>
+    <BundleResource Include="background.png" />
+  </ItemGroup>
 </Project>
