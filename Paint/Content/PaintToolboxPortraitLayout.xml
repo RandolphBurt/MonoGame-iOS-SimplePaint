@@ -97,7 +97,7 @@
 		<ColorPicker>
 			<Region>
 				<Location>
-					<X>66</X>
+					<X>65.66</X>
 					<Y>52</Y>
 				</Location>
 				<Size>
@@ -115,7 +115,7 @@
 		<ColorPicker>
 			<Region>
 				<Location>
-					<X>129</X>
+					<X>129.33</X>
 					<Y>52</Y>
 				</Location>
 				<Size>
@@ -151,7 +151,7 @@
 		<ColorPicker>
 			<Region>
 				<Location>
-					<X>257</X>
+					<X>256.66</X>
 					<Y>52</Y>
 				</Location>
 				<Size>
@@ -169,7 +169,7 @@
 		<ColorPicker>
 			<Region>
 				<Location>
-					<X>320</X>
+					<X>320.33</X>
 					<Y>52</Y>
 				</Location>
 				<Size>
@@ -205,7 +205,7 @@
 		<ColorPicker>
 			<Region>
 				<Location>
-					<X>448</X>
+					<X>447.66</X>
 					<Y>52</Y>
 				</Location>
 				<Size>
@@ -223,7 +223,7 @@
 		<ColorPicker>
 			<Region>
 				<Location>
-					<X>511</X>
+					<X>511.33</X>
 					<Y>52</Y>
 				</Location>
 				<Size>
@@ -259,7 +259,7 @@
 		<ColorPicker>
 			<Region>
 				<Location>
-					<X>639</X>
+					<X>638.66</X>
 					<Y>52</Y>
 				</Location>
 				<Size>
@@ -277,7 +277,7 @@
 		<ColorPicker>
 			<Region>
 				<Location>
-					<X>702</X>
+					<X>702.33</X>
 					<Y>52</Y>
 				</Location>
 				<Size>
