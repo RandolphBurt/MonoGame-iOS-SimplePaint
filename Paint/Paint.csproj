@@ -81,7 +81,6 @@
   <ItemGroup>
     <None Include="Info.plist" />
     <None Include="BusinessLogic\ToolboxLayoutDefinition.xsd" />
-    <None Include="Content\PaintToolboxPortraitLayout.xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Main.cs" />
@@ -143,6 +142,7 @@
     <Compile Include="MonoTouch\EmailSender.cs" />
     <Compile Include="MonoTouch\SocialNetworkMessenger.cs" />
     <Compile Include="BusinessLogic\ToolboxLayoutDefinition.cs" />
+    <Compile Include="General\ObjectDeserializer.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -155,6 +155,7 @@
     <Folder Include="GraphicsInterfaces\" />
     <Folder Include="Graphics\" />
     <Folder Include="MonoTouch\" />
+    <Folder Include="General\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\graphics.png" />
@@ -179,6 +180,7 @@
     <Content Include="Content\paint.png" />
     <Content Include="Content\paint%402x.png" />
     <Content Include="Content\graphics%402x.png" />
+    <Content Include="Content\PaintToolboxPortraitLayout.xml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\MonoGame\MyFork\MonoGame\MonoGame.Framework\MonoGame.Framework.iOS.csproj">

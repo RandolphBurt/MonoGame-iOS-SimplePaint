@@ -1,4 +1,4 @@
-	/// <summary>
+/// <summary>
 /// AppDelegate.cs
 /// Randolph Burt - January 2012
 /// </summary>
@@ -6,7 +6,9 @@ namespace Paint
 {
 	using System;
 	using System.IO;
-	
+
+	using Paint.ToolboxLayout;
+
 	using MonoTouch.Foundation;
 	using MonoTouch.UIKit;
 	using MonoTouch.ObjCRuntime;
@@ -67,6 +69,11 @@ namespace Paint
 		/// </summary>
 		private string masterImagePath;
 
+		/// <summary>
+		/// The layout of the toolbox for portrait pictures.
+		/// </summary>
+		private ToolboxLayoutDefinition portraitToolboxDefinition = null;
+
 		//
 		// This method is invoked when the application has loaded and is ready to run. In this 
 		// method you should instantiate the window, load the UI into it and then make the window
@@ -78,7 +85,9 @@ namespace Paint
 		{
 			this.imageDataPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "..", FolderNameLibrary, FolderNameImageData);
 			this.masterImagePath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-			
+		
+			this.LoadToolboxLayouts();
+
 			// Temp code below for total clear down 
 			/*
 			if (Directory.Exists(imageDataPath))
@@ -142,7 +151,16 @@ namespace Paint
 				this.paintApp.ForceSaveAndExit();
 			}
 		}
-		
+
+		/// <summary>
+		/// Loads the toolbox layouts - from xml configuraiton files
+		/// </summary>
+		private void LoadToolboxLayouts()
+		{
+			this.portraitToolboxDefinition = 
+				ObjectDeserializer.DeserialiseFromXmlFile<ToolboxLayoutDefinition>("Content/PaintToolboxPortraitLayout.xml");
+		}
+
 		/// <summary>
 		/// Start painting a new image
 		/// </summary>
