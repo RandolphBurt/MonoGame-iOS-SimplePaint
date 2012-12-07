@@ -18,14 +18,15 @@ namespace Paint
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Paint.ColorPicker"/> class.
 		/// </summary>
-		/// <param name='backgroundColor' The background color of the ColorPicker />
-		/// <param name='borderColor' The border color of the ColorPicker />
-		/// <param name='borderWidth' The border width />
 		/// <param name='graphicsDisplay' Contains all the graphics for rendering the tools />
-		/// <param name='bounds' The bounds of this control/tool />
-		/// <param name='color' The color this tool represents />
-		public ColorPicker (Color backgroundColor, Color borderColor, int borderWidth, IGraphicsDisplay graphicsDisplay, Rectangle bounds) 
-			: base(backgroundColor, borderColor, borderWidth, graphicsDisplay, bounds) 
+		/// <param name='colorPickerDefinition' The layout definition of this control/tool />
+		public ColorPicker (IGraphicsDisplay graphicsDisplay, ColorPickerDefinition colorPickerDefinition) 
+			: base(	
+		       colorPickerDefinition.BackgroundColor, 
+		       colorPickerDefinition.BorderColor, 
+		       colorPickerDefinition.BorderWidth, 
+		       graphicsDisplay, 
+		       colorPickerDefinition.Bounds) 
 		{
 		}
 		

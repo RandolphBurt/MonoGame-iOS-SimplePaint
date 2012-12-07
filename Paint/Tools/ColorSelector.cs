@@ -39,68 +39,74 @@ namespace Paint
 		/// Number of gauges used by this control
 		/// </summary>
 		private const int GaugeCount = 4;
-		
-		/// <summary>
-		/// The vertical margin used around each gauge.
-		/// </summary>
-		private const int GaugeVerticalMargin = 20;
 
-		/// <summary>
-		/// The horizontal margin used around each gauge.
-		/// </summary>
-		private const int GaugeHorizontalMargin = 20;
-		
-		/// <summary>
-		/// The height of each gauge.
-		/// </summary>
-		private const int GaugeHeight = 30;
-
-		/// <summary>
-		/// The size of the marker used in the gauge
-		/// </summary>
-		private const int GaugeMarkerWidth = 10;
-		
 		/// <summary>
 		/// The current color.
 		/// </summary>
 		private Color color;
+
+		/// <summary>
+		/// The color selector definition -layout information for this control
+		/// </summary>
+		private ColorSelectorDefinition colorSelectorDefinition;
 		
 		/// <summary>
 		/// List of all the gauges
 		/// </summary>
 		private Gauge[] gaugeList;
-		
+
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Paint.ColorSelector"/> class.
 		/// </summary>
-		/// <param name='backgroundColor' The background color of the colorSelector />
-		/// <param name='borderColor' The border color of the colorSelector />
-		/// <param name='borderWidth' The border width />
-		/// <param name='graphicsDisplay' Contains all the graphics for rendering the tools />
-		/// <param name='bounds' The bounds of this control/tool />
-		/// <param name='startColor' The color we should start with />
-		public ColorSelector (Color backgroundColor, Color borderColor, int borderWidth, IGraphicsDisplay graphicsDisplay, Rectangle bounds, Color startColor) 
-			: base(backgroundColor, borderColor, borderWidth, graphicsDisplay, bounds) 
+		/// <param name='graphicsDisplay'>
+		/// Graphics display.
+		/// </param>
+		/// <param name='colorSelectorDefinition'>
+		/// Color selector definition - layout of the color selector
+		/// </param>
+		public ColorSelector(IGraphicsDisplay graphicsDisplay, ColorSelectorDefinition colorSelectorDefinition)
+			: base(
+				colorSelectorDefinition.BackgroundColor, 
+				colorSelectorDefinition.BorderColor, 
+				colorSelectorDefinition.BorderWidth, 
+				graphicsDisplay, 
+				colorSelectorDefinition.Bounds) 
 		{
+			this.colorSelectorDefinition = colorSelectorDefinition;
+
 			// Create all our gauge sub-controls
 			List<Gauge> gauges = new List<Gauge>();
 			
 			Color[] colorList = new Color[] { Color.Red, Color.Lime, Color.Blue, Color.DarkBlue };
-			byte[] markerValueList = new byte[] { startColor.R, startColor.G, startColor.B, startColor.A }; 
+
+			byte[] markerValueList = new byte[] 
+			{ 
+				this.colorSelectorDefinition.StartColor.R, 
+				this.colorSelectorDefinition.StartColor.G, 
+				this.colorSelectorDefinition.StartColor.B, 
+				this.colorSelectorDefinition.StartColor.A 
+			}; 
 			
 			for (int i = 0; i < colorList.Length; i++)
 			{
 				Rectangle gaugeRectangle = new Rectangle(
-					bounds.X + GaugeHorizontalMargin,
-					bounds.Y + bounds.Height - ((GaugeCount - i) * (GaugeHeight + GaugeVerticalMargin)),
-					bounds.Width - GaugeHorizontalMargin * 2,	
-					GaugeHeight);
-
-				gauges.Add(new HorizontalGauge(backgroundColor, graphicsDisplay, gaugeRectangle, GaugeMarkerWidth, colorList[i], markerValueList[i] / 255.0f));
+					this.bounds.X + this.colorSelectorDefinition.GaugeHorizontalMargin,
+					this.bounds.Y + this.bounds.Height - ((GaugeCount - i) * (this.colorSelectorDefinition.GaugeWidth + this.colorSelectorDefinition.GaugeVerticalMargin)),
+					this.bounds.Width - this.colorSelectorDefinition.GaugeHorizontalMargin * 2,	
+					this.colorSelectorDefinition.GaugeWidth);
+				
+				gauges.Add(
+					new HorizontalGauge(
+						this.colorSelectorDefinition.BackgroundColor, 
+						graphicsDisplay, 
+						gaugeRectangle, 
+						this.colorSelectorDefinition.GaugeMarkerWidth, 
+						colorList[i], 
+						markerValueList[i] / 255.0f));
 			}
 			
-			gaugeList = gauges.ToArray();
-			this.color = startColor;
+			this.gaugeList = gauges.ToArray();
+			this.color = this.colorSelectorDefinition.StartColor;
 			this.HookGaugeEvents();
 		}
 		

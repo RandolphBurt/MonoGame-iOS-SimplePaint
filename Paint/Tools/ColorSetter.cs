@@ -15,11 +15,6 @@ namespace Paint
 	public class ColorSetter : IColorSetter, ICanvasTool
 	{
 		/// <summary>
-		/// Border size for drawing the tool on screen.
-		/// </summary>
-		private int borderWidth;
-		
-		/// <summary>
 		/// The previous color used for drawing.
 		/// </summary>
 		private Color previousColor;
@@ -30,19 +25,14 @@ namespace Paint
 		private Color color;
 		
 		/// <summary>
-		/// The color of the border of this tool
-		/// </summary>
-		private Color borderColor;
-		
-		/// <summary>
-		/// The location and size of this tool
-		/// </summary>
-		private Rectangle bounds;
-		
-		/// <summary>
 		/// Contains all the graphics for rendering the tools
 		/// </summary>
 		private IGraphicsDisplay graphicsDisplay;
+
+		/// <summary>
+		/// The color setter layout
+		/// </summary>
+		private ColorSetterDefinition colorSetterDefinition;
 		
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Paint.ColorSetter"/> class.
@@ -52,13 +42,30 @@ namespace Paint
 		/// <param name='bounds' The bounds of this control/tool />
 		/// <param name='startColor' The color we should start with />
 		/// <param name='borderWidth' The border width />
-		public ColorSetter (Color borderColor, IGraphicsDisplay graphicsDisplay, Rectangle bounds, Color startColor, int borderWidth) 
+		public ColorSetter (IGraphicsDisplay graphicsDisplay, ColorSetterDefinition colorSetterDefinition) 
 		{
-			this.previousColor = this.color = startColor;
-			this.bounds = bounds;
 			this.graphicsDisplay = graphicsDisplay;
-			this.borderColor = borderColor;
-			this.borderWidth = borderWidth;
+			this.colorSetterDefinition = colorSetterDefinition;
+			this.previousColor = this.color = colorSetterDefinition.BackgroundColor;
+		}
+
+		/// <summary>
+		/// Gets or sets the color we should display
+		/// </summary>
+		public Color Color 
+		{
+			get
+			{
+				return this.color;
+			}
+			
+			set 
+			{
+				if (this.color != value)
+				{
+					this.color = value;
+				}
+			}
 		}
 
 		/// <summary>
@@ -73,39 +80,20 @@ namespace Paint
 			if (this.color != this.previousColor || refreshDisplay == true)
 			{
 				// Blank out everything 
-				this.DrawRectangle(this.bounds, this.borderColor); 
+				this.DrawRectangle(this.colorSetterDefinition.Bounds, this.colorSetterDefinition.BorderColor); 
 				
 				Rectangle inBorderRectangle = new Rectangle(
-					this.bounds.X + borderWidth,
-					this.bounds.Y + borderWidth,
-					this.bounds.Width - (2 * borderWidth),
-					this.bounds.Height - (2 * borderWidth));
+					this.colorSetterDefinition.Bounds.X + this.colorSetterDefinition.BorderWidth,
+					this.colorSetterDefinition.Bounds.Y + this.colorSetterDefinition.BorderWidth,
+					this.colorSetterDefinition.Bounds.Width - (2 * this.colorSetterDefinition.BorderWidth),
+					this.colorSetterDefinition.Bounds.Height - (2 * this.colorSetterDefinition.BorderWidth));
 				
 				this.DrawRectangle(inBorderRectangle, this.Color); 
 				
 				this.previousColor = this.color;
 			}
 		}
-		
-		/// <summary>
-		/// Gets or sets the color we should display
-		/// </summary>
-		public Color Color 
-		{
-			get
-			{
-				return this.color;
-			}
-					
-			set 
-			{
-				if (this.color != value)
-				{
-					this.color = value;
-				}
-			}
-		}
-
+	
 		/// <summary>
 		/// Draws the rectangle.
 		/// </summary>

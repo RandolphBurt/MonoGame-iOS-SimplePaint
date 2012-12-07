@@ -15,17 +15,6 @@ namespace Paint
 	public class Button : CanvasToolTouchBase, IButton
 	{
 		/// <summary>
-		/// The images we are using to draw this button
-		/// If more than one image in the list then the image will change with each press
-		/// </summary>
-		private ImageType[] imageTypeList;
-		
-		/// <summary>
-		/// The image to use when the button is disabled.
-		/// </summary>
-		private ImageType? disabledImageType;
-		
-		/// <summary>
 		/// Is the button enabled or not.
 		/// </summary>
 		private bool enabled = true;
@@ -44,63 +33,38 @@ namespace Paint
 		/// Where do we want to draw the actual button image
 		/// </summary>
 		private Rectangle imageDestinationRectangle;
-		
-		/// <summary>
-		/// Initializes a new instance of the <see cref="Paint.ExitButton"/> class.
-		/// </summary>
-		/// <param name='backgroundColor' The background color of the button />
-		/// <param name='buttonBounds' The bounds of this control/tool />
-		/// <param name='graphicsDisplay' The graphics texture map - contains the image for this button />
-		/// <param name='imageType' Reference to the texture map of the image we are using for rendering />
-		public Button (Color backgroundColor, Rectangle buttonBounds, IGraphicsDisplay graphicsDisplay, ImageType imageType, ImageType? disabledImageType = null)
-			: base(backgroundColor, graphicsDisplay, buttonBounds) 
-		{
-			this.Initialise(graphicsDisplay, new ImageType[1] {imageType}, disabledImageType);
-		}
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="Paint.ExitButton"/> class.
+		/// The button definition - layout of this button
 		/// </summary>
-		/// <param name='backgroundColor' The background color of the button />
-		/// <param name='borderColor' The border color of the button />
-		/// <param name='borderWidth' Width of any border we want to display />
-		/// <param name='buttonBounds' The bounds of this control/tool />
-		/// <param name='graphicsDisplay' The graphics texture map - contains the image for this button />
-		/// <param name='imageType' Reference to the texture map of the image we are using for rendering />
-		public Button (Color backgroundColor, Color borderColor, int borderWidth, Rectangle buttonBounds, IGraphicsDisplay graphicsDisplay, 
-		               ImageType imageType, ImageType? disabledImageType = null)
-			: base(backgroundColor, borderColor, borderWidth, graphicsDisplay, buttonBounds) 
-		{
-			this.Initialise(graphicsDisplay, new ImageType[1] {imageType}, disabledImageType);
-		}
+		private ButtonDefinition buttonDefinition;
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="Paint.ExitButton"/> class.
+		/// Initializes a new instance of the <see cref="Paint.Button"/> class.
 		/// </summary>
-		/// <param name='backgroundColor' The background color of the button />
-		/// <param name='buttonBounds' The bounds of this control/tool />
-		/// <param name='graphicsDisplay' The graphics texture map - contains the image for this button />
-		/// <param name='imageTypeList' Reference to the texture map of the images we are using for rendering />
-		public Button (Color backgroundColor, Rectangle buttonBounds, IGraphicsDisplay graphicsDisplay, ImageType[] imageTypeList, ImageType? disabledImageType = null)
-			: base(backgroundColor, graphicsDisplay, buttonBounds) 
+		/// <param name='graphicsDisplay'>
+		/// Graphics display.
+		/// </param>
+		/// <param name='buttonDefinition'>
+		/// Button definition - layout information
+		/// </param>
+		public Button(IGraphicsDisplay graphicsDisplay, ButtonDefinition buttonDefinition)
+			: base(buttonDefinition.BackgroundColor, graphicsDisplay, buttonDefinition.Bounds) 
 		{
-			this.Initialise(graphicsDisplay, imageTypeList, disabledImageType);
-		}
+			this.buttonDefinition = buttonDefinition;
 
-		/// <summary>
-		/// Initializes a new instance of the <see cref="Paint.ExitButton"/> class.
-		/// </summary>
-		/// <param name='backgroundColor' The background color of the button />
-		/// <param name='borderColor' The border color of the button />
-		/// <param name='borderWidth' Width of any border we want to display />
-		/// <param name='buttonBounds' The bounds of this control/tool />
-		/// <param name='graphicsDisplay' The graphics texture map - contains the image for this button />
-		/// <param name='imageTypeList' Reference to the texture map of the images we are using for rendering />
-		public Button (Color backgroundColor, Color borderColor, int borderWidth, Rectangle buttonBounds, IGraphicsDisplay graphicsDisplay, 
-		               ImageType[] imageTypeList, ImageType? disabledImageType = null)
-			: base(backgroundColor, borderColor, borderWidth, graphicsDisplay, buttonBounds) 
-		{
-			this.Initialise(graphicsDisplay, imageTypeList, disabledImageType);
+			this.Enabled = true;
+
+			// Assume all images for this button are the same size, then calculate where to position the button
+			var graphicsRectangle = graphicsDisplay.SourceRectangleFromImageType(this.buttonDefinition.ImageList[0]);
+			int xDiff = this.bounds.Width - graphicsRectangle.Width;
+			int yDiff = this.bounds.Height - graphicsRectangle.Height;
+			
+			this.imageDestinationRectangle = new Rectangle(
+				this.bounds.X + xDiff / 2, 
+				this.bounds.Y + yDiff / 2,
+				this.bounds.Width - xDiff,
+				this.bounds.Height - yDiff);
 		}
 		
 		/// <summary>
@@ -156,11 +120,11 @@ namespace Paint
 				// Blank out everything - and then draw our graphic
 				this.BlankAndRedrawWithBorder();
 				
-				ImageType imageType = this.imageTypeList[this.currentButtonState];
+				ImageType imageType = this.buttonDefinition.ImageList[this.currentButtonState];
 				
-				if (this.Enabled == false && this.disabledImageType.HasValue)
+				if (this.Enabled == false && this.buttonDefinition.DisabledImageType.HasValue)
 				{
-					imageType = this.disabledImageType.Value;
+					imageType = this.buttonDefinition.DisabledImageType.Value;
 				}
 				
 				this.DrawGraphic(imageType, this.imageDestinationRectangle);
@@ -183,7 +147,7 @@ namespace Paint
 				{
 					int previousState = this.currentButtonState;
 					
-					if (++this.currentButtonState >= this.imageTypeList.Length)
+					if (++this.currentButtonState >= this.buttonDefinition.ImageList.Length)
 					{
 						// we've looped through all the images so go back to the first image
 						this.currentButtonState = 0;						
@@ -212,29 +176,6 @@ namespace Paint
 				this.ButtonPressed(this, EventArgs.Empty);
 			}
 		}
-		
-		/// <summary>
-		/// Initialise the button.
-		/// </summary>
-		/// <param name='graphicsDisplay' The graphics texture map - contains the image for this button />
-		/// <param name='imageType' Reference to the texture map of the image we are using for rendering />
-		private void Initialise(IGraphicsDisplay graphicsDisplay, ImageType[] imageTypeList, ImageType? disabledImageType = null)
-		{
-			this.Enabled = true;
-			this.imageTypeList = imageTypeList;
-			this.disabledImageType = disabledImageType;
-			
-			// Assume all images for this button are the same size, then calculate where to position the button
-			var graphicsRectangle = graphicsDisplay.SourceRectangleFromImageType(this.imageTypeList[0]);
-			int xDiff = this.bounds.Width - graphicsRectangle.Width;
-			int yDiff = this.bounds.Height - graphicsRectangle.Height;
-			
-			this.imageDestinationRectangle = new Rectangle(
-				this.bounds.X + xDiff / 2, 
-				this.bounds.Y + yDiff / 2,
-				this.bounds.Width - xDiff,
-				this.bounds.Height - yDiff);
-		}		
 	}
 }
 

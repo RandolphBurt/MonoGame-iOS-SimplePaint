@@ -143,6 +143,11 @@
     <Compile Include="MonoTouch\SocialNetworkMessenger.cs" />
     <Compile Include="BusinessLogic\ToolboxLayoutDefinition.cs" />
     <Compile Include="General\ObjectDeserializer.cs" />
+    <Compile Include="ToolDefinitions\BrushSizeSelectorDefinition.cs" />
+    <Compile Include="ToolDefinitions\ColorSetterDefinition.cs" />
+    <Compile Include="ToolDefinitions\ColorSelectorDefinition.cs" />
+    <Compile Include="ToolDefinitions\ColorPickerDefinition.cs" />
+    <Compile Include="ToolDefinitions\ButtonDefinition.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -156,6 +161,7 @@
     <Folder Include="Graphics\" />
     <Folder Include="MonoTouch\" />
     <Folder Include="General\" />
+    <Folder Include="ToolDefinitions\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\graphics.png" />

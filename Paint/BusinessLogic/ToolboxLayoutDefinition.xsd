@@ -6,7 +6,7 @@
 				<xs:element name="Border" type="BorderType"/>
 				<xs:element name="MaximizedHeight" type="xs:int"/>
 				<xs:element name="MinimizedHeight" type="xs:int" minOccurs="0"/>
-				<xs:element name="BackgroundColor" type="xs:string"/>
+				<xs:element name="BackgroundColor" type="ColorType"/>
 				<xs:element name="Controls" minOccurs="0">
 					<xs:complexType>
 						<xs:sequence>
@@ -96,14 +96,14 @@
 					</xs:sequence>
 				</xs:complexType>
 			</xs:element>
-			<xs:element name="BackgroundColor" type="xs:string"/>
+			<xs:element name="BackgroundColor" type="ColorType"/>
 			<xs:element name="Border" type="BorderType"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="BorderType">
 		<xs:sequence>
 			<xs:element name="Width" type="xs:int"/>
-			<xs:element name="Color" type="xs:string"/>
+			<xs:element name="Color" type="ColorType"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="GaugeType">
@@ -112,6 +112,13 @@
 			<xs:element name="HorizontalMargin" type="xs:int"/>
 			<xs:element name="Width" type="xs:int"/>
 			<xs:element name="MarkerWidth" type="xs:int"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ColorType">
+		<xs:sequence>
+			<xs:element name="Red" type="xs:unsignedByte"/>
+			<xs:element name="Green" type="xs:unsignedByte"/>
+			<xs:element name="Blue" type="xs:unsignedByte"/>
 		</xs:sequence>
 	</xs:complexType>
 </xs:schema>

@@ -9,47 +9,12 @@ namespace Paint
 	
 	using Microsoft.Xna.Framework;
 	using Microsoft.Xna.Framework.Graphics;
-	
+
 	/// <summary>
 	/// Brush size selector - tool allowing the user to pick the size of the brush for drawing
 	/// </summary>
 	public class BrushSizeSelector : CanvasToolTouchBase, IBrushSizeSelector
 	{		
-		/// <summary>
-		/// The color of the gauge.
-		/// </summary>
-		private readonly Color GaugeColor = Color.Black;
-		
-		/// <summary>
-		/// The vertical margin used around each gauge.
-		/// </summary>
-		private const int GaugeVerticalMargin = 20;
-
-		/// <summary>
-		/// The horizontal margin used around the gauge.
-		/// </summary>
-		private const int GaugeHorizontalMargin = 15;
-		
-		/// <summary>
-		/// The width of the gauge.
-		/// </summary>
-		private const int GaugeWidth = 30;
-
-		/// <summary>
-		/// The size of the marker used in the gauge
-		/// </summary>
-		private const int GaugeMarkerWidth = 10;
-		
-		/// <summary>
-		/// The minimum size of the brush allowed.
-		/// </summary>
-		private int minBrushSize;
-		
-		/// <summary>
-		/// The maximum size of the brush allowed.
-		/// </summary>
-		private int maxBrushSize;
-		
 		/// <summary>
 		/// The gauge used for representing the size of the brush.
 		/// </summary>
@@ -64,40 +29,57 @@ namespace Paint
 		/// Caches the Y position of the gauge so we can quickly check if and 'touch' was within the gauge
 		/// </summary>
 		private int gaugeYPosition = 0;
-				
+
+		/// <summary>
+		/// The brush size definition - layout information
+		/// </summary>
+		private BrushSizeSelectorDefinition brushSizeDefinition;
+
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Paint.BrushSizeSelector"/> class.
 		/// </summary>
-		/// <param name='backgroundColor' The background color of the colorSelector />
-		/// <param name='borderColor' The border color of the colorSelector />
-		/// <param name='borderWidth' The border width />
-		/// <param name='graphicsDisplay' Contains all the graphics for creating tools />
-		/// <param name='bounds' The bounds of this control/tool />
-		/// <param name='minBrushSize' The minimum size allowed for the brush />
-		/// <param name='maxBrushSize' The maximum size allowed for the brush />
-		/// <param name='startBrushSize' The starting size of the brush />
-		/// <param name='startColor' The color we should start with />
-		public BrushSizeSelector(Color backgroundColor, Color borderColor, int borderWidth, IGraphicsDisplay graphicsDisplay, Rectangle bounds,
-		                         int minBrushSize, int maxBrushSize, int startBrushSize, Color startColor) 
-			: base(backgroundColor, borderColor, borderWidth, graphicsDisplay, bounds) 
+		/// <param name='graphicsDisplay'>
+		/// Graphics display.
+		/// </param>
+		/// <param name='brushSizeDefinition'>
+		/// Brush size definition - layout of the control.
+		/// </param>
+		public BrushSizeSelector(IGraphicsDisplay graphicsDisplay, BrushSizeSelectorDefinition brushSizeDefinition) 
+			: base (
+				brushSizeDefinition.BackgroundColor,
+				brushSizeDefinition.BorderColor,
+				brushSizeDefinition.BorderWidth,
+				graphicsDisplay,
+				brushSizeDefinition.Bounds)
 		{
-			this.color = startColor;
-			this.minBrushSize = minBrushSize;
-			this.maxBrushSize = maxBrushSize;
-			this.BrushSize = startBrushSize;
+			this.brushSizeDefinition = brushSizeDefinition;
+
+			this.color = brushSizeDefinition.StartColor;
+			this.BrushSize = brushSizeDefinition.BrushSizeInitial;
+			this.gaugeYPosition = bounds.Y + brushSizeDefinition.GaugeVerticalMargin + this.brushSizeDefinition.BrushSizeMaximum;
 			
-			this.gaugeYPosition = bounds.Y + GaugeVerticalMargin + maxBrushSize;
-			
-			Rectangle gaugeRectangle = new Rectangle(
-				bounds.X + ((bounds.Width - GaugeWidth) / 2),
+			Rectangle gaugeBounds = new Rectangle(
+				this.bounds.X + ((this.bounds.Width - this.brushSizeDefinition.GaugeWidth) / 2),
 				this.gaugeYPosition,
-				GaugeWidth,
-				bounds.Height - (maxBrushSize + (GaugeVerticalMargin * 2)));
+				this.brushSizeDefinition.GaugeWidth,
+				this.bounds.Height - (this.brushSizeDefinition.BrushSizeMaximum + (this.brushSizeDefinition.GaugeVerticalMargin * 2)));
 			
-			float startMarkerValue = (float)(startBrushSize - minBrushSize) / (float)(maxBrushSize - minBrushSize);
-			this.brushSizeGauge = new VerticalGauge(backgroundColor, graphicsDisplay, gaugeRectangle, GaugeMarkerWidth, GaugeColor, startMarkerValue);
+			float startMarkerValue = 
+				(float)(this.brushSizeDefinition.BrushSizeInitial - this.brushSizeDefinition.BrushSizeMinimum) / 
+				(float)(this.brushSizeDefinition.BrushSizeMaximum - this.brushSizeDefinition.BrushSizeMinimum);
+
+			this.brushSizeGauge = 
+				new VerticalGauge(
+					this.backgroundColor, 
+					graphicsDisplay, 
+					gaugeBounds, 
+					this.brushSizeDefinition.GaugeMarkerWidth, 
+					this.brushSizeDefinition.BorderColor, 
+					startMarkerValue);
+
 			this.brushSizeGauge.MarkerChanged += brushSizeGauge_MarkerChanged;
 		}
+	
 				
 		/// <summary>
 		/// Occurs when the brush size changes.
@@ -189,17 +171,17 @@ namespace Paint
 		{
 			// Blank out previous brush first...
 			Rectangle blankRectangle = new Rectangle(
-				this.bounds.X + ((this.bounds.Width - this.maxBrushSize) / 2 ),
-				this.bounds.Y + (GaugeVerticalMargin / 2),
-				this.maxBrushSize,
-				this.maxBrushSize);
+				this.bounds.X + ((this.bounds.Width - this.brushSizeDefinition.BrushSizeMaximum) / 2 ),
+				this.bounds.Y + (brushSizeDefinition.GaugeVerticalMargin / 2),
+				this.brushSizeDefinition.BrushSizeMaximum,
+				this.brushSizeDefinition.BrushSizeMaximum);
 			
 			this.DrawRectangle(blankRectangle, this.backgroundColor); 							
 			
 			// draw new brush
 			Rectangle brushRectangle = new Rectangle(
 				this.bounds.X + ((this.bounds.Width - this.BrushSize) / 2 ),
-				this.bounds.Y + (GaugeVerticalMargin + this.maxBrushSize - this.BrushSize) / 2,
+				this.bounds.Y + (brushSizeDefinition.GaugeVerticalMargin + this.brushSizeDefinition.BrushSizeMaximum - this.BrushSize) / 2,
 				this.BrushSize,
 				this.BrushSize);
 			
@@ -217,7 +199,11 @@ namespace Paint
 		/// </param>
 		private void brushSizeGauge_MarkerChanged (object sender, EventArgs e)
 		{
-			this.BrushSize = this.minBrushSize + (int)(this.brushSizeGauge.Marker * (this.maxBrushSize - this.minBrushSize));
+			this.BrushSize = 
+				this.brushSizeDefinition.BrushSizeMinimum + 
+					(int)(this.brushSizeGauge.Marker * 
+					      (this.brushSizeDefinition.BrushSizeMaximum - this.brushSizeDefinition.BrushSizeMinimum));
+
 			this.OnBrushSizeChanged(EventArgs.Empty);
 		}	
 	}

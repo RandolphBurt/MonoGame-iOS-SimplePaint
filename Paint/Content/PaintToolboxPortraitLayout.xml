@@ -2,11 +2,19 @@
 <ToolboxLayoutDefinition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<Border>
 		<Width>4</Width>
-		<Color>0xff000000</Color>
+		<Color>
+			<Red>0</Red>
+			<Green>0</Green>
+			<Blue>0</Blue>
+		</Color>
 	</Border>
 	<MaximizedHeight>348</MaximizedHeight>
 	<MinimizedHeight>50</MinimizedHeight>
-	<BackgroundColor>0xffffffff</BackgroundColor>
+	<BackgroundColor>
+		<Red>255</Red>
+		<Green>255</Green>
+		<Blue>255</Blue>
+	</BackgroundColor>
 	<Controls>
 		<ColorSetter>
 			<Region>
@@ -18,10 +26,18 @@
 					<Width>451</Width>
 					<Height>54</Height>
 				</Size>
-				<BackgroundColor>0xff008000</BackgroundColor>
+				<BackgroundColor>
+					<Red>0</Red>
+					<Green>128</Green>
+					<Blue>0</Blue>
+				</BackgroundColor>
 				<Border>
 					<Width>4</Width>
-					<Color>0xff000000</Color>
+					<Color>
+						<Red>0</Red>
+						<Green>0</Green>
+						<Blue>0</Blue>
+					</Color>
 				</Border>
 			</Region>
 		</ColorSetter>
@@ -35,10 +51,18 @@
 					<Width>63</Width>
 					<Height>230</Height>
 				</Size>
-				<BackgroundColor>0xffffffff</BackgroundColor>
+				<BackgroundColor>
+					<Red>255</Red>
+					<Green>255</Green>
+					<Blue>255</Blue>
+				</BackgroundColor>
 				<Border>
 					<Width>2</Width>
-					<Color>0xff000000</Color>
+					<Color>
+						<Red>0</Red>
+						<Green>0</Green>
+						<Blue>0</Blue>
+					</Color>
 				</Border>
 			</Region>
 			<BrushSize>
@@ -56,17 +80,25 @@
 		<ColorSelector>
 			<Region>
 				<Location>
-					<X>65</X>
-					<Y>116</Y>
+					<X>67</X>
+					<Y>118</Y>
 				</Location>
 				<Size>
-					<Width>701</Width>
-					<Height>230</Height>
+					<Width>697</Width>
+					<Height>226</Height>
 				</Size>
-				<BackgroundColor>0xffffffff</BackgroundColor>
+				<BackgroundColor>
+					<Red>255</Red>
+					<Green>255</Green>
+					<Blue>255</Blue>
+				</BackgroundColor>
 				<Border>
-					<Width>2</Width>
-					<Color>0xff000000</Color>
+					<Width>4</Width>
+					<Color>
+						<Red>0</Red>
+						<Green>0</Green>
+						<Blue>0</Blue>
+					</Color>
 				</Border>
 			</Region>
 			<Gauge>
@@ -83,14 +115,22 @@
 					<Y>52</Y>
 				</Location>
 				<Size>
-					<Width>64</Width>
+					<Width>63</Width>
 					<Height>64</Height>
 				</Size>
-				<BackgroundColor>0xffffffff</BackgroundColor>
+				<BackgroundColor>
+					<Red>255</Red>
+					<Green>255</Green>
+					<Blue>255</Blue>
+				</BackgroundColor>
 				<!-- White -->
 				<Border>
 					<Width>2</Width>
-					<Color>0xff000000</Color>
+					<Color>
+						<Red>0</Red>
+						<Green>0</Green>
+						<Blue>0</Blue>
+					</Color>
 				</Border>
 			</Region>
 		</ColorPicker>
@@ -104,11 +144,19 @@
 					<Width>64</Width>
 					<Height>64</Height>
 				</Size>
-				<BackgroundColor>0xff000000</BackgroundColor>
+				<BackgroundColor>
+					<Red>0</Red>
+					<Green>0</Green>
+					<Blue>0</Blue>
+				</BackgroundColor>
 				<!-- Black -->
 				<Border>
 					<Width>2</Width>
-					<Color>0xff000000</Color>
+					<Color>
+						<Red>0</Red>
+						<Green>0</Green>
+						<Blue>0</Blue>
+					</Color>
 				</Border>
 			</Region>
 		</ColorPicker>
@@ -122,11 +170,19 @@
 					<Width>64</Width>
 					<Height>64</Height>
 				</Size>
-				<BackgroundColor>0xffc0c0c0</BackgroundColor>
+				<BackgroundColor>
+					<Red>192</Red>
+					<Green>192</Green>
+					<Blue>192</Blue>
+				</BackgroundColor>
 				<!-- Silver -->
 				<Border>
 					<Width>2</Width>
-					<Color>0xff000000</Color>
+					<Color>
+						<Red>0</Red>
+						<Green>0</Green>
+						<Blue>0</Blue>
+					</Color>
 				</Border>
 			</Region>
 		</ColorPicker>
@@ -140,11 +196,19 @@
 					<Width>64</Width>
 					<Height>64</Height>
 				</Size>
-				<BackgroundColor>0xffff0000</BackgroundColor>
+				<BackgroundColor>
+					<Red>255</Red>
+					<Green>0</Green>
+					<Blue>0</Blue>
+				</BackgroundColor>
 				<!-- Red -->
 				<Border>
 					<Width>2</Width>
-					<Color>0xff000000</Color>
+					<Color>
+						<Red>0</Red>
+						<Green>0</Green>
+						<Blue>0</Blue>
+					</Color>
 				</Border>
 			</Region>
 		</ColorPicker>
@@ -158,11 +222,19 @@
 					<Width>64</Width>
 					<Height>64</Height>
 				</Size>
-				<BackgroundColor>0xff00ff00</BackgroundColor>
+				<BackgroundColor>
+					<Red>0</Red>
+					<Green>255</Green>
+					<Blue>0</Blue>
+				</BackgroundColor>
 				<!-- Lime -->
 				<Border>
 					<Width>2</Width>
-					<Color>0xff000000</Color>
+					<Color>
+						<Red>0</Red>
+						<Green>0</Green>
+						<Blue>0</Blue>
+					</Color>
 				</Border>
 			</Region>
 		</ColorPicker>
@@ -176,11 +248,19 @@
 					<Width>64</Width>
 					<Height>64</Height>
 				</Size>
-				<BackgroundColor>0xff0000ff</BackgroundColor>
+				<BackgroundColor>
+					<Red>0</Red>
+					<Green>0</Green>
+					<Blue>255</Blue>
+				</BackgroundColor>
 				<!-- Blue -->
 				<Border>
 					<Width>2</Width>
-					<Color>0xff000000</Color>
+					<Color>
+						<Red>0</Red>
+						<Green>0</Green>
+						<Blue>0</Blue>
+					</Color>
 				</Border>
 			</Region>
 		</ColorPicker>
@@ -194,11 +274,19 @@
 					<Width>64</Width>
 					<Height>64</Height>
 				</Size>
-				<BackgroundColor>0xffffff00</BackgroundColor>
+				<BackgroundColor>
+					<Red>255</Red>
+					<Green>255</Green>
+					<Blue>0</Blue>
+				</BackgroundColor>
 				<!-- Yellow -->
 				<Border>
 					<Width>2</Width>
-					<Color>0xff000000</Color>
+					<Color>
+						<Red>0</Red>
+						<Green>0</Green>
+						<Blue>0</Blue>
+					</Color>
 				</Border>
 			</Region>
 		</ColorPicker>
@@ -212,11 +300,19 @@
 					<Width>64</Width>
 					<Height>64</Height>
 				</Size>
-				<BackgroundColor>0xff00ffff</BackgroundColor>
+				<BackgroundColor>
+					<Red>0</Red>
+					<Green>255</Green>
+					<Blue>255</Blue>
+				</BackgroundColor>
 				<!-- Cyan -->
 				<Border>
 					<Width>2</Width>
-					<Color>0xff000000</Color>
+					<Color>
+						<Red>0</Red>
+						<Green>0</Green>
+						<Blue>0</Blue>
+					</Color>
 				</Border>
 			</Region>
 		</ColorPicker>
@@ -230,11 +326,19 @@
 					<Width>64</Width>
 					<Height>64</Height>
 				</Size>
-				<BackgroundColor>0xffff00ff</BackgroundColor>
+				<BackgroundColor>
+					<Red>255</Red>
+					<Green>0</Green>
+					<Blue>255</Blue>
+				</BackgroundColor>
 				<!-- Fuchsia -->
 				<Border>
 					<Width>2</Width>
-					<Color>0xff000000</Color>
+					<Color>
+						<Red>0</Red>
+						<Green>0</Green>
+						<Blue>0</Blue>
+					</Color>
 				</Border>
 			</Region>
 		</ColorPicker>
@@ -248,11 +352,19 @@
 					<Width>64</Width>
 					<Height>64</Height>
 				</Size>
-				<BackgroundColor>0xffffc0cb</BackgroundColor>
+				<BackgroundColor>
+					<Red>255</Red>
+					<Green>192</Green>
+					<Blue>203</Blue>
+				</BackgroundColor>
 				<!-- Pink -->
 				<Border>
 					<Width>2</Width>
-					<Color>0xff000000</Color>
+					<Color>
+						<Red>0</Red>
+						<Green>0</Green>
+						<Blue>0</Blue>
+					</Color>
 				</Border>
 			</Region>
 		</ColorPicker>
@@ -266,11 +378,19 @@
 					<Width>64</Width>
 					<Height>64</Height>
 				</Size>
-				<BackgroundColor>0xffffa500</BackgroundColor>
+				<BackgroundColor>
+					<Red>255</Red>
+					<Green>165</Green>
+					<Blue>0</Blue>
+				</BackgroundColor>
 				<!-- Orange -->
 				<Border>
 					<Width>2</Width>
-					<Color>0xff000000</Color>
+					<Color>
+						<Red>0</Red>
+						<Green>0</Green>
+						<Blue>0</Blue>
+					</Color>
 				</Border>
 			</Region>
 		</ColorPicker>
@@ -284,11 +404,19 @@
 					<Width>64</Width>
 					<Height>64</Height>
 				</Size>
-				<BackgroundColor>0xff008000</BackgroundColor>
+				<BackgroundColor>
+					<Red>0</Red>
+					<Green>128</Green>
+					<Blue>0</Blue>
+				</BackgroundColor>
 				<!-- Green -->
 				<Border>
 					<Width>2</Width>
-					<Color>0xff000000</Color>
+					<Color>
+						<Red>0</Red>
+						<Green>0</Green>
+						<Blue>0</Blue>
+					</Color>
 				</Border>
 			</Region>
 		</ColorPicker>
@@ -303,10 +431,18 @@
 					<Width>50</Width>
 					<Height>46</Height>
 				</Size>
-				<BackgroundColor>0xffffffff</BackgroundColor>
+				<BackgroundColor>
+						<Red>255</Red>
+						<Green>255</Green>
+						<Blue>255</Blue>
+				</BackgroundColor>
 				<Border>
 					<Width>2</Width>
-					<Color>0xff000000</Color>
+					<Color>
+						<Red>0</Red>
+						<Green>0</Green>
+						<Blue>0</Blue>
+					</Color>
 				</Border>
 			</Region>
 		</Button>
@@ -321,10 +457,18 @@
 					<Width>50</Width>
 					<Height>46</Height>
 				</Size>
-				<BackgroundColor>0xffffffff</BackgroundColor>
+				<BackgroundColor>
+					<Red>255</Red>
+					<Green>255</Green>
+					<Blue>255</Blue>
+				</BackgroundColor>
 				<Border>
 					<Width>2</Width>
-					<Color>0xff000000</Color>
+					<Color>
+						<Red>0</Red>
+						<Green>0</Green>
+						<Blue>0</Blue>
+					</Color>
 				</Border>
 			</Region>
 		</Button>
@@ -339,10 +483,18 @@
 					<Width>50</Width>
 					<Height>46</Height>
 				</Size>
-				<BackgroundColor>0xffffffff</BackgroundColor>
+				<BackgroundColor>
+					<Red>255</Red>
+					<Green>255</Green>
+					<Blue>255</Blue>
+				</BackgroundColor>
 				<Border>
 					<Width>2</Width>
-					<Color>0xff000000</Color>
+					<Color>
+						<Red>0</Red>
+						<Green>0</Green>
+						<Blue>0</Blue>
+					</Color>
 				</Border>
 			</Region>
 		</Button>
@@ -357,10 +509,18 @@
 					<Width>50</Width>
 					<Height>46</Height>
 				</Size>
-				<BackgroundColor>0xffffffff</BackgroundColor>
+				<BackgroundColor>
+					<Red>255</Red>
+					<Green>255</Green>
+					<Blue>255</Blue>
+				</BackgroundColor>
 				<Border>
 					<Width>2</Width>
-					<Color>0xff000000</Color>
+					<Color>
+						<Red>0</Red>
+						<Green>0</Green>
+						<Blue>0</Blue>
+					</Color>
 				</Border>
 			</Region>
 		</Button>
@@ -375,10 +535,18 @@
 					<Width>59</Width>
 					<Height>46</Height>
 				</Size>
-				<BackgroundColor>0xffffffff</BackgroundColor>
+				<BackgroundColor>
+					<Red>255</Red>
+					<Green>255</Green>
+					<Blue>255</Blue>
+				</BackgroundColor>
 				<Border>
 					<Width>2</Width>
-					<Color>0xff000000</Color>
+					<Color>
+						<Red>0</Red>
+						<Green>0</Green>
+						<Blue>0</Blue>
+					</Color>
 				</Border>
 			</Region>
 		</Button>

@@ -16,7 +16,9 @@ namespace Paint
 	using Microsoft.Xna.Framework.Input.Touch;
 	using Microsoft.Xna.Framework.Media;
 	using Microsoft.Xna.Framework.Storage;
-	
+
+	using Paint.ToolboxLayout;
+
 	/// <summary>
 	/// The main application class just inherits from the monogame:Game class
 	/// Override a few key methods and away we go...
@@ -42,17 +44,7 @@ namespace Paint
 		/// Background color for our app
 		/// </summary>
 		private readonly Color BackgroundColor = Color.White;
-		
-		/// <summary>
-		/// The borders of all controls will be black
-		/// </summary>
-		private readonly Color BorderColor = Color.Black;
 
-		/// <summary>
-		/// The color we will set the brush to start with
-		/// </summary>
-		private readonly Color StartColor = Color.Green;
-		
 		/// <summary>
 		/// Our monogame GrahicsDeviceManager handles all the rendering
 		/// </summary>
@@ -140,6 +132,11 @@ namespace Paint
 		/// view/form to present when we about to save all the data
 		/// </summary>
 		private IUIBusyMessage saveBusyMessageDisplay = null;
+
+		/// <summary>
+		/// Defines the layout of all the controls in the toolbox
+		/// </summary>
+		private ToolboxLayoutDefinition toolboxLayoutDefinition = null;
 		
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Paint.PaintApp"/> class.
@@ -148,12 +145,14 @@ namespace Paint
 		/// <param name='filenameResolver'>Filename Resolver</param>
 		/// <param name='imageStateData'>ImageSaveData</param>
 		/// <param name='saveBusyMessageDisplay'>Class for dsplaying the 'Busy - saving' message</param>
+		/// <param name='toolboxLayoutDefinition'>Layout of the toolbox</param>
 		/// </summary>
 		public PaintApp(
 			IPictureIOManager pictureIOManager, 
 			IFilenameResolver filenameResolver, 
 			ImageStateData imageStateData,
-			IUIBusyMessage saveBusyMessageDisplay)
+			IUIBusyMessage saveBusyMessageDisplay,
+			ToolboxLayoutDefinition toolboxLayoutDefinition)
 		{
 			this.graphicsDeviceManager = new GraphicsDeviceManager(this);
 			this.graphicsDeviceManager.IsFullScreen = true;
@@ -161,6 +160,7 @@ namespace Paint
 			this.pictureIOManager = pictureIOManager;
 			this.imageStateData = imageStateData;
 			this.saveBusyMessageDisplay = saveBusyMessageDisplay;
+			this.toolboxLayoutDefinition = toolboxLayoutDefinition;
 			
 			if (imageStateData.Width > imageStateData.Height)
 			{
@@ -482,11 +482,9 @@ namespace Paint
 			};
 			
 			this.toolBox = new ToolBox(
-				this.BackgroundColor, 
-				this.BorderColor, 
+				this.toolboxLayoutDefinition,
 				this.graphicsDisplay,
 				colorList, 
-				this.StartColor,
 				this.imageStateData.Width,
 				//this.graphicsDeviceManager.GraphicsDevice.PresentationParameters.BackBufferWidth,
 				this.MinBrushSize, 
