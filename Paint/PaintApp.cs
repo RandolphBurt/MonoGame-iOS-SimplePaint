@@ -26,21 +26,6 @@ namespace Paint
 	public class PaintApp : Game, IRenderTargertHandler
 	{
 		/// <summary>
-		/// The maximum size of the brush
-		/// </summary>
-		private readonly int MaxBrushSize = 50;
-
-		/// <summary>
-		/// The minimum size of the brush
-		/// </summary>
-		private readonly int MinBrushSize = 1;
-		
-		/// <summary>
-		/// The initial size of the brush
-		/// </summary>
-		private readonly int StartBrushSize = 10;
-		
-		/// <summary>
 		/// Background color for our app
 		/// </summary>
 		private readonly Color BackgroundColor = Color.White;
