@@ -16,17 +16,17 @@ namespace Paint
 	/// Tool box - container for all tools
 	/// </summary>
 	public class ToolBox : IToolBox
-	{
+	{	
 		/// <summary>
-		/// Border size for drawing the tool on screen.
+		/// The toolbox bounds.
 		/// </summary>
-		protected const int StandardBorderSize = 2;
+		private Rectangle toolboxBounds;
 
 		/// <summary>
-		/// The height of the toolbar and the width of the min/max and dock buttons inside it
+		/// The toolbar inner bounds (i.e. inside the borders)
 		/// </summary>
-		public const int ToolbarHeight = 50;
-		
+		private Rectangle toolbarInnerBounds;
+
 		/// <summary>
 		/// The width of the toolbox.
 		/// </summary>
@@ -72,7 +72,6 @@ namespace Paint
 		/// </summary>
 		private Button redoButton;
 
-		
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Paint.ToolBox"/> class.
 		/// </summary>
@@ -85,8 +84,23 @@ namespace Paint
 			this.backgroundColor = this.TranslateToolboxLayoutColor(toolboxLayoutDefinition.BackgroundColor);
 			this.borderColor = this.TranslateToolboxLayoutColor(toolboxLayoutDefinition.Border.Color);
 			this.toolboxWidth = toolboxLayoutDefinition.Width * scale;
+			this.ToolboxMinimizedHeight = toolboxLayoutDefinition.MinimizedHeight * scale;
+			this.toolboxMaximisedHeight = toolboxLayoutDefinition.MaximizedHeight * scale;
+
+			// we start maximised and docked at the bottom
+			this.ToolboxHeight = this.toolboxMaximisedHeight;
 			this.DockPosition = DockPosition.Bottom; 
-			
+
+			int toolboxBorderWidth = toolboxLayoutDefinition.Border.Width * scale;
+
+			this.toolboxBounds = new Rectangle(0, 0, this.toolboxWidth, this.toolboxMaximisedHeight);
+
+			this.toolbarInnerBounds = new Rectangle(
+				toolboxBorderWidth, 
+				toolboxBorderWidth, 
+				this.toolboxWidth - (2 * toolboxBorderWidth),
+				this.ToolboxMinimizedHeight - (2 * toolboxBorderWidth));
+
 			this.CreateCanvasTools(toolboxLayoutDefinition, scale);
 		}
 
@@ -302,20 +316,11 @@ namespace Paint
 		/// </summary>
 		private void DrawBackground()
 		{
-			// First fill the entire region with the border colour
-			Rectangle borderRectangle = new Rectangle(0, 0, this.toolboxWidth, this.toolboxMaximisedHeight);
-			
-			this.graphicsDisplay.DrawGraphic(ImageType.EmptySquare, borderRectangle, this.borderColor);
-			
-			// Then go over the tool bar area - we want to ensure there is a double thickness border because we won't draw 
-			// the border on buttons
-			Rectangle toolbarRectangle = new Rectangle(
-				StandardBorderSize * 2, 
-				StandardBorderSize * 2, 
-				this.toolboxWidth - (4 * StandardBorderSize),
-				ToolbarHeight - (2 * StandardBorderSize));
-			
-			this.graphicsDisplay.DrawGraphic(ImageType.EmptySquare, toolbarRectangle, this.backgroundColor);
+			// First fill the entire region with the border colour...
+			this.graphicsDisplay.DrawGraphic(ImageType.EmptySquare, this.toolboxBounds, this.borderColor);
+
+			// Then blank out the space for the toolbar...
+			this.graphicsDisplay.DrawGraphic(ImageType.EmptySquare, this.toolbarInnerBounds, this.backgroundColor);
 			
 			// We don't bother blanking out the area beneath the toolbar because we'll draw over that with our
 			// controls anyway
@@ -332,12 +337,6 @@ namespace Paint
 				toolboxLayoutDefinition.Controls.ColorSetter.Region.BackgroundColor.Red,
 				toolboxLayoutDefinition.Controls.ColorSetter.Region.BackgroundColor.Green,
 				toolboxLayoutDefinition.Controls.ColorSetter.Region.BackgroundColor.Blue);
-
-			this.ToolboxMinimizedHeight = toolboxLayoutDefinition.MinimizedHeight * 2;
-			this.toolboxMaximisedHeight = toolboxLayoutDefinition.MaximizedHeight * 2;
-
-			// we start maximised
-			this.ToolboxHeight = this.toolboxMaximisedHeight;
 
 			this.canvasTools = new List<ICanvasToolTouch>();
 
@@ -459,7 +458,7 @@ namespace Paint
 							}
 							else 
 							{
-								this.ToolboxHeight = ToolbarHeight + (2 * StandardBorderSize);
+								this.ToolboxHeight = this.ToolboxMinimizedHeight;
 							}
 						};
 
