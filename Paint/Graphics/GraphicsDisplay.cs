@@ -18,7 +18,7 @@ namespace Paint
 		/// <summary>
 		/// Icon size for standard displays
 		/// </summary>
-		private const int IconSize = 36;
+		private const int IconSizeLowResolution = 36;
 		
 		/// <summary>
 		/// Icon size for Retina displays
@@ -58,20 +58,33 @@ namespace Paint
 		/// <param name='highResolution'> Is the iPad running in High resolution. </param>
 		public GraphicsDisplay(Texture2D graphicsTexture, SpriteBatch spriteBatch, bool highResolution)
 		{
+			int iconSize;
+			int emptySquareOffset;
+			
+			if (highResolution)
+			{
+				iconSize = IconSizeRetina;
+				emptySquareOffset = 2;
+			}
+			else
+			{
+				iconSize = IconSizeLowResolution;
+				emptySquareOffset = 1;
+			}
+
 			this.graphicsTexture = graphicsTexture;
 			this.spriteBatch = spriteBatch;
 			
 			List<Rectangle> imageList = new List<Rectangle>();			
-			int iconSize = highResolution ?  IconSizeRetina : IconSize;
-			
+
 			// This is the empty square image for all basic single color drawing
-			imageList.Add(new Rectangle(0 ,0 , 0, 0));
+			imageList.Add(new Rectangle(0, 0, 0, 0));
 			
 			for (int y = 0; y < SpriteMapIconRows; y++)
 			{
 				for (int x = 0; x < SpriteMapIconColumns; x++)
 				{
-					imageList.Add(new Rectangle(1 + (x * IconSize), y * IconSize, iconSize, iconSize));
+					imageList.Add(new Rectangle(emptySquareOffset + (x * iconSize), y * iconSize, iconSize, iconSize));
 				}
 			}
 			
