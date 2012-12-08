@@ -16,19 +16,16 @@ namespace Paint
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Paint.ColorSelectorDefinition"/> class.
 		/// </summary>
-		/// <param name='startColor'>
-		/// Theinitial colour we are drawing with.
-		/// </param>
-		/// <param name='colorSelectorDefinition'>
-		/// Layout of the color selector as defined within a xml file.
-		/// </param>
-		public ColorSelectorDefinition(Color startColor, ToolboxLayoutDefinitionControlsColorSelector colorSelectorDefinition)
+		/// <param name='startColor'> The initial colour we are drawing with. </param>
+		/// <param name='colorSelectorDefinition'> Layout of the color selector as defined within a xml file. </param>
+		/// <param name='scale' iPad size scale - i.e.2 for retina and 1 for normal - allows us to multiply up the layout />
+		public ColorSelectorDefinition(Color startColor, ToolboxLayoutDefinitionControlsColorSelector colorSelectorDefinition, int scale)
 		{
 			this.Bounds = new Rectangle(
-				(int)colorSelectorDefinition.Region.Location.X,
-				(int)colorSelectorDefinition.Region.Location.Y, 
-				colorSelectorDefinition.Region.Size.Width,
-				colorSelectorDefinition.Region.Size.Height);
+				(int)colorSelectorDefinition.Region.Location.X * scale,
+				(int)colorSelectorDefinition.Region.Location.Y * scale, 
+				colorSelectorDefinition.Region.Size.Width * scale,
+				colorSelectorDefinition.Region.Size.Height * scale);
 
 			this.StartColor = startColor;
 
@@ -42,10 +39,10 @@ namespace Paint
 				colorSelectorDefinition.Region.Border.Color.Green,
 				colorSelectorDefinition.Region.Border.Color.Blue);
 
-			this.GaugeWidth = colorSelectorDefinition.Gauge.Width;
-			this.GaugeMarkerWidth = colorSelectorDefinition.Gauge.MarkerWidth;
-			this.GaugeHorizontalMargin = colorSelectorDefinition.Gauge.HorizontalMargin;
-			this.GaugeVerticalMargin = colorSelectorDefinition.Gauge.VerticalMargin;
+			this.GaugeWidth = colorSelectorDefinition.Gauge.Width * scale;
+			this.GaugeMarkerWidth = colorSelectorDefinition.Gauge.MarkerWidth * scale;
+			this.GaugeHorizontalMargin = colorSelectorDefinition.Gauge.HorizontalMargin * scale;
+			this.GaugeVerticalMargin = colorSelectorDefinition.Gauge.VerticalMargin * scale;
 		}
 
 		public Rectangle Bounds

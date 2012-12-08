@@ -78,22 +78,16 @@ namespace Paint
 		/// </summary>
 		/// <param name='toolboxLayoutDefinition' The layout of the toolbox />
 		/// <param name='graphicsDisplay' The graphics texture map - contains images for buttons and controls />
-		/// <param name='colorList' List of pre-defined colors for the user to pick from  />
-		/// <param name='toolboxWidth' The width of the toolbox />
-		/// <param name='minBrushSize' The minimum size brush we can use />
-		/// <param name='maxBrushSize' The minimum size brush we can use />
-		/// <param name='startBrushSize' The initial size brush we can use />
-		public ToolBox (ToolboxLayoutDefinition toolboxLayoutDefinition, IGraphicsDisplay graphicsDisplay, 
-		                Color[] colorList, int toolboxWidth, int minBrushSize, 
-		                int maxBrushSize, int startBrushSize)
+		/// <param name='scale' iPad size scale - i.e.2 for retina and 1 for normal - allows us to multiply up the layout />
+		public ToolBox (ToolboxLayoutDefinition toolboxLayoutDefinition, IGraphicsDisplay graphicsDisplay, int scale)
 		{
 			this.graphicsDisplay = graphicsDisplay;
 			this.backgroundColor = this.TranslateToolboxLayoutColor(toolboxLayoutDefinition.BackgroundColor);
 			this.borderColor = this.TranslateToolboxLayoutColor(toolboxLayoutDefinition.Border.Color);
-			this.toolboxWidth = toolboxWidth;
+			this.toolboxWidth = toolboxLayoutDefinition.Width * scale;
 			this.DockPosition = DockPosition.Bottom; 
 			
-			this.CreateCanvasTools(toolboxLayoutDefinition, colorList, minBrushSize, maxBrushSize, startBrushSize);
+			this.CreateCanvasTools(toolboxLayoutDefinition, scale);
 		}
 
 		/// <summary>
@@ -331,38 +325,34 @@ namespace Paint
 		/// Creates all our canvas tools.
 		/// </summary>
 		/// <param name='toolboxLayoutDefinition' The layout of the toolbox />
-		/// <param name='bounds' The size of the iPad screen />
-		/// <param name='colorList' List of pre-defined colors for the user to pick from  />
-		/// <param name='minBrushSize' The minimum size brush we can use />
-		/// <param name='maxBrushSize' The minimum size brush we can use />
-		/// <param name='startBrushSize' The initial size brush we can use />
-		private void CreateCanvasTools(ToolboxLayoutDefinition toolboxLayoutDefinition, Color[] colorList, int minBrushSize, int maxBrushSize, int startBrushSize)
+		/// <param name='scale' Scale of this iPad = i.e. 2 is retina, 1 is normal />
+		private void CreateCanvasTools(ToolboxLayoutDefinition toolboxLayoutDefinition, int scale)
 		{
 			Color startColor = new Color(
 				toolboxLayoutDefinition.Controls.ColorSetter.Region.BackgroundColor.Red,
 				toolboxLayoutDefinition.Controls.ColorSetter.Region.BackgroundColor.Green,
 				toolboxLayoutDefinition.Controls.ColorSetter.Region.BackgroundColor.Blue);
 
-			this.ToolboxMinimizedHeight = toolboxLayoutDefinition.MinimizedHeight;
-			this.toolboxMaximisedHeight = toolboxLayoutDefinition.MaximizedHeight;
+			this.ToolboxMinimizedHeight = toolboxLayoutDefinition.MinimizedHeight * 2;
+			this.toolboxMaximisedHeight = toolboxLayoutDefinition.MaximizedHeight * 2;
 
 			// we start maximised
 			this.ToolboxHeight = this.toolboxMaximisedHeight;
 
 			this.canvasTools = new List<ICanvasToolTouch>();
 
-			var brushSizeSelector = this.CreateBrushSizeSelector(startColor, toolboxLayoutDefinition.Controls.BrushSizeSelector);			
+			var brushSizeSelector = this.CreateBrushSizeSelector(startColor, toolboxLayoutDefinition.Controls.BrushSizeSelector, scale);
 
 			this.canvasTools.Add(brushSizeSelector);
 
 			// ColorSetter - shows what colour the user has chosen
-			this.CreateColorSetter(startColor, toolboxLayoutDefinition.Controls.ColorSetter);
+			this.CreateColorSetter(startColor, toolboxLayoutDefinition.Controls.ColorSetter, scale);
 			
 			// Add all the buttons
-			this.CreateButtons(toolboxLayoutDefinition.Controls.Button);
+			this.CreateButtons(toolboxLayoutDefinition.Controls.Button, scale);
 	
 			// User defined color selector			
-			var colorSelector = this.CreateColorSelector(startColor, toolboxLayoutDefinition.Controls.ColorSelector);
+			var colorSelector = this.CreateColorSelector(startColor, toolboxLayoutDefinition.Controls.ColorSelector, scale);
 
 			colorSelector.ColorChanged += (sender, e) => { 
 				this.colorSetter.Color = colorSelector.Color;
@@ -372,7 +362,7 @@ namespace Paint
 			this.canvasTools.Add(colorSelector);
 
 			// Pre defined color pickers
-			this.CreateColorPickers(colorSelector, toolboxLayoutDefinition.Controls.ColorPicker);			
+			this.CreateColorPickers(colorSelector, toolboxLayoutDefinition.Controls.ColorPicker, scale);			
 		}	
 		
 		/// <summary>
@@ -380,11 +370,12 @@ namespace Paint
 		/// </summary>
 		/// <param name='colorSelector' The colorSelector control we need to update when ever the user picks a color />
 		/// <param name='layoutColorPickers' Layout information for each color picker control />
-		private void CreateColorPickers(ColorSelector colorSelector, ToolboxLayoutDefinitionControlsColorPicker[] layoutColorPickers)
+		/// <param name='scale' iPad size scale - i.e.2 for retina and 1 for normal - allows us to multiply up the layout />
+		private void CreateColorPickers(ColorSelector colorSelector, ToolboxLayoutDefinitionControlsColorPicker[] layoutColorPickers, int scale)
 		{
 			foreach (var layoutColorPicker in layoutColorPickers)
 			{
-				var colorPicker = new ColorPicker(this.graphicsDisplay, new ColorPickerDefinition(layoutColorPicker));
+				var colorPicker = new ColorPicker(this.graphicsDisplay, new ColorPickerDefinition(layoutColorPicker, scale));
 
 				colorPicker.ColorSelected += (sender, e) => 
 				{
@@ -399,7 +390,8 @@ namespace Paint
 		/// Creates all the buttons.
 		/// </summary>
 		/// <param name='buttons' All the buttons we need to display on screen />
-		private void CreateButtons(ToolboxLayoutDefinitionControlsButton[] buttons)
+		/// <param name='scale' iPad size scale - i.e.2 for retina and 1 for normal - allows us to multiply up the layout />
+		private void CreateButtons(ToolboxLayoutDefinitionControlsButton[] buttons, int scale)
 		{
 			foreach (var buttonLayout in buttons)
 			{
@@ -436,7 +428,7 @@ namespace Paint
 				var button = 
 					new Button(
 						this.graphicsDisplay, 
-						new ButtonDefinition(buttonLayout, imageList.ToArray(), disabledImageType));
+						new ButtonDefinition(buttonLayout, scale, imageList.ToArray(), disabledImageType));
 
 				switch (buttonLayout.ButtonType)
 				{
@@ -506,9 +498,10 @@ namespace Paint
 		/// </returns>
 		/// <param name='startColor' The color we will start drawing with />
 		/// <param name='layoutColorSelector' The layout information for this color selector />
-		private ColorSelector CreateColorSelector(Color startColor, ToolboxLayoutDefinitionControlsColorSelector layoutColorSelector)
+		/// <param name='scale' iPad size scale - i.e.2 for retina and 1 for normal - allows us to multiply up the layout />
+		private ColorSelector CreateColorSelector(Color startColor, ToolboxLayoutDefinitionControlsColorSelector layoutColorSelector, int scale)
 		{
-			return new ColorSelector(this.graphicsDisplay, new ColorSelectorDefinition(startColor, layoutColorSelector));
+			return new ColorSelector(this.graphicsDisplay, new ColorSelectorDefinition(startColor, layoutColorSelector, scale));
 		}
 
 		/// <summary>
@@ -516,9 +509,10 @@ namespace Paint
 		/// </summary>
 		/// <param name='startColor' The color we will start drawing with />
 		/// <param name='layoutColorSetter' The layout information for this color setter />
-		private void CreateColorSetter(Color startColor, ToolboxLayoutDefinitionControlsColorSetter layoutColorSetter)
+		/// <param name='scale' iPad size scale - i.e.2 for retina and 1 for normal - allows us to multiply up the layout />
+		private void CreateColorSetter(Color startColor, ToolboxLayoutDefinitionControlsColorSetter layoutColorSetter, int scale)
 		{
-			this.colorSetter = new ColorSetter(this.graphicsDisplay, new ColorSetterDefinition(layoutColorSetter));
+			this.colorSetter = new ColorSetter(this.graphicsDisplay, new ColorSetterDefinition(layoutColorSetter, scale));
 		}
 
 		/// <summary>
@@ -526,11 +520,12 @@ namespace Paint
 		/// </summary>
 		/// <param name='startColor' The color we will start drawing with />
 		/// <param name='layoutBrushSizeSelector' The layout information for this brush size selector />
-		private BrushSizeSelector CreateBrushSizeSelector(Color startColor, ToolboxLayoutDefinitionControlsBrushSizeSelector layoutBrushSizeSelector)
+		/// <param name='scale' iPad size scale - i.e.2 for retina and 1 for normal - allows us to multiply up the layout />
+		private BrushSizeSelector CreateBrushSizeSelector(Color startColor, ToolboxLayoutDefinitionControlsBrushSizeSelector layoutBrushSizeSelector, int scale)
 		{
 			var brushSizeSelector = new BrushSizeSelector(
 				this.graphicsDisplay, 
-				new BrushSizeSelectorDefinition(startColor, layoutBrushSizeSelector));
+				new BrushSizeSelectorDefinition(startColor, layoutBrushSizeSelector, scale));
 
 			this.SetBrushSizeRectange(brushSizeSelector.BrushSize);
 

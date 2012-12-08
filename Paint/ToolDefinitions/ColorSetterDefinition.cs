@@ -16,16 +16,15 @@ namespace Paint
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Paint.ColorSetterDefinition"/> class.
 		/// </summary>
-		/// <param name='colorSetterDefinition'>
-		/// Layout of the color setter as defined within a xml file.
-		/// </param>
-		public ColorSetterDefinition(ToolboxLayoutDefinitionControlsColorSetter colorSetterDefinition)
+		/// <param name='colorSetterDefinition'>Layout of the color setter as defined within a xml file.</param>
+		/// <param name='scale' iPad size scale - i.e.2 for retina and 1 for normal - allows us to multiply up the layout />
+		public ColorSetterDefinition(ToolboxLayoutDefinitionControlsColorSetter colorSetterDefinition, int scale)
 		{	
 			this.Bounds = new Rectangle(
-				(int)colorSetterDefinition.Region.Location.X,
-				(int)colorSetterDefinition.Region.Location.Y, 
-				colorSetterDefinition.Region.Size.Width,
-				colorSetterDefinition.Region.Size.Height);
+				(int)colorSetterDefinition.Region.Location.X * scale,
+				(int)colorSetterDefinition.Region.Location.Y * scale, 
+				colorSetterDefinition.Region.Size.Width * scale,
+				colorSetterDefinition.Region.Size.Height * scale);
 
 			this.BackgroundColor = new Color(
 				colorSetterDefinition.Region.BackgroundColor.Red,
@@ -37,7 +36,7 @@ namespace Paint
 				colorSetterDefinition.Region.Border.Color.Green,
 				colorSetterDefinition.Region.Border.Color.Blue);
 
-			this.BorderWidth = colorSetterDefinition.Region.Border.Width;
+			this.BorderWidth = colorSetterDefinition.Region.Border.Width * scale;
 
 		}
 

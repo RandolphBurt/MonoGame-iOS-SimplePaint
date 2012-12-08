@@ -16,16 +16,15 @@ namespace Paint
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Paint.ColorPickerDefinition"/> class.
 		/// </summary>
-		/// <param name='colorPickerDefinition'>
-		/// Layout of the color setter as defined within a xml file.
-		/// </param>
-		public ColorPickerDefinition(ToolboxLayoutDefinitionControlsColorPicker colorPickerDefinition)
+		/// <param name='colorPickerDefinition'> Layout of the color setter as defined within a xml file. </param>
+		/// <param name='scale' iPad size scale - i.e.2 for retina and 1 for normal - allows us to multiply up the layout />
+		public ColorPickerDefinition(ToolboxLayoutDefinitionControlsColorPicker colorPickerDefinition, int scale)
 		{	
 			this.Bounds = new Rectangle(
-				(int)colorPickerDefinition.Region.Location.X,
-				(int)colorPickerDefinition.Region.Location.Y, 
-				colorPickerDefinition.Region.Size.Width,
-				colorPickerDefinition.Region.Size.Height);
+				(int)colorPickerDefinition.Region.Location.X * scale,
+				(int)colorPickerDefinition.Region.Location.Y * scale, 
+				colorPickerDefinition.Region.Size.Width * scale,
+				colorPickerDefinition.Region.Size.Height * scale);
 			
 			this.BackgroundColor = new Color(
 				colorPickerDefinition.Region.BackgroundColor.Red,
@@ -37,7 +36,7 @@ namespace Paint
 				colorPickerDefinition.Region.Border.Color.Green,
 				colorPickerDefinition.Region.Border.Color.Blue);
 			
-			this.BorderWidth = colorPickerDefinition.Region.Border.Width;
+			this.BorderWidth = colorPickerDefinition.Region.Border.Width * scale;
 			
 		}
 		

@@ -6,6 +6,7 @@
 				<xs:element name="Border" type="BorderType"/>
 				<xs:element name="MaximizedHeight" type="xs:int"/>
 				<xs:element name="MinimizedHeight" type="xs:int" minOccurs="0"/>
+				<xs:element name="Width" type="xs:int"/>
 				<xs:element name="BackgroundColor" type="ColorType"/>
 				<xs:element name="Controls" minOccurs="0">
 					<xs:complexType>

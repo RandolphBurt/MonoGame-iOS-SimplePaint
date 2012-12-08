@@ -16,19 +16,16 @@ namespace Paint
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Paint.BrushSizeSelectorDefinition"/> class.
 		/// </summary>
-		/// <param name='startColor'>
-		/// Initial color to use for the brush
-		/// </param>
-		/// <param name='layoutBrushSizeSelector'>
-		/// Layout of the brush size as defined within a xml file.
-		/// </param>
-		public BrushSizeSelectorDefinition(Color startColor, ToolboxLayoutDefinitionControlsBrushSizeSelector layoutBrushSizeSelector)
+		/// <param name='startColor'> Initial color to use for the brush </param>
+		/// <param name='layoutBrushSizeSelector'> Layout of the brush size as defined within a xml file. </param>
+		/// <param name='scale' iPad size scale - i.e.2 for retina and 1 for normal - allows us to multiply up the layout />
+		public BrushSizeSelectorDefinition(Color startColor, ToolboxLayoutDefinitionControlsBrushSizeSelector layoutBrushSizeSelector, int scale)
 		{			
 			this.Bounds = new Rectangle(
-				(int)layoutBrushSizeSelector.Region.Location.X,
-				(int)layoutBrushSizeSelector.Region.Location.Y, 
-				layoutBrushSizeSelector.Region.Size.Width,
-				layoutBrushSizeSelector.Region.Size.Height);
+				(int)layoutBrushSizeSelector.Region.Location.X * scale,
+				(int)layoutBrushSizeSelector.Region.Location.Y * scale, 
+				layoutBrushSizeSelector.Region.Size.Width * scale,
+				layoutBrushSizeSelector.Region.Size.Height * scale);
 
 			this.StartColor = startColor;
 
@@ -42,15 +39,15 @@ namespace Paint
 				layoutBrushSizeSelector.Region.Border.Color.Green,
 				layoutBrushSizeSelector.Region.Border.Color.Blue);
 
-			this.BorderWidth = layoutBrushSizeSelector.Region.Border.Width;
+			this.BorderWidth = layoutBrushSizeSelector.Region.Border.Width * scale;
 
-			this.BrushSizeInitial = layoutBrushSizeSelector.BrushSize.Initial;
-			this.BrushSizeMinimum = layoutBrushSizeSelector.BrushSize.Minimum;
-			this.BrushSizeMaximum = layoutBrushSizeSelector.BrushSize.Maximum;
+			this.BrushSizeInitial = layoutBrushSizeSelector.BrushSize.Initial * scale;
+			this.BrushSizeMinimum = layoutBrushSizeSelector.BrushSize.Minimum * scale;
+			this.BrushSizeMaximum = layoutBrushSizeSelector.BrushSize.Maximum * scale;
 
-			this.GaugeWidth = layoutBrushSizeSelector.Gauge.Width;
-			this.GaugeMarkerWidth = layoutBrushSizeSelector.Gauge.MarkerWidth;
-			this.GaugeVerticalMargin = layoutBrushSizeSelector.Gauge.VerticalMargin;
+			this.GaugeWidth = layoutBrushSizeSelector.Gauge.Width * scale;
+			this.GaugeMarkerWidth = layoutBrushSizeSelector.Gauge.MarkerWidth * scale;
+			this.GaugeVerticalMargin = layoutBrushSizeSelector.Gauge.VerticalMargin * scale;
 		}
 
 		public Rectangle Bounds

@@ -228,7 +228,6 @@ namespace Paint
 
 			this.graphicsDisplay = new GraphicsDisplay(graphicsTextureMap, this.spriteBatch, highResolution);
 			
-			// TODO - are the three things below in the correct place?  Maybe should be in initialise
 			this.CreateCanvas();
 			this.CreateToolbox();
 			this.CreatePictureStateManager();
@@ -465,31 +464,10 @@ namespace Paint
 		/// </summary>
 		private void CreateToolbox()
 		{
-			// Pre defined color pickers
-			Color[] colorList = new Color[] { 
-				Color.White, 
-				Color.Black, 
-				Color.Silver,
-				Color.Red, 
-				Color.Lime, 
-				Color.Blue,
-				Color.Yellow,
-				Color.Cyan,
-				Color.Fuchsia,
-				Color.Pink, 
-				Color.Orange,
-				Color.Green
-			};
-			
-			this.toolBox = new ToolBox(
-				this.toolboxLayoutDefinition,
-				this.graphicsDisplay,
-				colorList, 
-				this.imageStateData.Width,
-				//this.graphicsDeviceManager.GraphicsDevice.PresentationParameters.BackBufferWidth,
-				this.MinBrushSize, 
-				this.MaxBrushSize, 
-				this.StartBrushSize);
+			// determine if we are a retina or not - if so then we'll need to double (scale = 2) our layout locations/sizes
+			int scale = Math.Max(this.imageStateData.Height, this.imageStateData.Width) / 1024;
+
+			this.toolBox = new ToolBox(this.toolboxLayoutDefinition, this.graphicsDisplay, scale);
 			
 			this.inMemoryToolboxRenderTarget = new RenderTarget2D(
 				this.graphicsDeviceManager.GraphicsDevice, 

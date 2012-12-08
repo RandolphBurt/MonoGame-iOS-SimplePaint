@@ -16,16 +16,17 @@ namespace Paint
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Paint.ToolboxLayoutDefinitionControlsButton"/> class.
 		/// </summary>
-		/// <param name='buttonDefinition'>
-		/// Layout of a button as defined within a xml file.
-		/// </param>
-		public ButtonDefinition(ToolboxLayoutDefinitionControlsButton buttonDefinition, ImageType[] imageList, ImageType? disabledImageType)
+		/// <param name='buttonDefinition'>Layout of a button as defined within a xml file.</param>
+		/// <param name='scale' iPad size scale - i.e.2 for retina and 1 for normal - allows us to multiply up the layout />
+		/// <param name='imageList' List of images to use for this button (will rotate through them all as the user presses the button) />
+		/// <param name='disabledImageType' Image to use if this button is disabled />
+		public ButtonDefinition(ToolboxLayoutDefinitionControlsButton buttonDefinition, int scale, ImageType[] imageList, ImageType? disabledImageType)
 		{	
 			this.Bounds = new Rectangle(
-				(int)buttonDefinition.Region.Location.X,
-				(int)buttonDefinition.Region.Location.Y, 
-				buttonDefinition.Region.Size.Width,
-				buttonDefinition.Region.Size.Height);
+				(int)buttonDefinition.Region.Location.X * scale,
+				(int)buttonDefinition.Region.Location.Y * scale, 
+				buttonDefinition.Region.Size.Width * scale,
+				buttonDefinition.Region.Size.Height * scale);
 			
 			this.BackgroundColor = new Color(
 				buttonDefinition.Region.BackgroundColor.Red,
@@ -37,7 +38,7 @@ namespace Paint
 				buttonDefinition.Region.Border.Color.Green,
 				buttonDefinition.Region.Border.Color.Blue);
 			
-			this.BorderWidth = buttonDefinition.Region.Border.Width;
+			this.BorderWidth = buttonDefinition.Region.Border.Width * scale;
 
 			this.ImageList = imageList;
 			this.DisabledImageType = disabledImageType;

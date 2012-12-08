@@ -29,6 +29,8 @@ namespace Paint.ToolboxLayout {
         private int maximizedHeightField;
         
         private int minimizedHeightField;
+
+		private int width;
         
         private bool minimizedHeightFieldSpecified;
         
@@ -66,6 +68,16 @@ namespace Paint.ToolboxLayout {
             }
         }
         
+		/// <remarks/>
+		public int Width {
+			get {
+				return this.width;
+			}
+			set {
+				this.width = value;
+			}
+		}
+
         /// <remarks/>
         [System.Xml.Serialization.XmlIgnoreAttribute()]
         public bool MinimizedHeightSpecified {
