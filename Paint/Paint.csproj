@@ -187,6 +187,7 @@
     <Content Include="Content\paint%402x.png" />
     <Content Include="Content\graphics%402x.png" />
     <Content Include="Content\PaintToolboxPortraitLayout.xml" />
+    <Content Include="Content\PaintToolboxLandscapeLayout.xml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\MonoGame\MyFork\MonoGame\MonoGame.Framework\MonoGame.Framework.iOS.csproj">

@@ -74,6 +74,11 @@ namespace Paint
 		/// </summary>
 		private ToolboxLayoutDefinition portraitToolboxDefinition = null;
 
+		/// <summary>
+		/// The layout of the toolbox for landscape pictures.
+		/// </summary>
+		private ToolboxLayoutDefinition landscapeToolboxDefinition = null;
+
 		//
 		// This method is invoked when the application has loaded and is ready to run. In this 
 		// method you should instantiate the window, load the UI into it and then make the window
@@ -159,6 +164,10 @@ namespace Paint
 		{
 			this.portraitToolboxDefinition = 
 				ObjectDeserializer.DeserialiseFromXmlFile<ToolboxLayoutDefinition>("Content/PaintToolboxPortraitLayout.xml");
+
+			this.landscapeToolboxDefinition = 
+				ObjectDeserializer.DeserialiseFromXmlFile<ToolboxLayoutDefinition>("Content/PaintToolboxLandscapeLayout.xml");
+
 		}
 
 		/// <summary>
@@ -214,7 +223,8 @@ namespace Paint
 			BusyMessageDisplay busyMessageDisplay = new BusyMessageDisplay("Saving", "Please wait...");
 
 			// Simply instantiate the class derived from monogame:game and away we go...
-			this.paintApp = new PaintApp(pictureIOManager, filenameResolver, imageStateData, busyMessageDisplay, this.portraitToolboxDefinition);
+			ToolboxLayoutDefinition layoutDefinition = imageStateData.Width > imageStateData.Height ? this.landscapeToolboxDefinition : this.portraitToolboxDefinition;
+			this.paintApp = new PaintApp(pictureIOManager, filenameResolver, imageStateData, busyMessageDisplay, layoutDefinition);
 			this.paintApp.Exiting += PaintAppExiting;			
 			
 			this.paintApp.Run();
