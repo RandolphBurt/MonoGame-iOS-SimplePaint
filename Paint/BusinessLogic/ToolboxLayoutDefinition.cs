@@ -29,10 +29,10 @@ namespace Paint.ToolboxLayout {
         private int maximizedHeightField;
         
         private int minimizedHeightField;
-
-		private int width;
         
         private bool minimizedHeightFieldSpecified;
+        
+        private int widthField;
         
         private ColorType backgroundColorField;
         
@@ -68,16 +68,6 @@ namespace Paint.ToolboxLayout {
             }
         }
         
-		/// <remarks/>
-		public int Width {
-			get {
-				return this.width;
-			}
-			set {
-				this.width = value;
-			}
-		}
-
         /// <remarks/>
         [System.Xml.Serialization.XmlIgnoreAttribute()]
         public bool MinimizedHeightSpecified {
@@ -86,6 +76,16 @@ namespace Paint.ToolboxLayout {
             }
             set {
                 this.minimizedHeightFieldSpecified = value;
+            }
+        }
+        
+        /// <remarks/>
+        public int Width {
+            get {
+                return this.widthField;
+            }
+            set {
+                this.widthField = value;
             }
         }
         
@@ -382,6 +382,10 @@ namespace Paint.ToolboxLayout {
         
         private ToolboxLayoutDefinitionControlsButton[] buttonField;
         
+        private ToolboxLayoutDefinitionControlsProgressBar progressBarField;
+        
+        private ToolboxLayoutDefinitionControlsSpeedGauge speedGaugeField;
+        
         /// <remarks/>
         public ToolboxLayoutDefinitionControlsColorSetter ColorSetter {
             get {
@@ -431,6 +435,26 @@ namespace Paint.ToolboxLayout {
             }
             set {
                 this.buttonField = value;
+            }
+        }
+        
+        /// <remarks/>
+        public ToolboxLayoutDefinitionControlsProgressBar ProgressBar {
+            get {
+                return this.progressBarField;
+            }
+            set {
+                this.progressBarField = value;
+            }
+        }
+        
+        /// <remarks/>
+        public ToolboxLayoutDefinitionControlsSpeedGauge SpeedGauge {
+            get {
+                return this.speedGaugeField;
+            }
+            set {
+                this.speedGaugeField = value;
             }
         }
     }
@@ -656,5 +680,83 @@ namespace Paint.ToolboxLayout {
         
         /// <remarks/>
         PlayPausePlayback,
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.0.30319.17929")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true)]
+    public partial class ToolboxLayoutDefinitionControlsProgressBar {
+        
+        private RegionType regionField;
+        
+        private int progresIndicatorWidthField;
+        
+        private int progressIndicatorHeightField;
+        
+        /// <remarks/>
+        public RegionType Region {
+            get {
+                return this.regionField;
+            }
+            set {
+                this.regionField = value;
+            }
+        }
+        
+        /// <remarks/>
+        public int ProgresIndicatorWidth {
+            get {
+                return this.progresIndicatorWidthField;
+            }
+            set {
+                this.progresIndicatorWidthField = value;
+            }
+        }
+        
+        /// <remarks/>
+        public int ProgressIndicatorHeight {
+            get {
+                return this.progressIndicatorHeightField;
+            }
+            set {
+                this.progressIndicatorHeightField = value;
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.0.30319.17929")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true)]
+    public partial class ToolboxLayoutDefinitionControlsSpeedGauge {
+        
+        private RegionType regionField;
+        
+        private GaugeType gaugeField;
+        
+        /// <remarks/>
+        public RegionType Region {
+            get {
+                return this.regionField;
+            }
+            set {
+                this.regionField = value;
+            }
+        }
+        
+        /// <remarks/>
+        public GaugeType Gauge {
+            get {
+                return this.gaugeField;
+            }
+            set {
+                this.gaugeField = value;
+            }
+        }
     }
 }

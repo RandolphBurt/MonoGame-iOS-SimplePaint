@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
+
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
 	<xs:element name="ToolboxLayoutDefinition">
 		<xs:complexType>
@@ -70,6 +72,23 @@
 											</xs:simpleType>
 										</xs:element>
 										<xs:element name="Region" type="RegionType"/>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="ProgressBar" minOccurs="0">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="Region" type="RegionType"/>
+										<xs:element name="ProgresIndicatorWidth" type="xs:int"/>
+										<xs:element name="ProgressIndicatorHeight" type="xs:int"/>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="SpeedGauge" minOccurs="0">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="Region" type="RegionType"/>
+										<xs:element name="Gauge" type="GaugeType"/>
 									</xs:sequence>
 								</xs:complexType>
 							</xs:element>
