@@ -13,7 +13,7 @@ namespace Paint
 	/// <summary>
 	/// Abstract Base class for all types of Guage
 	/// </summary>
-	public abstract class Gauge : CanvasToolTouchBase, IGauge
+	public abstract class Gauge : ToolBoxToolTouchBase, IGauge
 	{
 		/// <summary>
 		/// The size of the marker.

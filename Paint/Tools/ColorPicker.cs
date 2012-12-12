@@ -13,7 +13,7 @@ namespace Paint
 	/// <summary>
 	/// Color picker - Simple tool that has a preset color - the user can select this tool in order to start using that color
 	/// </summary>
-	public class ColorPicker : CanvasToolTouchBase, IColorPicker
+	public class ColorPicker : ToolBoxToolTouchBase, IColorPicker
 	{
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Paint.ColorPicker"/> class.

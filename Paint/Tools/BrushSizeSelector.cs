@@ -13,7 +13,7 @@ namespace Paint
 	/// <summary>
 	/// Brush size selector - tool allowing the user to pick the size of the brush for drawing
 	/// </summary>
-	public class BrushSizeSelector : CanvasToolTouchBase, IBrushSizeSelector
+	public class BrushSizeSelector : ToolBoxToolTouchBase, IBrushSizeSelector
 	{		
 		/// <summary>
 		/// The gauge used for representing the size of the brush.

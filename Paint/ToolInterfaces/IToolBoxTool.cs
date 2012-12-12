@@ -1,5 +1,5 @@
 /// <summary>
-/// ICanvasTool.cs
+/// IToolBoxTool.cs
 /// Randolph Burt - January 2012
 /// </summary>
 namespace Paint
@@ -9,7 +9,7 @@ namespace Paint
 	/// <summary>
 	/// Interface for any tools used in the paint app
 	/// </summary>
-	public interface ICanvasTool
+	public interface IToolBoxTool
 	{
 		/// <summary>
 		/// Draw this tool on to the image

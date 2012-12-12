@@ -5,9 +5,6 @@
 namespace Paint
 {
 	using System;
-
-	using Microsoft.Xna.Framework;
-	using Microsoft.Xna.Framework.Graphics;
 	
 	/// <summary>
 	/// Interface for ToolBox container controls.
@@ -19,26 +16,6 @@ namespace Paint
 		/// </summary>
 		event EventHandler ExitSelected;
 		
-		/// <summary>
-		/// Occurs when the user has pressed the undo button.
-		/// </summary>
-		event EventHandler UndoSelected;
-		
-		/// <summary>
-		/// Occurs when the user has pressed the redo button.
-		/// </summary>
-		event EventHandler RedoSelected;
-		
-		/// <summary>
-		/// Gets or sets a value indicating whether the undo button should be enabled or not.
-		/// </summary>
-		bool UndoEnabled { get; set; }
-
-		/// <summary>
-		/// Gets or sets a value indicating whether the redo button should be enabled or not.
-		/// </summary>
-		bool RedoEnabled { get; set; }
-
 		/// <summary>
 		/// Gets the current height of the toolbox.
 		/// </summary>
@@ -54,16 +31,6 @@ namespace Paint
 		/// </summary>
 		DockPosition DockPosition { get; }
 		
-		/// <summary>
-		/// Gets the current brush.
-		/// </summary>
-		Rectangle Brush { get; }
-
-		/// <summary>
-		/// Gets the current color 
-		/// </summary>
-		Color Color	{ get; }
-
 		/// <summary>
 		/// Checks wheter a particular touch point (user pressing the screen) is within the bounds of this control.
 		/// </summary>

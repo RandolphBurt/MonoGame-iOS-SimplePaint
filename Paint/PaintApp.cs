@@ -76,7 +76,7 @@ namespace Paint
 		/// <summary>
 		/// The tool box - contains all our color pickers and brush size controls
 		/// </summary>
-		private IToolBox toolBox;
+		private IPaintToolBox toolBox;
 		
 		/// <summary>
 		/// Simply tracks whether this is the very first time we are drawing the canvas - if so then we need to draw everything on each control/tool.
@@ -452,7 +452,7 @@ namespace Paint
 			// determine if we are a retina or not - if so then we'll need to double (scale = 2) our layout locations/sizes
 			int scale = Math.Max(this.imageStateData.Height, this.imageStateData.Width) / 1024;
 
-			this.toolBox = new ToolBox(this.toolboxLayoutDefinition, this.graphicsDisplay, scale);
+			this.toolBox = new PaintToolBox(this.toolboxLayoutDefinition, this.graphicsDisplay, scale);
 			
 			this.inMemoryToolboxRenderTarget = new RenderTarget2D(
 				this.graphicsDeviceManager.GraphicsDevice, 

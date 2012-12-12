@@ -12,7 +12,7 @@ namespace Paint
 	/// <summary>
 	/// A button toolbox item
 	/// </summary>
-	public class Button : CanvasToolTouchBase, IButton
+	public class Button : ToolBoxToolTouchBase, IButton
 	{
 		/// <summary>
 		/// Is the button enabled or not.

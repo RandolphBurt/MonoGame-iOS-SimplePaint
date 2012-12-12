@@ -13,7 +13,7 @@ namespace Paint
 	/// <summary>
 	/// Color selector - a tool allowing the user to specify the exact color to use by specifying individual RGBA values
 	/// </summary>
-	public class ColorSelector : CanvasToolTouchBase, IColorSelector
+	public class ColorSelector : ToolBoxToolTouchBase, IColorSelector
 	{		
 		/// <summary>
 		/// Relative order of the Red Gauge on screen and in the internal array of gauges.

@@ -12,7 +12,7 @@ namespace Paint
 	/// <summary>
 	/// Color setter - A tool used to indicate the currently selected color for drawing
 	/// </summary>
-	public class ColorSetter : IColorSetter, ICanvasTool
+	public class ColorSetter : IColorSetter, IToolBoxTool
 	{
 		/// <summary>
 		/// The previous color used for drawing.

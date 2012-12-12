@@ -94,7 +94,6 @@
     <Compile Include="Tools\BrushSizeSelector.cs" />
     <Compile Include="Tools\ColorPicker.cs" />
     <Compile Include="Tools\ColorSetter.cs" />
-    <Compile Include="Tools\CanvasToolTouchBase.cs" />
     <Compile Include="BusinessLogic\TouchPoint.cs" />
     <Compile Include="BusinessLogic\TouchType.cs" />
     <Compile Include="BusinessLogic\DockPosition.cs" />
@@ -105,10 +104,7 @@
     <Compile Include="ToolInterfaces\IColorPicker.cs" />
     <Compile Include="ToolInterfaces\IColorSelector.cs" />
     <Compile Include="ToolInterfaces\IColorSetter.cs" />
-    <Compile Include="ToolInterfaces\ICanvasToolTouch.cs" />
-    <Compile Include="ToolInterfaces\ICanvasTool.cs" />
     <Compile Include="ToolInterfaces\IToolBox.cs" />
-    <Compile Include="Tools\ToolBox.cs" />
     <Compile Include="RecordAndPlaybackInterfaces\ICanvasRecorder.cs" />
     <Compile Include="RecordAndPlayback\CanvasRecorder.cs" />
     <Compile Include="RecordAndPlayback\CanvasPlayback.cs" />
@@ -148,6 +144,12 @@
     <Compile Include="ToolDefinitions\ColorSelectorDefinition.cs" />
     <Compile Include="ToolDefinitions\ColorPickerDefinition.cs" />
     <Compile Include="ToolDefinitions\ButtonDefinition.cs" />
+    <Compile Include="ToolInterfaces\IPaintToolBox.cs" />
+    <Compile Include="Tools\PaintToolBox.cs" />
+    <Compile Include="Tools\ToolBox.cs" />
+    <Compile Include="ToolInterfaces\IToolBoxTool.cs" />
+    <Compile Include="ToolInterfaces\IToolBoxToolTouch.cs" />
+    <Compile Include="Tools\ToolBoxToolTouchBase.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

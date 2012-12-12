@@ -1,5 +1,5 @@
 /// <summary>
-/// ICanvasToolTouch.cs
+/// IToolBoxToolTouch.cs
 /// Randolph Burt - January 2012
 /// </summary>
 namespace Paint
@@ -9,7 +9,7 @@ namespace Paint
 	/// <summary>
 	/// Interface for a tool that allows user interaction
 	/// </summary>
-	public interface ICanvasToolTouch : ICanvasTool
+	public interface IToolBoxToolTouch : IToolBoxTool
 	{
 		/// <summary>
 		/// Checks wheter a particular touch point (user pressing the screen) is within the bounds of this control.

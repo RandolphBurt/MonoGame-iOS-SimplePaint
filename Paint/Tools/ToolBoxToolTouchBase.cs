@@ -1,19 +1,15 @@
 /// <summary>
-/// CanvasToolTouchBase.cs
+/// TooBoxToolTouchBase.cs
 /// Randolph Burt - January 2012
 /// </summary>
 namespace Paint
 {
-	using System;
-	
 	using Microsoft.Xna.Framework;
-	using Microsoft.Xna.Framework.Graphics;
-	using Microsoft.Xna.Framework.Input.Touch;
-	
+
 	/// <summary>
 	/// Base (Abstract) class for any tools that allow user interaction.
 	/// </summary>
-	public abstract class CanvasToolTouchBase : ICanvasToolTouch
+	public abstract class ToolBoxToolTouchBase : IToolBoxToolTouch
 	{
 		/// <summary>
 		/// Border size for drawing the tool on screen.
@@ -51,7 +47,7 @@ namespace Paint
 		/// <param name='backgroundColor' The background color of this tool />
 		/// <param name='graphicsDisplay' Contains all the images for the application />
 		/// <param name='bounds' The bounds of this control/tool />
-		public CanvasToolTouchBase(Color backgroundColor, IGraphicsDisplay graphicsDisplay, Rectangle bounds)
+		public ToolBoxToolTouchBase(Color backgroundColor, IGraphicsDisplay graphicsDisplay, Rectangle bounds)
 		{
 			this.bounds = bounds;
 			this.graphicsDisplay = graphicsDisplay;
@@ -68,7 +64,7 @@ namespace Paint
 		/// <param name='borderWidth' The border width of this tool />
 		/// <param name='graphicsDisplay' Contains all the images for the application />
 		/// <param name='bounds' The bounds of this control/tool />
-		public CanvasToolTouchBase(Color backgroundColor, Color borderColor, int borderWidth, IGraphicsDisplay graphicsDisplay, Rectangle bounds)
+		public ToolBoxToolTouchBase(Color backgroundColor, Color borderColor, int borderWidth, IGraphicsDisplay graphicsDisplay, Rectangle bounds)
 		{
 			this.bounds = bounds;
 			this.graphicsDisplay = graphicsDisplay;
