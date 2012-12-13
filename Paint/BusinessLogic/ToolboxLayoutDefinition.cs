@@ -30,13 +30,15 @@ namespace Paint.ToolboxLayout {
         
         private int minimizedHeightField;
         
-        private bool minimizedHeightFieldSpecified;
-        
         private int widthField;
         
         private ColorType backgroundColorField;
         
-        private ToolboxLayoutDefinitionControls controlsField;
+        private ToolboxLayoutDefinitionStandardTools standardToolsField;
+        
+        private ToolboxLayoutDefinitionPaintTools paintToolsField;
+        
+        private ToolboxLayoutDefinitionPlaybackTools playbackToolsField;
         
         /// <remarks/>
         public BorderType Border {
@@ -69,17 +71,6 @@ namespace Paint.ToolboxLayout {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public bool MinimizedHeightSpecified {
-            get {
-                return this.minimizedHeightFieldSpecified;
-            }
-            set {
-                this.minimizedHeightFieldSpecified = value;
-            }
-        }
-        
-        /// <remarks/>
         public int Width {
             get {
                 return this.widthField;
@@ -100,12 +91,32 @@ namespace Paint.ToolboxLayout {
         }
         
         /// <remarks/>
-        public ToolboxLayoutDefinitionControls Controls {
+        public ToolboxLayoutDefinitionStandardTools StandardTools {
             get {
-                return this.controlsField;
+                return this.standardToolsField;
             }
             set {
-                this.controlsField = value;
+                this.standardToolsField = value;
+            }
+        }
+        
+        /// <remarks/>
+        public ToolboxLayoutDefinitionPaintTools PaintTools {
+            get {
+                return this.paintToolsField;
+            }
+            set {
+                this.paintToolsField = value;
+            }
+        }
+        
+        /// <remarks/>
+        public ToolboxLayoutDefinitionPlaybackTools PlaybackTools {
+            get {
+                return this.playbackToolsField;
+            }
+            set {
+                this.playbackToolsField = value;
             }
         }
     }
@@ -370,91 +381,17 @@ namespace Paint.ToolboxLayout {
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true)]
-    public partial class ToolboxLayoutDefinitionControls {
+    public partial class ToolboxLayoutDefinitionStandardTools {
         
-        private ToolboxLayoutDefinitionControlsColorSetter colorSetterField;
-        
-        private ToolboxLayoutDefinitionControlsBrushSizeSelector brushSizeSelectorField;
-        
-        private ToolboxLayoutDefinitionControlsColorSelector colorSelectorField;
-        
-        private ToolboxLayoutDefinitionControlsColorPicker[] colorPickerField;
-        
-        private ToolboxLayoutDefinitionControlsButton[] buttonField;
-        
-        private ToolboxLayoutDefinitionControlsProgressBar progressBarField;
-        
-        private ToolboxLayoutDefinitionControlsSpeedGauge speedGaugeField;
+        private ToolboxLayoutDefinitionStandardToolsButtons buttonsField;
         
         /// <remarks/>
-        public ToolboxLayoutDefinitionControlsColorSetter ColorSetter {
+        public ToolboxLayoutDefinitionStandardToolsButtons Buttons {
             get {
-                return this.colorSetterField;
+                return this.buttonsField;
             }
             set {
-                this.colorSetterField = value;
-            }
-        }
-        
-        /// <remarks/>
-        public ToolboxLayoutDefinitionControlsBrushSizeSelector BrushSizeSelector {
-            get {
-                return this.brushSizeSelectorField;
-            }
-            set {
-                this.brushSizeSelectorField = value;
-            }
-        }
-        
-        /// <remarks/>
-        public ToolboxLayoutDefinitionControlsColorSelector ColorSelector {
-            get {
-                return this.colorSelectorField;
-            }
-            set {
-                this.colorSelectorField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute("ColorPicker")]
-        public ToolboxLayoutDefinitionControlsColorPicker[] ColorPicker {
-            get {
-                return this.colorPickerField;
-            }
-            set {
-                this.colorPickerField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute("Button")]
-        public ToolboxLayoutDefinitionControlsButton[] Button {
-            get {
-                return this.buttonField;
-            }
-            set {
-                this.buttonField = value;
-            }
-        }
-        
-        /// <remarks/>
-        public ToolboxLayoutDefinitionControlsProgressBar ProgressBar {
-            get {
-                return this.progressBarField;
-            }
-            set {
-                this.progressBarField = value;
-            }
-        }
-        
-        /// <remarks/>
-        public ToolboxLayoutDefinitionControlsSpeedGauge SpeedGauge {
-            get {
-                return this.speedGaugeField;
-            }
-            set {
-                this.speedGaugeField = value;
+                this.buttonsField = value;
             }
         }
     }
@@ -465,7 +402,144 @@ namespace Paint.ToolboxLayout {
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true)]
-    public partial class ToolboxLayoutDefinitionControlsColorSetter {
+    public partial class ToolboxLayoutDefinitionStandardToolsButtons {
+        
+        private ToolboxLayoutDefinitionStandardToolsButtonsButton[] buttonField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute("Button")]
+        public ToolboxLayoutDefinitionStandardToolsButtonsButton[] Button {
+            get {
+                return this.buttonField;
+            }
+            set {
+                this.buttonField = value;
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.0.30319.17929")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true)]
+    public partial class ToolboxLayoutDefinitionStandardToolsButtonsButton {
+        
+        private ToolboxLayoutDefinitionStandardToolsButtonsButtonButtonType buttonTypeField;
+        
+        private RegionType regionField;
+        
+        /// <remarks/>
+        public ToolboxLayoutDefinitionStandardToolsButtonsButtonButtonType ButtonType {
+            get {
+                return this.buttonTypeField;
+            }
+            set {
+                this.buttonTypeField = value;
+            }
+        }
+        
+        /// <remarks/>
+        public RegionType Region {
+            get {
+                return this.regionField;
+            }
+            set {
+                this.regionField = value;
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.0.30319.17929")]
+    [System.SerializableAttribute()]
+    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true)]
+    public enum ToolboxLayoutDefinitionStandardToolsButtonsButtonButtonType {
+        
+        /// <remarks/>
+        Exit,
+        
+        /// <remarks/>
+        Undo,
+        
+        /// <remarks/>
+        Redo,
+        
+        /// <remarks/>
+        ToggleMaxMin,
+        
+        /// <remarks/>
+        ToggleDock,
+        
+        /// <remarks/>
+        PlayPausePlayback,
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.0.30319.17929")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true)]
+    public partial class ToolboxLayoutDefinitionPaintTools {
+        
+        private ToolboxLayoutDefinitionPaintToolsColorSetter colorSetterField;
+        
+        private ToolboxLayoutDefinitionPaintToolsBrushSizeSelector brushSizeSelectorField;
+        
+        private ToolboxLayoutDefinitionPaintToolsColorSelector colorSelectorField;
+        
+        private ToolboxLayoutDefinitionPaintToolsColorPickers colorPickersField;
+        
+        /// <remarks/>
+        public ToolboxLayoutDefinitionPaintToolsColorSetter ColorSetter {
+            get {
+                return this.colorSetterField;
+            }
+            set {
+                this.colorSetterField = value;
+            }
+        }
+        
+        /// <remarks/>
+        public ToolboxLayoutDefinitionPaintToolsBrushSizeSelector BrushSizeSelector {
+            get {
+                return this.brushSizeSelectorField;
+            }
+            set {
+                this.brushSizeSelectorField = value;
+            }
+        }
+        
+        /// <remarks/>
+        public ToolboxLayoutDefinitionPaintToolsColorSelector ColorSelector {
+            get {
+                return this.colorSelectorField;
+            }
+            set {
+                this.colorSelectorField = value;
+            }
+        }
+        
+        /// <remarks/>
+        public ToolboxLayoutDefinitionPaintToolsColorPickers ColorPickers {
+            get {
+                return this.colorPickersField;
+            }
+            set {
+                this.colorPickersField = value;
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.0.30319.17929")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true)]
+    public partial class ToolboxLayoutDefinitionPaintToolsColorSetter {
         
         private RegionType regionField;
         
@@ -486,11 +560,11 @@ namespace Paint.ToolboxLayout {
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true)]
-    public partial class ToolboxLayoutDefinitionControlsBrushSizeSelector {
+    public partial class ToolboxLayoutDefinitionPaintToolsBrushSizeSelector {
         
         private RegionType regionField;
         
-        private ToolboxLayoutDefinitionControlsBrushSizeSelectorBrushSize brushSizeField;
+        private ToolboxLayoutDefinitionPaintToolsBrushSizeSelectorBrushSize brushSizeField;
         
         private GaugeType gaugeField;
         
@@ -505,7 +579,7 @@ namespace Paint.ToolboxLayout {
         }
         
         /// <remarks/>
-        public ToolboxLayoutDefinitionControlsBrushSizeSelectorBrushSize BrushSize {
+        public ToolboxLayoutDefinitionPaintToolsBrushSizeSelectorBrushSize BrushSize {
             get {
                 return this.brushSizeField;
             }
@@ -531,7 +605,7 @@ namespace Paint.ToolboxLayout {
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true)]
-    public partial class ToolboxLayoutDefinitionControlsBrushSizeSelectorBrushSize {
+    public partial class ToolboxLayoutDefinitionPaintToolsBrushSizeSelectorBrushSize {
         
         private int minimumField;
         
@@ -576,7 +650,7 @@ namespace Paint.ToolboxLayout {
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true)]
-    public partial class ToolboxLayoutDefinitionControlsColorSelector {
+    public partial class ToolboxLayoutDefinitionPaintToolsColorSelector {
         
         private RegionType regionField;
         
@@ -609,7 +683,29 @@ namespace Paint.ToolboxLayout {
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true)]
-    public partial class ToolboxLayoutDefinitionControlsColorPicker {
+    public partial class ToolboxLayoutDefinitionPaintToolsColorPickers {
+        
+        private ToolboxLayoutDefinitionPaintToolsColorPickersColorPicker[] colorPickerField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute("ColorPicker")]
+        public ToolboxLayoutDefinitionPaintToolsColorPickersColorPicker[] ColorPicker {
+            get {
+                return this.colorPickerField;
+            }
+            set {
+                this.colorPickerField = value;
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.0.30319.17929")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true)]
+    public partial class ToolboxLayoutDefinitionPaintToolsColorPickersColorPicker {
         
         private RegionType regionField;
         
@@ -630,56 +726,31 @@ namespace Paint.ToolboxLayout {
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true)]
-    public partial class ToolboxLayoutDefinitionControlsButton {
+    public partial class ToolboxLayoutDefinitionPlaybackTools {
         
-        private ToolboxLayoutDefinitionControlsButtonButtonType buttonTypeField;
+        private ToolboxLayoutDefinitionPlaybackToolsProgressBar progressBarField;
         
-        private RegionType regionField;
+        private ToolboxLayoutDefinitionPlaybackToolsSpeedGauge speedGaugeField;
         
         /// <remarks/>
-        public ToolboxLayoutDefinitionControlsButtonButtonType ButtonType {
+        public ToolboxLayoutDefinitionPlaybackToolsProgressBar ProgressBar {
             get {
-                return this.buttonTypeField;
+                return this.progressBarField;
             }
             set {
-                this.buttonTypeField = value;
+                this.progressBarField = value;
             }
         }
         
         /// <remarks/>
-        public RegionType Region {
+        public ToolboxLayoutDefinitionPlaybackToolsSpeedGauge SpeedGauge {
             get {
-                return this.regionField;
+                return this.speedGaugeField;
             }
             set {
-                this.regionField = value;
+                this.speedGaugeField = value;
             }
         }
-    }
-    
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.0.30319.17929")]
-    [System.SerializableAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true)]
-    public enum ToolboxLayoutDefinitionControlsButtonButtonType {
-        
-        /// <remarks/>
-        Exit,
-        
-        /// <remarks/>
-        Undo,
-        
-        /// <remarks/>
-        Redo,
-        
-        /// <remarks/>
-        ToggleMaxMin,
-        
-        /// <remarks/>
-        ToggleDock,
-        
-        /// <remarks/>
-        PlayPausePlayback,
     }
     
     /// <remarks/>
@@ -688,7 +759,7 @@ namespace Paint.ToolboxLayout {
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true)]
-    public partial class ToolboxLayoutDefinitionControlsProgressBar {
+    public partial class ToolboxLayoutDefinitionPlaybackToolsProgressBar {
         
         private RegionType regionField;
         
@@ -733,7 +804,7 @@ namespace Paint.ToolboxLayout {
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true)]
-    public partial class ToolboxLayoutDefinitionControlsSpeedGauge {
+    public partial class ToolboxLayoutDefinitionPlaybackToolsSpeedGauge {
         
         private RegionType regionField;
         

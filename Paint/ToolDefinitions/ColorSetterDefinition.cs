@@ -18,7 +18,7 @@ namespace Paint
 		/// </summary>
 		/// <param name='colorSetterDefinition'>Layout of the color setter as defined within a xml file.</param>
 		/// <param name='scale' iPad size scale - i.e.2 for retina and 1 for normal - allows us to multiply up the layout />
-		public ColorSetterDefinition(ToolboxLayoutDefinitionControlsColorSetter colorSetterDefinition, int scale)
+		public ColorSetterDefinition(ToolboxLayoutDefinitionPaintToolsColorSetter colorSetterDefinition, int scale)
 		{	
 			this.Bounds = new Rectangle(
 				(int)colorSetterDefinition.Region.Location.X * scale,

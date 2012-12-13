@@ -136,15 +136,15 @@ namespace Paint
 		/// Creates all the buttons and adds them to our list of controls
 		/// </summary>
 		/// <param name='buttons' All the buttons we need to display on screen />
-		protected override void AddButton(ToolboxLayoutDefinitionControlsButton buttonLayout)
+		protected override void AddButton(ToolboxLayoutDefinitionStandardToolsButtonsButton buttonLayout)
 		{
 			switch (buttonLayout.ButtonType)
 			{
-				case ToolboxLayoutDefinitionControlsButtonButtonType.Undo:
+				case ToolboxLayoutDefinitionStandardToolsButtonsButtonButtonType.Undo:
 					this.AddUndoButton(buttonLayout);
 					break;
 					
-				case ToolboxLayoutDefinitionControlsButtonButtonType.Redo:
+				case ToolboxLayoutDefinitionStandardToolsButtonsButtonButtonType.Redo:
 					this.AddRedoButton(buttonLayout);
 					break;
 					
@@ -172,22 +172,19 @@ namespace Paint
 		private void CreateTools(ToolboxLayoutDefinition toolboxLayoutDefinition)
 		{
 			Color startColor = new Color(
-				toolboxLayoutDefinition.Controls.ColorSetter.Region.BackgroundColor.Red,
-				toolboxLayoutDefinition.Controls.ColorSetter.Region.BackgroundColor.Green,
-				toolboxLayoutDefinition.Controls.ColorSetter.Region.BackgroundColor.Blue);
+				toolboxLayoutDefinition.PaintTools.ColorSetter.Region.BackgroundColor.Red,
+				toolboxLayoutDefinition.PaintTools.ColorSetter.Region.BackgroundColor.Green,
+				toolboxLayoutDefinition.PaintTools.ColorSetter.Region.BackgroundColor.Blue);
 
-			var brushSizeSelector = this.CreateBrushSizeSelector(startColor, toolboxLayoutDefinition.Controls.BrushSizeSelector);
+			var brushSizeSelector = this.CreateBrushSizeSelector(startColor, toolboxLayoutDefinition.PaintTools.BrushSizeSelector);
 			this.AddTool(brushSizeSelector);
 
 			// ColorSetter - shows what colour the user has chosen
-			this.colorSetter = this.CreateColorSetter(startColor, toolboxLayoutDefinition.Controls.ColorSetter);
+			this.colorSetter = this.CreateColorSetter(startColor, toolboxLayoutDefinition.PaintTools.ColorSetter);
 			this.AddTool(colorSetter);
 
-			// Add all the buttons
-			this.AddButtons(toolboxLayoutDefinition.Controls.Button);
-	
 			// User defined color selector			
-			var colorSelector = this.CreateColorSelector(startColor, toolboxLayoutDefinition.Controls.ColorSelector);
+			var colorSelector = this.CreateColorSelector(startColor, toolboxLayoutDefinition.PaintTools.ColorSelector);
 
 			colorSelector.ColorChanged += (sender, e) => { 
 				this.colorSetter.Color = colorSelector.Color;
@@ -197,7 +194,7 @@ namespace Paint
 			this.AddTool(colorSelector);
 
 			// Pre defined color pickers
-			this.CreateColorPickers(colorSelector, toolboxLayoutDefinition.Controls.ColorPicker);			
+			this.CreateColorPickers(colorSelector, toolboxLayoutDefinition.PaintTools.ColorPickers.ColorPicker);			
 		}	
 		
 		/// <summary>
@@ -205,11 +202,11 @@ namespace Paint
 		/// </summary>
 		/// <param name='colorSelector' The colorSelector control we need to update when ever the user picks a color />
 		/// <param name='layoutColorPickers' Layout information for each color picker control />
-		private void CreateColorPickers(ColorSelector colorSelector, ToolboxLayoutDefinitionControlsColorPicker[] layoutColorPickers)
+		private void CreateColorPickers(ColorSelector colorSelector, ToolboxLayoutDefinitionPaintToolsColorPickersColorPicker[] layoutColorPickers)
 		{
 			foreach (var layoutColorPicker in layoutColorPickers)
 			{
-				var colorPicker = new ColorPicker(this.graphicsDisplay, new ColorPickerDefinition(layoutColorPicker, this.scale));
+				var colorPicker = new ColorPicker(this.GraphicsDisplay, new ColorPickerDefinition(layoutColorPicker, this.Scale));
 
 				colorPicker.ColorSelected += (sender, e) => 
 				{
@@ -226,11 +223,11 @@ namespace Paint
 		/// <param name='buttonLayout'>
 		/// Button layout.
 		/// </param>
-		private void AddRedoButton(ToolboxLayoutDefinitionControlsButton buttonLayout)
+		private void AddRedoButton(ToolboxLayoutDefinitionStandardToolsButtonsButton buttonLayout)
 		{
 			this.redoButton = new Button(
-				this.graphicsDisplay, 
-				new ButtonDefinition(buttonLayout, this.scale, new ImageType[] { ImageType.RedoButton } , ImageType.RedoButtonDisabled));		
+				this.GraphicsDisplay, 
+				new ButtonDefinition(buttonLayout, this.Scale, new ImageType[] { ImageType.RedoButton } , ImageType.RedoButtonDisabled));		
 
 			this.redoButton.Enabled = false;
 			this.redoButton.ButtonPressed += (sender, e) => 
@@ -247,11 +244,11 @@ namespace Paint
 		/// <param name='buttonLayout'>
 		/// Button layout.
 		/// </param>
-		private void AddUndoButton(ToolboxLayoutDefinitionControlsButton buttonLayout)
+		private void AddUndoButton(ToolboxLayoutDefinitionStandardToolsButtonsButton buttonLayout)
 		{
 			this.undoButton = new Button(
-				this.graphicsDisplay, 
-				new ButtonDefinition(buttonLayout, this.scale, new ImageType[] { ImageType.UndoButton } , ImageType.UndoButtonDisabled));		
+				this.GraphicsDisplay, 
+				new ButtonDefinition(buttonLayout, this.Scale, new ImageType[] { ImageType.UndoButton } , ImageType.UndoButtonDisabled));		
 			
 			this.undoButton.Enabled = false;
 			this.undoButton.ButtonPressed += (sender, e) => 
@@ -270,9 +267,9 @@ namespace Paint
 		/// </returns>
 		/// <param name='startColor' The color we will start drawing with />
 		/// <param name='layoutColorSelector' The layout information for this color selector />
-		private ColorSelector CreateColorSelector(Color startColor, ToolboxLayoutDefinitionControlsColorSelector layoutColorSelector)
+		private ColorSelector CreateColorSelector(Color startColor, ToolboxLayoutDefinitionPaintToolsColorSelector layoutColorSelector)
 		{
-			return new ColorSelector(this.graphicsDisplay, new ColorSelectorDefinition(startColor, layoutColorSelector, this.scale));
+			return new ColorSelector(this.GraphicsDisplay, new ColorSelectorDefinition(startColor, layoutColorSelector, this.Scale));
 		}
 
 		/// <summary>
@@ -283,9 +280,9 @@ namespace Paint
 		/// </returns>
 		/// <param name='startColor' The color we will start drawing with />
 		/// <param name='layoutColorSetter' The layout information for this color setter />
-		private ColorSetter CreateColorSetter(Color startColor, ToolboxLayoutDefinitionControlsColorSetter layoutColorSetter)
+		private ColorSetter CreateColorSetter(Color startColor, ToolboxLayoutDefinitionPaintToolsColorSetter layoutColorSetter)
 		{
-			return new ColorSetter(this.graphicsDisplay, new ColorSetterDefinition(layoutColorSetter, this.scale));
+			return new ColorSetter(this.GraphicsDisplay, new ColorSetterDefinition(layoutColorSetter, this.Scale));
 		}
 
 		/// <summary>
@@ -293,11 +290,11 @@ namespace Paint
 		/// </summary>
 		/// <param name='startColor' The color we will start drawing with />
 		/// <param name='layoutBrushSizeSelector' The layout information for this brush size selector />
-		private BrushSizeSelector CreateBrushSizeSelector(Color startColor, ToolboxLayoutDefinitionControlsBrushSizeSelector layoutBrushSizeSelector)
+		private BrushSizeSelector CreateBrushSizeSelector(Color startColor, ToolboxLayoutDefinitionPaintToolsBrushSizeSelector layoutBrushSizeSelector)
 		{
 			var brushSizeSelector = new BrushSizeSelector(
-				this.graphicsDisplay, 
-				new BrushSizeSelectorDefinition(startColor, layoutBrushSizeSelector, this.scale));
+				this.GraphicsDisplay, 
+				new BrushSizeSelectorDefinition(startColor, layoutBrushSizeSelector, this.Scale));
 
 			this.SetBrushSizeRectange(brushSizeSelector.BrushSize);
 

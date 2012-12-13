@@ -19,7 +19,7 @@ namespace Paint
 		/// <param name='startColor'> Initial color to use for the brush </param>
 		/// <param name='layoutBrushSizeSelector'> Layout of the brush size as defined within a xml file. </param>
 		/// <param name='scale' iPad size scale - i.e.2 for retina and 1 for normal - allows us to multiply up the layout />
-		public BrushSizeSelectorDefinition(Color startColor, ToolboxLayoutDefinitionControlsBrushSizeSelector layoutBrushSizeSelector, int scale)
+		public BrushSizeSelectorDefinition(Color startColor, ToolboxLayoutDefinitionPaintToolsBrushSizeSelector layoutBrushSizeSelector, int scale)
 		{			
 			this.Bounds = new Rectangle(
 				(int)layoutBrushSizeSelector.Region.Location.X * scale,

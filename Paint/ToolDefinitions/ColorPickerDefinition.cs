@@ -18,7 +18,7 @@ namespace Paint
 		/// </summary>
 		/// <param name='colorPickerDefinition'> Layout of the color setter as defined within a xml file. </param>
 		/// <param name='scale' iPad size scale - i.e.2 for retina and 1 for normal - allows us to multiply up the layout />
-		public ColorPickerDefinition(ToolboxLayoutDefinitionControlsColorPicker colorPickerDefinition, int scale)
+		public ColorPickerDefinition(ToolboxLayoutDefinitionPaintToolsColorPickersColorPicker colorPickerDefinition, int scale)
 		{	
 			this.Bounds = new Rectangle(
 				(int)colorPickerDefinition.Region.Location.X * scale,

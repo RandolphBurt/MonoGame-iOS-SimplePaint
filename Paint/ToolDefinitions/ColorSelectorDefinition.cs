@@ -19,7 +19,7 @@ namespace Paint
 		/// <param name='startColor'> The initial colour we are drawing with. </param>
 		/// <param name='colorSelectorDefinition'> Layout of the color selector as defined within a xml file. </param>
 		/// <param name='scale' iPad size scale - i.e.2 for retina and 1 for normal - allows us to multiply up the layout />
-		public ColorSelectorDefinition(Color startColor, ToolboxLayoutDefinitionControlsColorSelector colorSelectorDefinition, int scale)
+		public ColorSelectorDefinition(Color startColor, ToolboxLayoutDefinitionPaintToolsColorSelector colorSelectorDefinition, int scale)
 		{
 			this.Bounds = new Rectangle(
 				(int)colorSelectorDefinition.Region.Location.X * scale,

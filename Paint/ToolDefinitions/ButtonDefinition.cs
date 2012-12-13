@@ -20,7 +20,7 @@ namespace Paint
 		/// <param name='scale' iPad size scale - i.e.2 for retina and 1 for normal - allows us to multiply up the layout />
 		/// <param name='imageList' List of images to use for this button (will rotate through them all as the user presses the button) />
 		/// <param name='disabledImageType' Image to use if this button is disabled />
-		public ButtonDefinition(ToolboxLayoutDefinitionControlsButton buttonDefinition, int scale, ImageType[] imageList, ImageType? disabledImageType)
+		public ButtonDefinition(ToolboxLayoutDefinitionStandardToolsButtonsButton buttonDefinition, int scale, ImageType[] imageList, ImageType? disabledImageType)
 		{	
 			this.Bounds = new Rectangle(
 				(int)buttonDefinition.Region.Location.X * scale,

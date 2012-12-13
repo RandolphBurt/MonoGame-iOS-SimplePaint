@@ -44,26 +44,6 @@ namespace Paint
 		private Rectangle toolboxBounds;
 
 		/// <summary>
-		/// The color of the border of all controls
-		/// </summary>
-		protected Color borderColor;
-		
-		/// <summary>
-		/// The color of the background of all controls
-		/// </summary>
-		protected Color backgroundColor;
-		
-		/// <summary>
-		/// Scale of this iPad = i.e. 2 is retina, 1 is normal
-		/// </summary>
-		protected int scale;
-
-		/// <summary>
-		/// The graphics texture map - contains images for buttons and controls
-		/// </summary>
-		protected IGraphicsDisplay graphicsDisplay;
-
-		/// <summary>
 		/// Initializes a new instance of the <see cref="Paint.ToolBox"/> class.
 		/// </summary>
 		/// <param name='toolboxLayoutDefinition' The layout of the toolbox />
@@ -71,10 +51,10 @@ namespace Paint
 		/// <param name='scale' iPad size scale - i.e.2 for retina and 1 for normal - allows us to multiply up the layout />
 		public ToolBox(ToolboxLayoutDefinition toolboxLayoutDefinition, IGraphicsDisplay graphicsDisplay, int scale)
 		{
-			this.backgroundColor = this.TranslateToolboxLayoutColor(toolboxLayoutDefinition.BackgroundColor);
-			this.borderColor = this.TranslateToolboxLayoutColor(toolboxLayoutDefinition.Border.Color);
-			this.graphicsDisplay = graphicsDisplay;
-			this.scale = scale;
+			this.BackgroundColor = this.TranslateToolboxLayoutColor(toolboxLayoutDefinition.BackgroundColor);
+			this.BorderColor = this.TranslateToolboxLayoutColor(toolboxLayoutDefinition.Border.Color);
+			this.GraphicsDisplay = graphicsDisplay;
+			this.Scale = scale;
 			this.toolboxWidth = toolboxLayoutDefinition.Width * scale;
 			this.ToolboxMinimizedHeight = toolboxLayoutDefinition.MinimizedHeight * scale;
 			this.toolboxMaximisedHeight = toolboxLayoutDefinition.MaximizedHeight * scale;
@@ -95,6 +75,9 @@ namespace Paint
 
 			this.interactiveTools = new List<IToolBoxToolTouch>();
 			this.nonInteractiveTools = new List<IToolBoxTool>();
+
+			// Add all the buttons
+			this.AddStandardTools(toolboxLayoutDefinition.StandardTools);
 		}
 
 		/// <summary>
@@ -130,6 +113,26 @@ namespace Paint
 		}
 
 		/// <summary>
+		/// The color of the border of all controls
+		/// </summary>
+		protected Color BorderColor { get; private set; }
+		
+		/// <summary>
+		/// The color of the background of all controls
+		/// </summary>
+		protected Color BackgroundColor { get; private set; }
+		
+		/// <summary>
+		/// Scale of this iPad = i.e. 2 is retina, 1 is normal
+		/// </summary>
+		protected int Scale { get; private set; }
+		
+		/// <summary>
+		/// The graphics texture map - contains images for buttons and controls
+		/// </summary>
+		protected IGraphicsDisplay GraphicsDisplay { get; private set; }
+
+		/// <summary>
 		/// Checks wheter a particular touch point (user pressing the screen) is within the bounds of one of the tools.
 		/// </summary>
 		/// <returns>
@@ -163,7 +166,7 @@ namespace Paint
 			/*
 			 * Draw the tools with an Opque BlendState to ensure we overwrite the previous color completely
 			 */
-			this.graphicsDisplay.BeginRenderOpaque();
+			this.GraphicsDisplay.BeginRenderOpaque();
 			
 			if (refreshDisplay == true)
 			{
@@ -172,7 +175,7 @@ namespace Paint
 
 			this.DrawTools(refreshDisplay);
 
-			this.graphicsDisplay.EndRender();
+			this.GraphicsDisplay.EndRender();
 		}
 
 		/// <summary>
@@ -201,10 +204,10 @@ namespace Paint
 		protected virtual void DrawBackground()
 		{
 			// First fill the entire region with the border colour...
-			this.graphicsDisplay.DrawGraphic(ImageType.EmptySquare, this.toolboxBounds, this.borderColor);
+			this.GraphicsDisplay.DrawGraphic(ImageType.EmptySquare, this.toolboxBounds, this.BorderColor);
 			
 			// Then blank out the space for the toolbar...
-			this.graphicsDisplay.DrawGraphic(ImageType.EmptySquare, this.toolbarInnerBounds, this.backgroundColor);
+			this.GraphicsDisplay.DrawGraphic(ImageType.EmptySquare, this.toolbarInnerBounds, this.BackgroundColor);
 
 			// Classes ingeriting from us may override this and do more
 		}
@@ -245,7 +248,7 @@ namespace Paint
 		/// Creates all the buttons and adds them to our list of controls
 		/// </summary>
 		/// <param name='buttons' All the buttons we need to display on screen />
-		protected void AddButtons(ToolboxLayoutDefinitionControlsButton[] buttons)
+		protected void AddButtons(ToolboxLayoutDefinitionStandardToolsButtonsButton[] buttons)
 		{
 			foreach (var buttonLayout in buttons)
 			{
@@ -262,38 +265,38 @@ namespace Paint
 		/// <param name='buttonLayout'>
 		/// Button layout.
 		/// </param>
-		protected virtual void AddButton(ToolboxLayoutDefinitionControlsButton buttonLayout)
+		protected virtual void AddButton(ToolboxLayoutDefinitionStandardToolsButtonsButton buttonLayout)
 		{
 			List<ImageType> imageList = new List<ImageType>();
 			
 			switch (buttonLayout.ButtonType)
 			{
-				case ToolboxLayoutDefinitionControlsButtonButtonType.Exit:
+				case ToolboxLayoutDefinitionStandardToolsButtonsButtonButtonType.Exit:
 					imageList.Add(ImageType.ExitButton);
 					break;
 					
-				case ToolboxLayoutDefinitionControlsButtonButtonType.ToggleDock:
+				case ToolboxLayoutDefinitionStandardToolsButtonsButtonButtonType.ToggleDock:
 					imageList.Add(ImageType.DockTopButton);
 					imageList.Add(ImageType.DockBottomButton);
 					break;
 					
-				case ToolboxLayoutDefinitionControlsButtonButtonType.ToggleMaxMin:
+				case ToolboxLayoutDefinitionStandardToolsButtonsButtonButtonType.ToggleMaxMin:
 					imageList.Add(ImageType.MinimizeToolbar);
 					imageList.Add(ImageType.MaximizeToolbar);
 					break;					
 			}
 			
 			var button = new Button(
-					this.graphicsDisplay, 
-					new ButtonDefinition(buttonLayout, this.scale, imageList.ToArray(), null));		
+					this.GraphicsDisplay, 
+					new ButtonDefinition(buttonLayout, this.Scale, imageList.ToArray(), null));		
 
 			switch (buttonLayout.ButtonType)
 			{
-				case ToolboxLayoutDefinitionControlsButtonButtonType.Exit:
+				case ToolboxLayoutDefinitionStandardToolsButtonsButtonButtonType.Exit:
 					button.ButtonPressed += (sender, e) => (this.OnExitButtonPressed(EventArgs.Empty));
 					break;
 					
-				case ToolboxLayoutDefinitionControlsButtonButtonType.ToggleDock:
+				case ToolboxLayoutDefinitionStandardToolsButtonsButtonButtonType.ToggleDock:
 					button.ButtonPressed += (sender, e) => 
 					{
 						if (button.State == 0)
@@ -307,7 +310,7 @@ namespace Paint
 					};
 					break;
 					
-				case ToolboxLayoutDefinitionControlsButtonButtonType.ToggleMaxMin:
+				case ToolboxLayoutDefinitionStandardToolsButtonsButtonButtonType.ToggleMaxMin:
 					button.ButtonPressed += (sender, e) => 
 					{
 						if (button.State == 0)
@@ -326,6 +329,16 @@ namespace Paint
 			this.AddTool(button);
 		}
 
+		/// <summary>
+		/// Adds the standard tools.
+		/// </summary>
+		/// <param name='standardTools'>
+		/// Standard tools.
+		/// </param>
+		private void AddStandardTools(ToolboxLayoutDefinitionStandardTools standardTools)
+		{
+			this.AddButtons(standardTools.Buttons.Button);
+		}
 
 		/// <summary>
 		/// Translates the toolbox layout color type to a Color.
