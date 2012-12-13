@@ -70,14 +70,9 @@ namespace Paint
 		private string masterImagePath;
 
 		/// <summary>
-		/// The layout of the toolbox for portrait pictures.
+		/// The toolbox layout manager
 		/// </summary>
-		private ToolboxLayoutDefinition portraitToolboxDefinition = null;
-
-		/// <summary>
-		/// The layout of the toolbox for landscape pictures.
-		/// </summary>
-		private ToolboxLayoutDefinition landscapeToolboxDefinition = null;
+		private IToolboxLayoutManager toolboxLayoutManager = null;
 
 		//
 		// This method is invoked when the application has loaded and is ready to run. In this 
@@ -91,7 +86,7 @@ namespace Paint
 			this.imageDataPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "..", FolderNameLibrary, FolderNameImageData);
 			this.masterImagePath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
 		
-			this.LoadToolboxLayouts();
+			this.toolboxLayoutManager = new ToolboxLayoutManager();
 
 			// Temp code below for total clear down 
 			/*
@@ -158,19 +153,6 @@ namespace Paint
 		}
 
 		/// <summary>
-		/// Loads the toolbox layouts - from xml configuraiton files
-		/// </summary>
-		private void LoadToolboxLayouts()
-		{
-			this.portraitToolboxDefinition = 
-				ObjectDeserializer.DeserialiseFromXmlFile<ToolboxLayoutDefinition>("Content/PaintToolboxPortraitLayout.xml");
-
-			this.landscapeToolboxDefinition = 
-				ObjectDeserializer.DeserialiseFromXmlFile<ToolboxLayoutDefinition>("Content/PaintToolboxLandscapeLayout.xml");
-
-		}
-
-		/// <summary>
 		/// Start painting a new image
 		/// </summary>
 		/// <param name='orientation'>
@@ -223,7 +205,11 @@ namespace Paint
 			BusyMessageDisplay busyMessageDisplay = new BusyMessageDisplay("Saving", "Please wait...");
 
 			// Simply instantiate the class derived from monogame:game and away we go...
-			ToolboxLayoutDefinition layoutDefinition = imageStateData.Width > imageStateData.Height ? this.landscapeToolboxDefinition : this.portraitToolboxDefinition;
+			ToolboxLayoutDefinition layoutDefinition = 
+				imageStateData.Width > imageStateData.Height ? 
+					this.toolboxLayoutManager.PaintLandscapeToolboxLayout : 
+					this.toolboxLayoutManager.PaintPortraitToolboxLayout;
+
 			this.paintApp = new PaintApp(pictureIOManager, filenameResolver, imageStateData, busyMessageDisplay, layoutDefinition);
 			this.paintApp.Exiting += PaintAppExiting;			
 			
@@ -246,7 +232,12 @@ namespace Paint
 			this.SetOrientationForImage(imageStateData);
 
 			// Simply instantiate the class derived from monogame:game and away we go...
-			this.playBackApp = new CanvasPlaybackApp(canvasPlayback, imageStateData);
+			ToolboxLayoutDefinition layoutDefinition = 
+				imageStateData.Width > imageStateData.Height ? 
+					this.toolboxLayoutManager.PlaybackLandscapeToolboxLayout : 
+					this.toolboxLayoutManager.PlaybackPortraitToolboxLayout;
+
+			this.playBackApp = new CanvasPlaybackApp(canvasPlayback, imageStateData, layoutDefinition);
 			this.playBackApp.Exiting += CanvasPlaybackAppExiting;
 			this.playBackApp.Run();
 		}

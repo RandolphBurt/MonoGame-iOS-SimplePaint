@@ -11,7 +11,9 @@ namespace Paint
 	using Microsoft.Xna.Framework;
 	using Microsoft.Xna.Framework.Graphics;
 	using Microsoft.Xna.Framework.Input.Touch;
-	
+
+	using Paint.ToolboxLayout;
+
 	/// <summary>
 	/// Canvas playback app.
 	/// </summary>
@@ -78,17 +80,20 @@ namespace Paint
 		/// The image state data. height/width of image and details of save points (undo/redo state)
 		/// </summary>
 		private ImageStateData imageStateData = null;
+
+		private ToolboxLayoutDefinition toolboxLayoutDefinition;
 		
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Paint.CanvasPlaybackApp"/> class.
 		/// </summary>
 		/// <param name='canvasPlayback'>Canvas Playback data</param>
 		/// <param name='imageStateData'>ImageSaveData</param>
-		public CanvasPlaybackApp(ICanvasPlayback canvasPlayback, ImageStateData imageStateData)
+		public CanvasPlaybackApp(ICanvasPlayback canvasPlayback, ImageStateData imageStateData, ToolboxLayoutDefinition toolboxLayoutDefinition)
 		{
 			this.graphicsDeviceManager = new GraphicsDeviceManager(this);
 			this.graphicsDeviceManager.IsFullScreen = true;
 			this.imageStateData = imageStateData;
+			this.toolboxLayoutDefinition = toolboxLayoutDefinition;
 
 			if (imageStateData.Width > imageStateData.Height)
 			{

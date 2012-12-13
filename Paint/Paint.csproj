@@ -150,6 +150,8 @@
     <Compile Include="ToolInterfaces\IToolBoxTool.cs" />
     <Compile Include="ToolInterfaces\IToolBoxToolTouch.cs" />
     <Compile Include="Tools\ToolBoxToolTouchBase.cs" />
+    <Compile Include="BusinessLogic\ToolboxLayoutManager.cs" />
+    <Compile Include="BusinessLogic\IToolboxLayoutManager.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -190,6 +192,8 @@
     <Content Include="Content\graphics%402x.png" />
     <Content Include="Content\PaintToolboxPortraitLayout.xml" />
     <Content Include="Content\PaintToolboxLandscapeLayout.xml" />
+    <Content Include="Content\PlaybackToolboxPortraitLayout.xml" />
+    <Content Include="Content\PlaybackToolboxLandscapeLayout.xml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\MonoGame\MyFork\MonoGame\MonoGame.Framework\MonoGame.Framework.iOS.csproj">
