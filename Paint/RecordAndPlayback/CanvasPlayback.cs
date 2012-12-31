@@ -148,7 +148,11 @@ namespace Paint
 			int positionX = this.commandByteArray[1] | this.commandByteArray[2] << 8;
 			int positionY = this.commandByteArray[3] | this.commandByteArray[4] << 8;
 			
-			return new TouchPoint(new Vector2(positionX, positionY), touchType);
+			return new TouchPoint(
+				new Vector2(positionX, positionY), 
+				touchType,
+				this.Color,
+				this.Brush);
 		}
 		
 		/// <summary>

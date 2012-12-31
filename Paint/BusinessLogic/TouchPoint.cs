@@ -19,16 +19,16 @@ namespace Paint
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Paint.TouchPoint"/> class.
 		/// </summary>
-		/// <param name='position'>
-		/// The position on screen that the user touched.
-		/// </param>
-		/// <param name='touchType'>
-		/// Touch type (FreeFrag, Tap etc)
-		/// </param>
-		public TouchPoint(Vector2 position, TouchType touchType)
+		/// <param name='position'>The position on screen that the user touched.</param>
+		/// <param name='touchType'>Touch type (FreeFrag, Tap etc)</param>
+		/// <param name='color'>The color for this point</param>
+		/// <param name='size'>The size of the point</param>
+		public TouchPoint(Vector2 position, TouchType touchType, Color color, Rectangle size)
 		{
 			this.Position = position;
 			this.TouchType = touchType;
+			this.Color = color;
+			this.Size = size;
 		}
 		
 		/// <summary>
@@ -44,6 +44,24 @@ namespace Paint
 		/// Gets the type of the touch (FreeFrag, Tap etc)
 		/// </summary>
 		public TouchType TouchType
+		{
+			get;
+			private set;
+		}
+
+		/// <summary>
+		/// Gets the color for this point
+		/// </summary>
+		public Color Color 
+		{
+			get;
+			private set;
+		}
+
+		/// <summary>
+		/// Gets the size of the point
+		/// </summary>
+		public Rectangle Size 
 		{
 			get;
 			private set;

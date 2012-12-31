@@ -152,6 +152,7 @@
     <Compile Include="Tools\ToolBoxToolTouchBase.cs" />
     <Compile Include="BusinessLogic\ToolboxLayoutManager.cs" />
     <Compile Include="BusinessLogic\IToolboxLayoutManager.cs" />
+    <Compile Include="BaseGame.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

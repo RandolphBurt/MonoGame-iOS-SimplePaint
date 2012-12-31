@@ -182,7 +182,7 @@ namespace Paint
 		/// The list of all gestures / locations touched by the user since the last update
 		/// </param>		
 		/// </summary>
-		public void Draw(Color color, Rectangle brush, List<ITouchPoint> touchPoints)
+		public void Draw(List<ITouchPoint> touchPoints)
 		{
 			DateTime now = DateTime.UtcNow;
 
@@ -198,7 +198,7 @@ namespace Paint
 			
 			this.lastChangeMadeUTC = now;
 			
-			this.canvasRecorder.Draw(color, brush, touchPoints);
+			this.canvasRecorder.Draw(touchPoints);
 			
 			if (this.changesMadeSinceLastSave == false)
 			{

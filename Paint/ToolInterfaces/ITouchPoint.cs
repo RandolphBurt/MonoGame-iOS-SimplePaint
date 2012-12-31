@@ -24,6 +24,16 @@ namespace Paint
 		/// Gets the type of the touch (FreeFrag, Tap etc)
 		/// </summary>
 		TouchType TouchType { get; } 
+
+		/// <summary>
+		/// Gets the color for this point
+		/// </summary>
+		Color Color { get; }
+
+		/// <summary>
+		/// Gets the size of the point
+		/// </summary>
+		Rectangle Size { get; }
 	}
 }
 

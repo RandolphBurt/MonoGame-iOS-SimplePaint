@@ -9,13 +9,7 @@ namespace Paint
 	using System.IO;
 	
 	using Microsoft.Xna.Framework;
-	using Microsoft.Xna.Framework.Audio;
-	using Microsoft.Xna.Framework.Content;
 	using Microsoft.Xna.Framework.Graphics;
-	using Microsoft.Xna.Framework.Input;
-	using Microsoft.Xna.Framework.Input.Touch;
-	using Microsoft.Xna.Framework.Media;
-	using Microsoft.Xna.Framework.Storage;
 
 	using Paint.ToolboxLayout;
 
@@ -23,50 +17,13 @@ namespace Paint
 	/// The main application class just inherits from the monogame:Game class
 	/// Override a few key methods and away we go...
 	/// </summary>
-	public class PaintApp : Game, IRenderTargertHandler
+	public class PaintApp : BaseGame, IRenderTargertHandler
 	{
-		/// <summary>
-		/// Background color for our app
-		/// </summary>
-		private readonly Color BackgroundColor = Color.White;
-
-		/// <summary>
-		/// Our monogame GrahicsDeviceManager handles all the rendering
-		/// </summary>
-		private GraphicsDeviceManager graphicsDeviceManager;
-
-		/// <summary>
-		/// The graphics texture map - contains all our graphics for buttons etc
-		/// </summary>
-		private IGraphicsDisplay graphicsDisplay;
-		
-		/// <summary>
-		/// An in memory render target - as the user draws on the canvas then so we update this rendertarget.
-		/// Then each 'draw cycle' we render this to the screen.
-		/// </summary>
-		private RenderTarget2D inMemoryCanvasRenderTarget;
-
-		/// <summary>
-		/// An in memory render target for holding the toolbox
-		/// Then each 'draw cycle' we render this to the screen.
-		/// </summary>
-		private RenderTarget2D inMemoryToolboxRenderTarget;
-
 		/// <summary>
 		/// The render targets used for tracking undo/redo - The image in the previous (wrapping) entry in the array 
 		/// should be shown when we undo a change
 		/// </summary>
 		private RenderTarget2D[] undoRedoRenderTargets = null;
-		
-		/// <summary>
-		/// The sprite batch handles all the drawing to the render targets / screen
-		/// </summary>
-		private SpriteBatch spriteBatch;
-				
-		/// <summary>
-		/// Where we draw our picture - the canvas/paper/drawing board
-		/// </summary>
-		private ICanvas canvas;
 		
 		/// <summary>
 		/// The picture state manager - handles playback and save/undo/redo
@@ -75,23 +32,9 @@ namespace Paint
 		
 		/// <summary>
 		/// The tool box - contains all our color pickers and brush size controls
+		/// More specialised version of the parent class IToolBox, but the same instance
 		/// </summary>
-		private IPaintToolBox toolBox;
-		
-		/// <summary>
-		/// Simply tracks whether this is the very first time we are drawing the canvas - if so then we need to draw everything on each control/tool.
-		/// </summary>
-		private bool initialDraw = true;
-		
-		/// <summary>
-		/// Keep track of the previous gesture/touch-type that was made by the user.
-		/// </summary>
-		private TouchType previousTouchType = TouchType.DragComplete;
-				
-		/// <summary>
-		/// Keeps track of all touch/gestures made on the canvas since the last Draw command- is then reset after handled by the Draw.
-		/// </summary>
-		private List<ITouchPoint> canvasTouchPoints = new List<ITouchPoint>();
+		private IPaintToolBox paintToolBox;
 		
 		/// <summary>
 		/// The picture IO manager - handles all reading / writing images and information file
@@ -104,11 +47,6 @@ namespace Paint
 		private IFilenameResolver filenameResolver;
 		
 		/// <summary>
-		/// The image state data. height/width of image and details of save points (undo/redo state)
-		/// </summary>
-		private ImageStateData imageStateData = null;
-
-		/// <summary>
 		/// What mode is the app currently running in paint, pending shutdown or actually exiting
 		/// </summary>
 		private PaintMode paintMode = PaintMode.Paint;
@@ -118,11 +56,6 @@ namespace Paint
 		/// </summary>
 		private IUIBusyMessage saveBusyMessageDisplay = null;
 
-		/// <summary>
-		/// Defines the layout of all the controls in the toolbox
-		/// </summary>
-		private ToolboxLayoutDefinition toolboxLayoutDefinition = null;
-		
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Paint.PaintApp"/> class.
 		/// Instantiate our GraphicsDeviceManager and establish where the content folder is
@@ -138,25 +71,11 @@ namespace Paint
 			ImageStateData imageStateData,
 			IUIBusyMessage saveBusyMessageDisplay,
 			ToolboxLayoutDefinition toolboxLayoutDefinition)
+			: base(imageStateData, toolboxLayoutDefinition)
 		{
-			this.graphicsDeviceManager = new GraphicsDeviceManager(this);
-			this.graphicsDeviceManager.IsFullScreen = true;
 			this.filenameResolver = filenameResolver;
 			this.pictureIOManager = pictureIOManager;
-			this.imageStateData = imageStateData;
 			this.saveBusyMessageDisplay = saveBusyMessageDisplay;
-			this.toolboxLayoutDefinition = toolboxLayoutDefinition;
-			
-			if (imageStateData.Width > imageStateData.Height)
-			{
-				this.graphicsDeviceManager.SupportedOrientations = DisplayOrientation.LandscapeLeft | DisplayOrientation.LandscapeRight;
-			}
-			else
-			{
-				this.graphicsDeviceManager.SupportedOrientations = DisplayOrientation.Portrait | DisplayOrientation.PortraitUpsideDown;
-			}
-			
-			this.Content.RootDirectory = "Content";
 		}
 
 		/// <summary>
@@ -179,7 +98,7 @@ namespace Paint
 		/// <param name='savePoint'>specific save point we wish to restore</param>
 		public void RestoreSavePoint(int savePoint)
 		{
-			this.RenderImage(this.inMemoryCanvasRenderTarget, this.undoRedoRenderTargets[savePoint]);
+			this.RenderImage(this.InMemoryCanvasRenderTarget, this.undoRedoRenderTargets[savePoint]);
 		}
 		
 		/// <summary>
@@ -188,49 +107,36 @@ namespace Paint
 		/// <param name='savePoint'>specific save point we wish to use to store the canvas</param>
 		public void StoreSavePoint(int savePoint)
 		{
-			this.RenderImage(this.undoRedoRenderTargets[savePoint], this.inMemoryCanvasRenderTarget);
+			this.RenderImage(this.undoRedoRenderTargets[savePoint], this.InMemoryCanvasRenderTarget);
 		}		
+
+		/// <summary>
+		/// Returns the current brush size
+		/// </summary>
+		/// <returns>The brush size.</returns>
+		protected override Rectangle CurrentBrushSize()
+		{
+			return this.paintToolBox.Brush;
+		}
 		
+		/// <summary>
+		/// Returns the Ccrrent color.
+		/// </summary>
+		/// <returns>The color.</returns>
+		protected override Color CurrentColor()
+		{
+			return this.paintToolBox.Color;
+		}
+
 		/// <summary>
 		/// We load any content we need at the beginning of the application life cycle.
 		/// Also anything that needs initialising is done here
 		/// </summary>
 		protected override void LoadContent()
 		{
-			this.spriteBatch = new SpriteBatch(graphicsDeviceManager.GraphicsDevice);
-			
-			Texture2D graphicsTextureMap = null;
-			bool highResolution = Math.Max(this.imageStateData.Height, this.imageStateData.Width) > 1024;
+			base.LoadContent();
 
-			if (highResolution)
-			{
-				graphicsTextureMap = Content.Load<Texture2D>("graphics@2x.png");
-			}
-			else
-			{
-				graphicsTextureMap = Content.Load<Texture2D>("graphics.png");
-			}
-
-			this.graphicsDisplay = new GraphicsDisplay(graphicsTextureMap, this.spriteBatch, highResolution);
-			
-			this.CreateCanvas();
-			this.CreateToolbox();
 			this.CreatePictureStateManager();
-		}
-				
-		/// <summary>
-		/// Enable the capturing of gestures on the device
-		/// </summary>
-		protected override void Initialize()
-		{
-			// Enable the gestures we care about. You must set EnabledGestures before
-			// you can use any of the other gesture APIs.
-			TouchPanel.EnabledGestures =
-                GestureType.Tap | 
-				GestureType.FreeDrag |
-				GestureType.DragComplete;
-			
-			base.Initialize();
 		}
 		
 		/// <summary>
@@ -241,34 +147,8 @@ namespace Paint
 		/// </param>
 		protected override void Draw(GameTime gameTime)
 		{
-			GraphicsDevice device = this.graphicsDeviceManager.GraphicsDevice;
-									
-			// First set the render target to be our image that we update as we go along...
-			device.SetRenderTarget(inMemoryCanvasRenderTarget);
-		
-			this.canvas.Draw(this.toolBox.Color, this.toolBox.Brush, this.canvasTouchPoints);
-			this.pictureStateManager.Draw(this.toolBox.Color, this.toolBox.Brush, this.canvasTouchPoints);
-			
-			// Then we draw the toolbox
-			device.SetRenderTarget(inMemoryToolboxRenderTarget);
-			this.toolBox.Draw(this.initialDraw);
-			
-			// Thes switch back to drawing onto the screen where we copy our image on to the screen
-			device.SetRenderTarget(null);
-			device.Clear(this.BackgroundColor);
-			
-			this.graphicsDisplay.BeginRender();
-									
-			this.DrawCanvasOnScreen();
-			this.DrawToolboxOnScreen();
-			
-			this.graphicsDisplay.EndRender();
-			
-			this.initialDraw = false;
-			
-			// We've dealt with all the touch points so now we can start with a new list
-			this.canvasTouchPoints = new List<ITouchPoint>();
-			
+			this.pictureStateManager.Draw(this.CanvasTouchPoints);
+
 			base.Draw(gameTime);
 		}
 		
@@ -294,26 +174,55 @@ namespace Paint
 			
 			base.Update(gameTime);
 		}
+				
+		/// <summary>
+		/// Creates the render targets (including all the undo buffers).
+		/// </summary>
+		protected override void CreateRenderTargets()
+		{
+			var device = this.GraphicsDeviceManager.GraphicsDevice;
+			var width = this.ImageStateData.Width;
+			var height = this.ImageStateData.Height;
+			
+			List<RenderTarget2D> renderTargetList = new List<RenderTarget2D>();
+			
+			for (var count = 0; count < this.ImageStateData.MaxUndoRedoCount; count++)
+			{
+				renderTargetList.Add(new RenderTarget2D(device, width, height));
+			}
+						
+			this.undoRedoRenderTargets = renderTargetList.ToArray();
+
+			base.CreateRenderTargets();
+		}
 
 		/// <summary>
-		/// Saves all the data and then exits.
+		/// Creates the toolbox.
 		/// </summary>
-		private void SaveAndExit()
+		/// <returns>The toolbox.</returns>
+		/// <param name='scale'>
+		/// determine if we are a retina or not - if so then we'll need to double (scale = 2) our layout locations/sizes
+		/// </param>
+		protected override IToolBox CreateToolbox(int scale)
 		{
-			this.pictureStateManager.Save();
-			this.pictureIOManager.SaveData(this.pictureStateManager.ImageStateData, this.inMemoryCanvasRenderTarget, this.undoRedoRenderTargets);
-			
-			foreach (var renderTarget in this.undoRedoRenderTargets)
+			this.paintToolBox = new PaintToolBox(this.ToolboxLayoutDefinition, this.GraphicsDisplay, scale);
+
+			this.paintToolBox.ExitSelected += (sender, e) => 
 			{
-				if (renderTarget != null && renderTarget.IsDisposed == false)
-				{
-					renderTarget.Dispose();
-				}
-			}
+				this.InitiateShutdown();
+			};
 			
-			this.undoRedoRenderTargets = null;
+			this.paintToolBox.RedoSelected += (sender, e) => 
+			{
+				this.pictureStateManager.Redo();
+			};
 			
-			this.Exit();
+			this.paintToolBox.UndoSelected += (sender, e) => 
+			{
+				this.pictureStateManager.Undo();
+			};
+
+			return this.paintToolBox;
 		}
 
 		/// <summary>
@@ -323,102 +232,14 @@ namespace Paint
 		/// <param name='source'>The source image we wish to render</param>
 		private void RenderImage(RenderTarget2D target, RenderTarget2D source)
 		{
-			GraphicsDevice device = this.graphicsDeviceManager.GraphicsDevice;	
+			GraphicsDevice device = this.GraphicsDeviceManager.GraphicsDevice;	
 			device.SetRenderTarget(target);
-			this.spriteBatch.Begin();
+			this.SpriteBatch.Begin();
 			device.Clear(this.BackgroundColor);
-			this.spriteBatch.Draw(source, Vector2.Zero, this.BackgroundColor);
-			this.spriteBatch.End();	                      
+			this.SpriteBatch.Draw(source, Vector2.Zero, this.BackgroundColor);
+			this.SpriteBatch.End();	                      
 		}		
-		
-		/// <summary>
-		/// Draws the canvas on screen.
-		/// </summary>
-		private void DrawCanvasOnScreen()
-		{
-			Vector2 canvasPosition = Vector2.Zero;
-			
-			if (this.toolBox.DockPosition == DockPosition.Top)
-			{
-				canvasPosition = new Vector2(0, this.toolBox.ToolboxMinimizedHeight);
-			}
-			
-			this.spriteBatch.Draw(this.inMemoryCanvasRenderTarget, canvasPosition, this.BackgroundColor);
-		}
-		
-		/// <summary>
-		/// Draws the toolbox on screen.
-		/// </summary>
-		private void DrawToolboxOnScreen()
-		{
-			Rectangle toolboxBounds = 
-				new Rectangle(
-					0, 
-					0,
-					this.inMemoryToolboxRenderTarget.Width, 
-					this.toolBox.ToolboxHeight);
 
-			Vector2 toolboxPosition = Vector2.Zero;
-			if (this.toolBox.DockPosition == DockPosition.Bottom)
-			{
-				toolboxPosition = new Vector2(0, inMemoryToolboxRenderTarget.Height - this.toolBox.ToolboxHeight);
-			}
-			
-			// Blank the square where the toolbox will go - this ensures that none of the canvas shows through where
-			// there is transparency.
-			this.graphicsDisplay.DrawGraphic(
-				ImageType.EmptySquare, 
-				new Rectangle((int)toolboxPosition.X, (int)toolboxPosition.Y, toolboxBounds.Width, toolboxBounds.Height), 
-				this.BackgroundColor);
-			
-			this.spriteBatch.Draw(this.inMemoryToolboxRenderTarget, toolboxPosition, toolboxBounds, this.BackgroundColor);
-		}
-				
-		/// <summary>
-		/// Creates the canvas.
-		/// </summary>
-		private void CreateCanvas()
-		{
-			this.canvas = new Canvas(this.graphicsDisplay);
-
-			var device = this.graphicsDeviceManager.GraphicsDevice;
-			var width = this.imageStateData.Width;
-			var height = this.imageStateData.Height;
-			
-			List<RenderTarget2D> renderTargetList = new List<RenderTarget2D>();
-			
-			for (short count = 0; count < this.imageStateData.MaxUndoRedoCount; count++)
-			{
-				renderTargetList.Add(new RenderTarget2D(device, width, height));
-			}
-						
-			this.undoRedoRenderTargets = renderTargetList.ToArray();
-			this.inMemoryCanvasRenderTarget = new RenderTarget2D(device, width, height);					
-
-			// Strange behaviour where the image used by the previous 'Game' is left in the RenderTarget2D
-			// therefore we blank the rendertarget first to ensure nothing left behind
-			this.BlankRenderTarget(this.inMemoryCanvasRenderTarget);
-		}
-		
-		/// <summary>
-		/// Blanks the render target.
-		/// </summary>
-		/// <param name='renderTarget'>
-		/// Render target.
-		/// </param>
-		private void BlankRenderTarget(RenderTarget2D renderTarget)
-		{
-			var device = this.graphicsDeviceManager.GraphicsDevice;
-			
-			device.SetRenderTarget(renderTarget);
-			
-			this.graphicsDisplay.BeginRender();
-			
-			this.graphicsDisplay.DrawGraphic(ImageType.EmptySquare, renderTarget.Bounds, this.BackgroundColor);
-			
-			this.graphicsDisplay.EndRender();
-		}		
-		
 		/// <summary>
 		/// Creates the picture state manager.
 		/// </summary>
@@ -427,52 +248,21 @@ namespace Paint
 			if (File.Exists(this.filenameResolver.MasterImageInfoFilename) == true)
 			{
 				// existing image so we load the rendertargetlist from disk
-				this.pictureIOManager.LoadData(this.graphicsDeviceManager.GraphicsDevice, this.spriteBatch, this.undoRedoRenderTargets, this.BackgroundColor);
+				this.pictureIOManager.LoadData(this.GraphicsDeviceManager.GraphicsDevice, this.SpriteBatch, this.undoRedoRenderTargets, this.BackgroundColor);
 			}
 			
-			this.pictureStateManager = new PictureStateManager(this.filenameResolver, this.pictureIOManager, this, this.imageStateData);			
+			this.pictureStateManager = new PictureStateManager(this.filenameResolver, this.pictureIOManager, this, this.ImageStateData);			
 			this.pictureStateManager.RedoEnabledChanged += (sender, e) => 
 			{
-				this.toolBox.RedoEnabled = this.pictureStateManager.RedoEnabled;
+				this.paintToolBox.RedoEnabled = this.pictureStateManager.RedoEnabled;
 			};
 			
 			this.pictureStateManager.UndoEnabledChanged += (sender, e) => 
 			{
-				this.toolBox.UndoEnabled = this.pictureStateManager.UndoEnabled;
+				this.paintToolBox.UndoEnabled = this.pictureStateManager.UndoEnabled;
 			};
-
+			
 			this.pictureStateManager.InitialisePictureState();			
-		}
-		
-		/// <summary>
-		/// Creates the toolbox.
-		/// </summary>
-		private void CreateToolbox()
-		{
-			// determine if we are a retina or not - if so then we'll need to double (scale = 2) our layout locations/sizes
-			int scale = Math.Max(this.imageStateData.Height, this.imageStateData.Width) / 1024;
-
-			this.toolBox = new PaintToolBox(this.toolboxLayoutDefinition, this.graphicsDisplay, scale);
-			
-			this.inMemoryToolboxRenderTarget = new RenderTarget2D(
-				this.graphicsDeviceManager.GraphicsDevice, 
-				this.imageStateData.Width,
-				this.imageStateData.Height);
-			
-			this.toolBox.ExitSelected += (sender, e) => 
-			{
-				this.InitiateShutdown();
-			};
-			
-			this.toolBox.RedoSelected += (sender, e) => 
-			{
-				this.pictureStateManager.Redo();
-			};
-			
-			this.toolBox.UndoSelected += (sender, e) => 
-			{
-				this.pictureStateManager.Undo();
-			};
 		}
 
 		/// <summary>
@@ -490,129 +280,26 @@ namespace Paint
 		}
 
 		/// <summary>
-		/// Handles any user input.
-		/// Collect all gestures made since the last 'update' - stores these ready to be handled by the Canvas for drawing
+		/// Saves all the data and then exits.
 		/// </summary>
-		private void HandleInput()
-		{	
-			while (TouchPanel.IsGestureAvailable)
-			{
-				// read the next gesture from the queue
-				GestureSample gesture = TouchPanel.ReadGesture();
-				
-				TouchType touchType = this.ConvertGestureType(gesture.GestureType);
-				
-				TouchPoint touchPoint = new TouchPoint(gesture.Position, touchType);
-				
-				// First check if this can be handled by the toolbox - if not then we will keep for the canvas
-				if (this.CheckToolboxCollision(touchPoint) == false)
-				{
-					this.canvasTouchPoints.Add(this.ConvertScreenTouchToCanvasTouch(touchPoint));
-				}
-				
-				this.previousTouchType = touchType;
-			}
-		}
-		
-		/// <summary>
-		/// Converts the screen touchpoint to a canvas touchpoint - i.e. alters the position of the touch to take into account the position and size
-		/// of the toolbox
-		/// </summary>
-		/// <returns>
-		/// A TouchPoint in Canvas co-ordinates
-		/// </returns>
-		/// <param name='screenTouchPoint' The touch point in screen co-ordinates/>
-		private TouchPoint ConvertScreenTouchToCanvasTouch(TouchPoint screenTouchPoint)
+		private void SaveAndExit()
 		{
-			if (this.toolBox.DockPosition == DockPosition.Top)
-			{
-				Vector2 offsetPosition = new Vector2(screenTouchPoint.Position.X, screenTouchPoint.Position.Y - this.toolBox.ToolboxMinimizedHeight);
-				return new TouchPoint(offsetPosition, screenTouchPoint.TouchType);
-			}
+			this.pictureStateManager.Save();
+			this.pictureIOManager.SaveData(this.pictureStateManager.ImageStateData, this.InMemoryCanvasRenderTarget, this.undoRedoRenderTargets);
 			
-			return screenTouchPoint;
-		}
-		
-		/// <summary>
-		/// Checks whether the user has touched inside the toolbox
-		/// </summary>
-		/// <returns>
-		/// true if the touch is within the toolbox, false if not
-		/// </returns>
-		/// <param name='touchPoint' Where the user touched the screen />
-		private bool CheckToolboxCollision(TouchPoint touchPoint)
-		{
-			bool touchInToolbox = false;			
-			TouchPoint offsetCollisionPoint = touchPoint;
-			
-			if (this.toolBox.DockPosition == DockPosition.Bottom)
+			foreach (var renderTarget in this.undoRedoRenderTargets)
 			{
-				int toolboxPositionY = (this.imageStateData.Height - this.toolBox.ToolboxHeight);
-				Vector2 offsetPosition = new Vector2(touchPoint.Position.X, touchPoint.Position.Y - toolboxPositionY);
-				offsetCollisionPoint = new TouchPoint(offsetPosition, touchPoint.TouchType);
-				
-				if (touchPoint.Position.Y >= toolboxPositionY)
+				if (renderTarget != null && renderTarget.IsDisposed == false)
 				{
-					touchInToolbox = true;
+					renderTarget.Dispose();
 				}
 			}
-			else
-			{
-				if (touchPoint.Position.Y <= this.toolBox.ToolboxHeight)
-				{
-					touchInToolbox = true;
-				}				
-			}
-						
-			if (touchInToolbox == false)
-			{
-				return false;
-			}
 			
-			this.toolBox.CheckTouchCollision(offsetCollisionPoint);
-			return true;
-		}
-		
-		/// <summary>
-		/// Converts a MonoGame.GestureType into our TouchType representation
-		/// </summary>
-		/// <returns>
-		/// The converted TouchType
-		/// </returns>
-		/// <param name='gestureType'>
-		/// The monogame gesture type.
-		/// </param>
-		private TouchType ConvertGestureType(GestureType gestureType)
-		{
-			/* If the user taps the screen then we get a single Tap
-			 * If the user touches the screen and drags then we get several FreeDrag events and a final DragComplete event.
-			 * We keep track of the previous GestureType so that we can characterise the first FreeDrag as a StartDrag.  This 
-			 * allows the Canvas control to track where the drag started - I've decided that while a drag continues then all input
-			 * should be handled by the control where the drag started, even if the user accidentally moves outside that control.
-			 * Makes for a better user experience.
-			 */
-			switch (gestureType)
-			{
-				case GestureType.Tap:
-					return TouchType.Tap;
-				
-				case GestureType.FreeDrag:
-					if (this.previousTouchType != TouchType.FreeDrag && this.previousTouchType != TouchType.StartDrag)
-					{
-						return TouchType.StartDrag;
-					}
-					else
-					{
-						return TouchType.FreeDrag;
-					}
-				
-				case GestureType.DragComplete:
-					return TouchType.DragComplete;
-			}
+			this.undoRedoRenderTargets = null;
 			
-			return TouchType.DragComplete;
+			this.Exit();
 		}
-		
+
 		/// <summary>
 		/// What mode is the app currently in
 		/// </summary>
