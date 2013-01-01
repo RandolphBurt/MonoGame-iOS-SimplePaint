@@ -93,6 +93,22 @@ namespace Paint
 		}
 
 		/// <summary>
+		/// Gets the percentage of what we've processed so far.
+		/// </summary>
+		public float PercentageRead
+		{
+			get
+			{
+				if (this.playbackCommandTotal == 0)
+				{
+					return 100f;
+				}
+
+				return ((float)this.commandsReadSoFar / (float)this.playbackCommandTotal) * 100;
+			}
+		}
+
+		/// <summary>
 		/// Reset the input stream to the beginning ready for starting the playback all over again
 		/// </summary>
 		public void Restart()

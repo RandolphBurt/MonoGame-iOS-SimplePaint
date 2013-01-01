@@ -19,6 +19,11 @@ namespace Paint
 		private Button playButton = null;
 
 		/// <summary>
+		/// The playback progress bar.
+		/// </summary>
+		private PlaybackProgressBar playbackProgressBar;
+
+		/// <summary>
 		/// Initializes a new instance of the <see cref="Paint.PlaybackToolbox"/> class.
 		/// </summary>
 		/// <param name='toolboxLayoutDefinition' The layout of the toolbox />
@@ -27,6 +32,18 @@ namespace Paint
 		public PlaybackToolbox(ToolboxLayoutDefinition toolboxLayoutDefinition, IGraphicsDisplay graphicsDisplay, int scale)
 			: base (toolboxLayoutDefinition, graphicsDisplay, scale)
 		{
+			this.CreateTools(toolboxLayoutDefinition);
+		}
+
+		/// <summary>
+		/// Sets the playback progress percentage.
+		/// </summary>
+		public float PlaybackProgressPercentage
+		{ 
+			set
+			{
+				this.playbackProgressBar.Percentage = value;
+			}
 		}
 
 		/// <summary>
@@ -167,6 +184,26 @@ namespace Paint
 			};		
 			
 			this.AddTool(this.playButton);
+		}
+		
+		/// <summary>
+		/// Creates all our tools.
+		/// </summary>
+		/// <param name='toolboxLayoutDefinition' The layout of the toolbox />
+		private void CreateTools(ToolboxLayoutDefinition toolboxLayoutDefinition)
+		{
+			this.playbackProgressBar = this.CreateProgressBar(toolboxLayoutDefinition.PlaybackTools.ProgressBar);
+			this.AddTool(this.playbackProgressBar);
+		}
+
+		/// <summary>
+		/// Creates the progress bar.
+		/// </summary>
+		/// <returns>The progress bar.</returns>
+		/// <param name='progressBar'>Progress bar layout definition</param>
+		private PlaybackProgressBar CreateProgressBar(ToolboxLayoutDefinitionPlaybackToolsProgressBar progressBar)
+		{
+			return new PlaybackProgressBar(this.GraphicsDisplay, new PlaybackProgressBarDefinition(progressBar, this.Scale));
 		}
 	}
 }

@@ -766,9 +766,7 @@ namespace Paint.ToolboxLayout {
         
         private RegionType regionField;
         
-        private int progresIndicatorWidthField;
-        
-        private int progressIndicatorHeightField;
+		private ToolboxLayoutDefinitionPlaybackToolsProgressBarIndicatorBar indicatorBarField;
         
         /// <remarks/>
         public RegionType Region {
@@ -781,26 +779,61 @@ namespace Paint.ToolboxLayout {
         }
         
         /// <remarks/>
-        public int ProgresIndicatorWidth {
+		public ToolboxLayoutDefinitionPlaybackToolsProgressBarIndicatorBar IndicatorBar {
             get {
-                return this.progresIndicatorWidthField;
+				return this.indicatorBarField;
             }
             set {
-                this.progresIndicatorWidthField = value;
+				this.indicatorBarField = value;
             }
         }
-        
-        /// <remarks/>
-        public int ProgressIndicatorHeight {
-            get {
-                return this.progressIndicatorHeightField;
-            }
-            set {
-                this.progressIndicatorHeightField = value;
-            }
-        }
-    }
-    
+	}
+
+	/// <remarks/>
+	[System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.0.30319.17929")]
+	[System.SerializableAttribute()]
+	[System.Diagnostics.DebuggerStepThroughAttribute()]
+	[System.ComponentModel.DesignerCategoryAttribute("code")]
+	[System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true)]
+	public partial class ToolboxLayoutDefinitionPlaybackToolsProgressBarIndicatorBar {
+
+		private int widthField;
+		
+		private int heightField;
+
+		private ColorType colorField;
+		
+		/// <remarks/>
+		public int Width {
+			get {
+				return this.widthField;
+			}
+			set {
+				this.widthField = value;
+			}
+		}
+		
+		/// <remarks/>
+		public int Height {
+			get {
+				return this.heightField;
+			}
+			set {
+				this.heightField = value;
+			}
+		}
+
+		/// <remarks/>
+		public ColorType Color {
+			get {
+				return this.colorField;
+			}
+			set {
+				this.colorField = value;
+			}
+		}
+	}
+
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.0.30319.17929")]
     [System.SerializableAttribute()]

@@ -157,6 +157,9 @@
     <Compile Include="BusinessLogic\ITouchPointSizeColor.cs" />
     <Compile Include="BusinessLogic\TouchPointSizeColour.cs" />
     <Compile Include="BusinessLogic\TouchPoint.cs" />
+    <Compile Include="ToolInterfaces\IPlaybackProgressBar.cs" />
+    <Compile Include="Tools\PlaybackProgressBar.cs" />
+    <Compile Include="ToolDefinitions\PlaybackProgressBarDefinition.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

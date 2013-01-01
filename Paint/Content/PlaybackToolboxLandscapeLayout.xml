@@ -124,4 +124,40 @@
 			</Button>
 		</Buttons>
 	</StandardTools>
+	<PlaybackTools>
+		<ProgressBar>
+			<Region>
+				<Location>
+					<X>170</X>
+					<Y>4</Y>
+				</Location>
+				<Size>
+					<Width>200</Width>
+					<Height>46</Height>
+				</Size>
+				<BackgroundColor>
+					<Red>255</Red>
+					<Green>255</Green>
+					<Blue>255</Blue>
+				</BackgroundColor>
+				<Border>
+					<Width>0</Width>
+					<Color>
+						<Red>0</Red>
+						<Green>0</Green>
+						<Blue>0</Blue>
+					</Color>
+				</Border>
+			</Region>
+			<IndicatorBar>
+				<Width>184</Width>
+				<Height>6</Height>
+				<Color>
+					<Red>0</Red>
+					<Green>0</Green>
+					<Blue>255</Blue>
+				</Color>
+			</IndicatorBar>
+		</ProgressBar>
+	</PlaybackTools>	
 </ToolboxLayoutDefinition>		

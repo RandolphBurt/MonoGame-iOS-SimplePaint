@@ -139,6 +139,8 @@ namespace Paint
 				{
 					this.CanvasTouchPoints.Add(touchPoint);
 				}
+
+				this.playbackToolbox.PlaybackProgressPercentage =  this.canvasPlayback.PercentageRead;
 			}
 			                           
 			base.Update(gameTime);

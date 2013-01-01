@@ -27,6 +27,11 @@ namespace Paint
 		event EventHandler PauseSelected;
 
 		/// <summary>
+		/// Sets the playback progress percentage.
+		/// </summary>
+		float PlaybackProgressPercentage{ set; }
+
+		/// <summary>
 		/// Disables the playback button
 		/// </summary>
 		void SetPlayButtonDisabled();

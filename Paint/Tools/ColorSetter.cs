@@ -37,11 +37,8 @@ namespace Paint
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Paint.ColorSetter"/> class.
 		/// </summary>
-		/// <param name='backgroundColor' The background color of the colorSetter />
 		/// <param name='graphicsDisplay' Contains all the graphics for rendering the tools />
-		/// <param name='bounds' The bounds of this control/tool />
-		/// <param name='startColor' The color we should start with />
-		/// <param name='borderWidth' The border width />
+		/// <param name='colorSetterDefinition' The layout of the color setter />
 		public ColorSetter (IGraphicsDisplay graphicsDisplay, ColorSetterDefinition colorSetterDefinition) 
 		{
 			this.graphicsDisplay = graphicsDisplay;

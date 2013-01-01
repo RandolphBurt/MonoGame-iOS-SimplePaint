@@ -27,6 +27,11 @@ namespace Paint
 		/// Gets a value indicating whether there are still any touchpoints left to playback
 		/// </summary>
 		bool DataAvailable { get; }
+		
+		/// <summary>
+		/// Gets the percentage of what we've processed so far.
+		/// </summary>
+		float PercentageRead { get; }
 
 		/// <summary>
 		/// Gets the next touch point.

@@ -102,8 +102,15 @@
 								<xs:complexType>
 									<xs:sequence>
 										<xs:element name="Region" type="RegionType"/>
-										<xs:element name="ProgresIndicatorWidth" type="xs:int"/>
-										<xs:element name="ProgressIndicatorHeight" type="xs:int"/>
+										<xs:element name="IndicatorBar">
+											<xs:complexType>
+												<xs:sequence>
+													<xs:element name="Width" type="xs:int"/>
+													<xs:element name="Height" type="xs:int"/>
+													<xs:element name="Color" type="ColorType"/>
+												</xs:sequence>
+											</xs:complexType>
+										</xs:element>
 									</xs:sequence>
 								</xs:complexType>
 							</xs:element>
