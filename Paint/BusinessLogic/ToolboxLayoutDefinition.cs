@@ -474,6 +474,9 @@ namespace Paint.ToolboxLayout {
         
         /// <remarks/>
         PlayPausePlayback,
+
+		/// <remarks/>
+		Restart,
     }
     
     /// <remarks/>

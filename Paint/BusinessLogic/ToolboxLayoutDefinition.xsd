@@ -26,6 +26,7 @@
 																<xs:enumeration value="ToggleMaxMin"/>
 																<xs:enumeration value="ToggleDock"/>
 																<xs:enumeration value="PlayPausePlayback"/>
+																<xs:enumeration value="Restart"/>
 															</xs:restriction>
 														</xs:simpleType>
 													</xs:element>
