@@ -49,7 +49,7 @@ namespace Paint
 		/// The list of all gestures / locations touched by the user since the last update
 		/// </param>		
 		/// </summary>
-		void Draw(List<ITouchPoint> touchPoints);
+		void Draw(List<ITouchPointSizeColor> touchPoints);
 		
 		/// <summary>
 		/// Undo the most recent change

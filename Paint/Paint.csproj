@@ -94,12 +94,10 @@
     <Compile Include="Tools\BrushSizeSelector.cs" />
     <Compile Include="Tools\ColorPicker.cs" />
     <Compile Include="Tools\ColorSetter.cs" />
-    <Compile Include="BusinessLogic\TouchPoint.cs" />
     <Compile Include="BusinessLogic\TouchType.cs" />
     <Compile Include="BusinessLogic\DockPosition.cs" />
     <Compile Include="ToolInterfaces\ICanvas.cs" />
     <Compile Include="ToolInterfaces\IGauge.cs" />
-    <Compile Include="ToolInterfaces\ITouchPoint.cs" />
     <Compile Include="ToolInterfaces\IBrushSizeSelector.cs" />
     <Compile Include="ToolInterfaces\IColorPicker.cs" />
     <Compile Include="ToolInterfaces\IColorSelector.cs" />
@@ -155,6 +153,10 @@
     <Compile Include="BaseGame.cs" />
     <Compile Include="Tools\PlaybackToolbox.cs" />
     <Compile Include="ToolInterfaces\IPlaybackToolBox.cs" />
+    <Compile Include="BusinessLogic\ITouchPoint.cs" />
+    <Compile Include="BusinessLogic\ITouchPointSizeColor.cs" />
+    <Compile Include="BusinessLogic\TouchPointSizeColour.cs" />
+    <Compile Include="BusinessLogic\TouchPoint.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

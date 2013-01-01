@@ -182,7 +182,7 @@ namespace Paint
 		/// The list of all gestures / locations touched by the user since the last update
 		/// </param>		
 		/// </summary>
-		public void Draw(List<ITouchPoint> touchPoints)
+		public void Draw(List<ITouchPointSizeColor> touchPoints)
 		{
 			DateTime now = DateTime.UtcNow;
 

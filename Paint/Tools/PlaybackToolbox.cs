@@ -126,7 +126,6 @@ namespace Paint
 		/// </param>
 		private void AddRestartButton(ToolboxLayoutDefinitionStandardToolsButtonsButton buttonLayout)
 		{
-			// TODO - need new icon for disabled button
 			var restartButton = new Button(
 				this.GraphicsDisplay, 
 				new ButtonDefinition(buttonLayout, this.Scale, new ImageType[] { ImageType.RestartButton }, null));

@@ -221,7 +221,7 @@ namespace Paint
 				
 				TouchType touchType = this.ConvertGestureType(gesture.GestureType);
 				
-				TouchPoint touchPoint = new TouchPoint(
+				TouchPointSizeColour touchPoint = new TouchPointSizeColour(
 					gesture.Position, 
 					touchType, 
 					this.paintToolBox.Color, 

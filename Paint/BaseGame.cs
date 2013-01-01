@@ -69,7 +69,7 @@ namespace Paint
 		/// <summary>
 		/// Keeps track of all touch/gestures made on the canvas since the last Draw command- is then reset after handled by the Draw.
 		/// </summary>
-		protected List<ITouchPoint> CanvasTouchPoints = new List<ITouchPoint>();
+		protected List<ITouchPointSizeColor> CanvasTouchPoints = new List<ITouchPointSizeColor>();
 
 		/// <summary>
 		/// Simply tracks whether this is the very first time we are drawing the canvas - if so then we need to draw everything on each control/tool.
@@ -203,7 +203,7 @@ namespace Paint
 			this.InitialDraw = false;
 			
 			// We've dealt with all the touch points so now we can start with a new list
-			this.CanvasTouchPoints = new List<ITouchPoint>();
+			this.CanvasTouchPoints = new List<ITouchPointSizeColor>();
 			
 			base.Draw(gameTime);
 		}
@@ -235,21 +235,17 @@ namespace Paint
 		/// true if the touch is within the toolbox, false if not
 		/// </returns>
 		/// <param name='touchPoint' Where the user touched the screen />
-		protected bool CheckToolboxCollision(TouchPoint touchPoint)
+		protected bool CheckToolboxCollision(ITouchPoint touchPoint)
 		{
 			bool touchInToolbox = false;			
-			TouchPoint offsetCollisionPoint = touchPoint;
+			ITouchPoint offsetCollisionPoint = touchPoint;
 			
 			if (this.ToolBox.DockPosition == DockPosition.Bottom)
 			{
 				int toolboxPositionY = (this.ImageStateData.Height - this.ToolBox.ToolboxHeight);
 				Vector2 offsetPosition = new Vector2(touchPoint.Position.X, touchPoint.Position.Y - toolboxPositionY);
 				
-				offsetCollisionPoint = new TouchPoint(
-					offsetPosition, 
-					touchPoint.TouchType,
-					touchPoint.Color, 
-					touchPoint.Size);
+				offsetCollisionPoint = new TouchPoint(offsetPosition, touchPoint.TouchType);
 				
 				if (touchPoint.Position.Y >= toolboxPositionY)
 				{
@@ -331,12 +327,12 @@ namespace Paint
 		/// A TouchPoint in Canvas co-ordinates
 		/// </returns>
 		/// <param name='screenTouchPoint' The touch point in screen co-ordinates/>
-		protected TouchPoint ConvertScreenTouchToCanvasTouch(TouchPoint screenTouchPoint)
+		protected TouchPointSizeColour ConvertScreenTouchToCanvasTouch(TouchPointSizeColour screenTouchPoint)
 		{
 			if (this.ToolBox.DockPosition == DockPosition.Top)
 			{
 				Vector2 offsetPosition = new Vector2(screenTouchPoint.Position.X, screenTouchPoint.Position.Y - this.ToolBox.ToolboxMinimizedHeight);
-				return new TouchPoint(
+				return new TouchPointSizeColour(
 					offsetPosition, 
 					screenTouchPoint.TouchType,
 					screenTouchPoint.Color,

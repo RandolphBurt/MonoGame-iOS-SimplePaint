@@ -35,7 +35,7 @@ namespace Paint
 		/// The list of all gestures / locations touched by the user since the last update
 		/// </param>		
 		/// </summary>
-		public void Draw(List<ITouchPoint> touchPoints)
+		public void Draw(List<ITouchPointSizeColor> touchPoints)
 		{
 			/* 
 			 * We use NonPremultiplied when drawing our picture - this allows the user to reduce the alpha value (transparency)
@@ -61,7 +61,7 @@ namespace Paint
 		/// The list of all gestures / locations that we need to paint
 		/// </param>		
 		/// </summary>
-		private void DrawPicture(List<ITouchPoint> touchPoints)
+		private void DrawPicture(List<ITouchPointSizeColor> touchPoints)
 		{
 			foreach (var touch in touchPoints) 
 			{

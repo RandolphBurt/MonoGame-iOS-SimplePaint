@@ -34,7 +34,7 @@ namespace Paint
 		/// <returns>
 		/// The next touch point.
 		/// </returns>
-		ITouchPoint GetNextTouchPoint();
+		ITouchPointSizeColor GetNextTouchPoint();
 
 		/// <summary>
 		/// Reset the input stream to the beginning ready for starting the playback all over again

@@ -109,7 +109,7 @@ namespace Paint
 		/// The next touch point.
 		/// A return value of null means that we are setting the colour or brush size - so no drawing happening 
 		/// </returns>
-		public ITouchPoint GetNextTouchPoint()
+		public ITouchPointSizeColor GetNextTouchPoint()
 		{
 			while (this.commandsReadSoFar < this.playbackCommandTotal)
 			{
@@ -151,14 +151,14 @@ namespace Paint
 		/// <param name='canvasRecorderCommand'>
 		/// Canvas recorder command.
 		/// </param>
-		private ITouchPoint CreateTouchPoint(byte canvasRecorderCommand)
+		private ITouchPointSizeColor CreateTouchPoint(byte canvasRecorderCommand)
 		{
 			var touchType = CanvasRecorderCommand.ToTouchType(canvasRecorderCommand);
 			
 			int positionX = this.commandByteArray[1] | this.commandByteArray[2] << 8;
 			int positionY = this.commandByteArray[3] | this.commandByteArray[4] << 8;
 			
-			return new TouchPoint(
+			return new TouchPointSizeColour(
 				new Vector2(positionX, positionY), 
 				touchType,
 				this.Color,

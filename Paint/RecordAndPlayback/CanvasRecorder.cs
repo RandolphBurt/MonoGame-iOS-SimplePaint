@@ -41,7 +41,7 @@ namespace Paint
 		/// The list of all gestures / locations touched by the user since the last update
 		/// </param>		
 		/// </summary>
-		public void Draw(List<ITouchPoint> touchPoints)
+		public void Draw(List<ITouchPointSizeColor> touchPoints)
 		{
 			if (touchPoints.Count == 0)
 			{
@@ -173,7 +173,7 @@ namespace Paint
 		/// <summary>
 		/// Records the touch point as a command
 		/// </summary>
-		void RecordTouchPoint(ITouchPoint touch)
+		void RecordTouchPoint(ITouchPointSizeColor touch)
 		{
 			Vector2 position = touch.Position;
 			
