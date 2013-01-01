@@ -45,19 +45,19 @@ namespace Paint
 		public event EventHandler PauseSelected;
 
 		/// <summary>
-		/// Gets or sets a value indicating whether the play button should be enabled or not.
+		/// Disables the playback button
 		/// </summary>
-		public bool PlayPauseEnabled
+		public void SetPlayButtonDisabled()
 		{ 
-			get
-			{
-				return this.playButton.Enabled;
-			}
-
-			set
-			{
-				this.playButton.Enabled = value;
-			}
+			this.playButton.Enabled = false;
+		}
+				
+		/// <summary>
+		/// Sets the playback button to signify we are currently paused
+		/// </summary>
+		public void SetPlayButtonPaused()
+		{ 
+			this.playButton.State = 0;
 		}
 
 		/// <summary>

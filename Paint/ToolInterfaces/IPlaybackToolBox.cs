@@ -27,9 +27,14 @@ namespace Paint
 		event EventHandler PauseSelected;
 
 		/// <summary>
-		/// Gets or sets a value indicating whether the play button should be enabled or not.
+		/// Disables the playback button
 		/// </summary>
-		bool PlayPauseEnabled { get; set; }
+		void SetPlayButtonDisabled();
+
+		/// <summary>
+		/// Sets the playback button to signify we are currently paused
+		/// </summary>
+		void SetPlayButtonPaused();
 	}
 }
 

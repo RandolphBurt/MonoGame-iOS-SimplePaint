@@ -150,6 +150,10 @@ namespace Paint
 			{
 				this.paintApp.ForceSaveAndExit();
 			}
+			else if (this.playBackApp != null)
+			{
+				this.playBackApp.ForcePause();
+			}
 		}
 
 		/// <summary>

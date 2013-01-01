@@ -50,6 +50,18 @@ namespace Paint
 		}
 
 		/// <summary>
+		/// Forces the playback to pause.
+		/// </summary>
+		public void ForcePause()
+		{
+			if (this.playbackMode == PlaybackMode.Playing)
+			{
+				this.playbackMode = PlaybackMode.Paused;
+				this.playbackToolbox.SetPlayButtonPaused();
+			}
+		}
+
+		/// <summary>
 		/// Creates the toolbox.
 		/// </summary>
 		/// <returns>The toolbox.</returns>
@@ -117,7 +129,7 @@ namespace Paint
 			if (this.canvasPlayback.DataAvailable == false)
 			{
 				this.playbackMode = PlaybackMode.Finished;
-				this.playbackToolbox.PlayPauseEnabled = false;
+				this.playbackToolbox.SetPlayButtonDisabled();
 			}
 			else if (this.playbackMode == PlaybackMode.Playing)
 			{			
