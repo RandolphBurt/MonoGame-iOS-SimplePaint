@@ -99,6 +99,16 @@ namespace Paint
 			{
 				return this.currentButtonState;
 			}
+
+			set
+			{
+				if (this.currentButtonState != value)
+				{
+					// Allows us to force a state/image change without firing the ButtonPressed event
+					this.currentButtonState = value;
+					this.refreshRequired = true;
+				}
+			}
 		}
 		
 		/// <summary>

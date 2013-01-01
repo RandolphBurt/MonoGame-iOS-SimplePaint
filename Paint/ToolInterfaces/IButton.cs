@@ -29,11 +29,12 @@ namespace Paint
 		}
 		
 		/// <summary>
-		/// Gets the current Button State
+		/// Gets or sets the current Button State
 		/// </summary>
 		int State
 		{
 			get;
+			set;
 		}
 	}
 }
