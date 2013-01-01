@@ -109,7 +109,12 @@ namespace Paint
 		/// <summary>
 		/// Draw a restart button.
 		/// </summary>
-		RestartButton
+		RestartButton,
+
+		/// <summary>
+		/// Draw a disabled play button
+		/// </summary>
+		PlayButtonDisabled
 	}
 }
 

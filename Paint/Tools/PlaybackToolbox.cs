@@ -150,10 +150,9 @@ namespace Paint
 		/// </param>
 		private void AddPlayPauseButton(ToolboxLayoutDefinitionStandardToolsButtonsButton buttonLayout)
 		{
-			// TODO - need new icon for disabled button
 			this.playButton = new Button(
 				this.GraphicsDisplay, 
-				new ButtonDefinition(buttonLayout, this.Scale, new ImageType[] { ImageType.PlayButton, ImageType.PauseButton }, ImageType.UndoButtonDisabled));
+				new ButtonDefinition(buttonLayout, this.Scale, new ImageType[] { ImageType.PlayButton, ImageType.PauseButton }, ImageType.PlayButtonDisabled));
 			
 			this.playButton.ButtonPressed += (sender, e) => 
 			{
