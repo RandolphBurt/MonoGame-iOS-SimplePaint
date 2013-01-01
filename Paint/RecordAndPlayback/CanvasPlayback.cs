@@ -91,6 +91,16 @@ namespace Paint
 				return this.commandsReadSoFar < this.playbackCommandTotal;
 			}
 		}
+
+		/// <summary>
+		/// Reset the input stream to the beginning ready for starting the playback all over again
+		/// </summary>
+		public void Restart()
+		{
+			// skip past the final brush size and color as we don't need to know them
+			fileStream.Seek(12, SeekOrigin.Begin);
+			this.commandsReadSoFar = 0;
+		}
 		
 		/// <summary>
 		/// Gets the next touch point.
@@ -111,11 +121,11 @@ namespace Paint
 				{
 					case CanvasRecorderCommand.SetColor:
 						this.SetColor();
-						return null;
-						
+						break;
+
 					case CanvasRecorderCommand.SetBrushSize:
 						this.SetBrushSize();
-						return null;
+						break;
 					
 					case CanvasRecorderCommand.Tap:
 					case CanvasRecorderCommand.StartDrag:

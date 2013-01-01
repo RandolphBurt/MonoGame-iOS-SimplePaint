@@ -10,6 +10,7 @@ namespace Paint
 	
 	using Microsoft.Xna.Framework;
 	using Microsoft.Xna.Framework.Graphics;
+	using Microsoft.Xna.Framework.Input.Touch;
 
 	using Paint.ToolboxLayout;
 
@@ -111,24 +112,6 @@ namespace Paint
 		}		
 
 		/// <summary>
-		/// Returns the current brush size
-		/// </summary>
-		/// <returns>The brush size.</returns>
-		protected override Rectangle CurrentBrushSize()
-		{
-			return this.paintToolBox.Brush;
-		}
-		
-		/// <summary>
-		/// Returns the Ccrrent color.
-		/// </summary>
-		/// <returns>The color.</returns>
-		protected override Color CurrentColor()
-		{
-			return this.paintToolBox.Color;
-		}
-
-		/// <summary>
 		/// We load any content we need at the beginning of the application life cycle.
 		/// Also anything that needs initialising is done here
 		/// </summary>
@@ -223,6 +206,33 @@ namespace Paint
 			};
 
 			return this.paintToolBox;
+		}
+
+		/// <summary>
+		/// Handles any user input.
+		/// Collect all gestures made since the last 'update' - stores these ready to be handled by the Canvas for drawing
+		/// </summary>
+		private void HandleInput()
+		{	
+			while (TouchPanel.IsGestureAvailable)
+			{
+				// read the next gesture from the queue
+				GestureSample gesture = TouchPanel.ReadGesture();
+				
+				TouchType touchType = this.ConvertGestureType(gesture.GestureType);
+				
+				TouchPoint touchPoint = new TouchPoint(
+					gesture.Position, 
+					touchType, 
+					this.paintToolBox.Color, 
+					this.paintToolBox.Brush);
+				
+				// First check if this can be handled by the toolbox - if not then we will keep for the canvas
+				if (this.CheckToolboxCollision(touchPoint) == false)
+				{
+					this.CanvasTouchPoints.Add(this.ConvertScreenTouchToCanvasTouch(touchPoint));
+				}				
+			}
 		}
 
 		/// <summary>

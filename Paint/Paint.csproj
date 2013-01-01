@@ -153,6 +153,8 @@
     <Compile Include="BusinessLogic\ToolboxLayoutManager.cs" />
     <Compile Include="BusinessLogic\IToolboxLayoutManager.cs" />
     <Compile Include="BaseGame.cs" />
+    <Compile Include="Tools\PlaybackToolbox.cs" />
+    <Compile Include="ToolInterfaces\IPlaybackToolBox.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

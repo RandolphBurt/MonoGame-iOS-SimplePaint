@@ -37,7 +37,7 @@ namespace Paint
 		/// <param name='toolboxLayoutDefinition' The layout of the toolbox />
 		/// <param name='graphicsDisplay' The graphics texture map - contains images for buttons and controls />
 		/// <param name='scale' iPad size scale - i.e.2 for retina and 1 for normal - allows us to multiply up the layout />
-		public PaintToolBox (ToolboxLayoutDefinition toolboxLayoutDefinition, IGraphicsDisplay graphicsDisplay, int scale)
+		public PaintToolBox(ToolboxLayoutDefinition toolboxLayoutDefinition, IGraphicsDisplay graphicsDisplay, int scale)
 			: base (toolboxLayoutDefinition, graphicsDisplay, scale)
 		{
 			this.CreateTools(toolboxLayoutDefinition);
@@ -46,7 +46,7 @@ namespace Paint
 		/// <summary>
 		/// Gets the current brush being used for drawing
 		/// </summary>
-		public Rectangle Brush 
+		public Rectangle Brush
 		{
 			get;
 			private set;
@@ -55,7 +55,7 @@ namespace Paint
 		/// <summary>
 		/// Gets the current color.
 		/// </summary>
-		public Color Color 
+		public Color Color
 		{
 			get
 			{
@@ -66,13 +66,14 @@ namespace Paint
 		/// <summary>
 		/// Gets or sets a value indicating whether the undo button should be enabled or not.
 		/// </summary>
-		public bool UndoEnabled { 
+		public bool UndoEnabled
+		{ 
 			get
 			{
 				return this.undoButton.Enabled;
 			}
 			
-			set 
+			set
 			{
 				this.undoButton.Enabled = value;
 			}
@@ -88,7 +89,7 @@ namespace Paint
 				return this.redoButton.Enabled;
 			}
 			
-			set 
+			set
 			{
 				this.redoButton.Enabled = value;
 			}
@@ -112,7 +113,7 @@ namespace Paint
 		/// </param>
 		protected virtual void OnUndoSelected(EventArgs e)
 		{
-			if (this.UndoSelected != null) 
+			if (this.UndoSelected != null)
 			{
 				this.UndoSelected(this, EventArgs.Empty);
 			}
@@ -126,7 +127,7 @@ namespace Paint
 		/// </param>
 		protected virtual void OnRedoSelected(EventArgs e)
 		{
-			if (this.RedoSelected != null) 
+			if (this.RedoSelected != null)
 			{
 				this.RedoSelected(this, EventArgs.Empty);
 			}
@@ -227,7 +228,7 @@ namespace Paint
 		{
 			this.redoButton = new Button(
 				this.GraphicsDisplay, 
-				new ButtonDefinition(buttonLayout, this.Scale, new ImageType[] { ImageType.RedoButton } , ImageType.RedoButtonDisabled));		
+				new ButtonDefinition(buttonLayout, this.Scale, new ImageType[] { ImageType.RedoButton }, ImageType.RedoButtonDisabled));		
 
 			this.redoButton.Enabled = false;
 			this.redoButton.ButtonPressed += (sender, e) => 
@@ -248,7 +249,7 @@ namespace Paint
 		{
 			this.undoButton = new Button(
 				this.GraphicsDisplay, 
-				new ButtonDefinition(buttonLayout, this.Scale, new ImageType[] { ImageType.UndoButton } , ImageType.UndoButtonDisabled));		
+				new ButtonDefinition(buttonLayout, this.Scale, new ImageType[] { ImageType.UndoButton }, ImageType.UndoButtonDisabled));		
 			
 			this.undoButton.Enabled = false;
 			this.undoButton.ButtonPressed += (sender, e) => 

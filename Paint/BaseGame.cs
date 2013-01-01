@@ -123,18 +123,6 @@ namespace Paint
 		protected abstract IToolBox CreateToolbox(int scale);
 
 		/// <summary>
-		/// Returns the current brush size
-		/// </summary>
-		/// <returns>The brush size.</returns>
-		protected abstract Rectangle CurrentBrushSize();
-
-		/// <summary>
-		/// Returns the Ccrrent color.
-		/// </summary>
-		/// <returns>The color.</returns>
-		protected abstract Color CurrentColor();
-
-		/// <summary>
 		/// We load any content we need at the beginning of the application life cycle.
 		/// Also anything that needs initialising is done here
 		/// </summary>
@@ -286,35 +274,6 @@ namespace Paint
 		}
 
 		/// <summary>
-		/// Handles any user input.
-		/// Collect all gestures made since the last 'update' - stores these ready to be handled by the Canvas for drawing
-		/// </summary>
-		protected void HandleInput()
-		{	
-			while (TouchPanel.IsGestureAvailable)
-			{
-				// read the next gesture from the queue
-				GestureSample gesture = TouchPanel.ReadGesture();
-				
-				TouchType touchType = this.ConvertGestureType(gesture.GestureType);
-				
-				TouchPoint touchPoint = new TouchPoint(
-					gesture.Position, 
-					touchType, 
-					this.CurrentColor(), 
-					this.CurrentBrushSize());
-				
-				// First check if this can be handled by the toolbox - if not then we will keep for the canvas
-				if (this.CheckToolboxCollision(touchPoint) == false)
-				{
-					this.CanvasTouchPoints.Add(this.ConvertScreenTouchToCanvasTouch(touchPoint));
-				}
-				
-				this.previousTouchType = touchType;
-			}
-		}
-
-		/// <summary>
 		/// Converts a MonoGame.GestureType into our TouchType representation
 		/// </summary>
 		/// <returns>
@@ -323,7 +282,7 @@ namespace Paint
 		/// <param name='gestureType'>
 		/// The monogame gesture type.
 		/// </param>
-		private TouchType ConvertGestureType(GestureType gestureType)
+		protected TouchType ConvertGestureType(GestureType gestureType)
 		{
 			/* If the user taps the screen then we get a single Tap
 			 * If the user touches the screen and drags then we get several FreeDrag events and a final DragComplete event.
@@ -332,26 +291,36 @@ namespace Paint
 			 * should be handled by the control where the drag started, even if the user accidentally moves outside that control.
 			 * Makes for a better user experience.
 			 */
+
+			TouchType returnValue;
+
 			switch (gestureType)
 			{
 				case GestureType.Tap:
-					return TouchType.Tap;
+					returnValue = TouchType.Tap;
+					break;
 					
 				case GestureType.FreeDrag:
 					if (this.previousTouchType != TouchType.FreeDrag && this.previousTouchType != TouchType.StartDrag)
 					{
-						return TouchType.StartDrag;
+						returnValue = TouchType.StartDrag;
 					}
 					else
 					{
-						return TouchType.FreeDrag;
+						returnValue = TouchType.FreeDrag;
 					}
+
+					break;
 					
 				case GestureType.DragComplete:
-					return TouchType.DragComplete;
+				default:
+					returnValue = TouchType.DragComplete;
+					break;
 			}
-			
-			return TouchType.DragComplete;
+
+			this.previousTouchType = returnValue;
+
+			return returnValue;
 		}
 		
 		/// <summary>
@@ -362,7 +331,7 @@ namespace Paint
 		/// A TouchPoint in Canvas co-ordinates
 		/// </returns>
 		/// <param name='screenTouchPoint' The touch point in screen co-ordinates/>
-		private TouchPoint ConvertScreenTouchToCanvasTouch(TouchPoint screenTouchPoint)
+		protected TouchPoint ConvertScreenTouchToCanvasTouch(TouchPoint screenTouchPoint)
 		{
 			if (this.ToolBox.DockPosition == DockPosition.Top)
 			{
@@ -376,6 +345,25 @@ namespace Paint
 			
 			return screenTouchPoint;
 		}
+
+		/// <summary>
+		/// Blanks the render target.
+		/// </summary>
+		/// <param name='renderTarget'>
+		/// Render target.
+		/// </param>
+		protected void BlankRenderTarget(RenderTarget2D renderTarget)
+		{
+			var device = this.GraphicsDeviceManager.GraphicsDevice;
+			
+			device.SetRenderTarget(renderTarget);
+			
+			this.GraphicsDisplay.BeginRender();
+			
+			this.GraphicsDisplay.DrawGraphic(ImageType.EmptySquare, renderTarget.Bounds, this.BackgroundColor);
+			
+			this.GraphicsDisplay.EndRender();
+		}		
 
 		/// <summary>
 		/// Draws the canvas on screen.
@@ -419,25 +407,6 @@ namespace Paint
 			
 			this.SpriteBatch.Draw(this.InMemoryToolboxRenderTarget, toolboxPosition, toolboxBounds, this.BackgroundColor);
 		}
-
-		/// <summary>
-		/// Blanks the render target.
-		/// </summary>
-		/// <param name='renderTarget'>
-		/// Render target.
-		/// </param>
-		private void BlankRenderTarget(RenderTarget2D renderTarget)
-		{
-			var device = this.GraphicsDeviceManager.GraphicsDevice;
-			
-			device.SetRenderTarget(renderTarget);
-			
-			this.GraphicsDisplay.BeginRender();
-			
-			this.GraphicsDisplay.DrawGraphic(ImageType.EmptySquare, renderTarget.Bounds, this.BackgroundColor);
-			
-			this.GraphicsDisplay.EndRender();
-		}		
 	}
 }
 

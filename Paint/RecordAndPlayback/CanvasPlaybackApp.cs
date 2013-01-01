@@ -2,6 +2,9 @@
 /// CanvasPlaybackApp.cs
 /// Randolph Burt - April 2012
 /// </summary>
+using Microsoft.Xna.Framework.Input.Touch;
+
+
 namespace Paint
 {
 	using System;
@@ -21,19 +24,15 @@ namespace Paint
 		private ICanvasPlayback canvasPlayback;
 
 		/// <summary>
-		/// The current color we are using to draw
+		/// The playback mode.
 		/// </summary>
-		private Color currentColor = Color.White;
-		
-		/// <summary>
-		/// The brush 
-		/// </summary>
-		private Rectangle brush;
+		private PlaybackMode playbackMode = PlaybackMode.NotStarted;
 
 		/// <summary>
-		/// Indicates whether we need to draw all outstanding touch points before we retrieve any more from the playback
+		/// The tool box - contains all our buttons (e.g. play/pause/restart)
+		/// More specialised version of the parent class IToolBox, but the same instance
 		/// </summary>
-		private bool drawRequiredBeforeNextUpdate = false;
+		private IPlaybackToolBox playbackToolbox;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Paint.CanvasPlaybackApp"/> class.
@@ -51,24 +50,6 @@ namespace Paint
 		}
 
 		/// <summary>
-		/// Returns the current brush size
-		/// </summary>
-		/// <returns>The brush size.</returns>
-		protected override Rectangle CurrentBrushSize()
-		{
-			return this.brush;
-		}
-		
-		/// <summary>
-		/// Returns the Ccrrent color.
-		/// </summary>
-		/// <returns>The color.</returns>
-		protected override Color CurrentColor()
-		{
-			return this.currentColor;
-		}
-
-		/// <summary>
 		/// Creates the toolbox.
 		/// </summary>
 		/// <returns>The toolbox.</returns>
@@ -77,8 +58,44 @@ namespace Paint
 		/// </param>
 		protected override IToolBox CreateToolbox(int scale)
 		{
-			// TODO
-			return new PaintToolBox(this.ToolboxLayoutDefinition, this.GraphicsDisplay, scale);
+			this.playbackToolbox = new PlaybackToolbox(this.ToolboxLayoutDefinition, this.GraphicsDisplay, scale);
+
+			this.playbackToolbox.ExitSelected += (sender, e) => 
+			{
+				if (this.playbackMode != PlaybackMode.Exiting)
+				{
+					this.playbackMode = PlaybackMode.Exiting;
+					this.Exit();
+				}
+			};
+
+			this.playbackToolbox.PauseSelected += (sender, e) => 
+			{
+				if (this.playbackMode != PlaybackMode.Exiting && this.playbackMode != PlaybackMode.Finished)
+				{
+					this.playbackMode = PlaybackMode.Paused;
+				}
+			};
+
+			this.playbackToolbox.PlaySelected += (sender, e) => 
+			{
+				if (this.playbackMode != PlaybackMode.Exiting && this.playbackMode != PlaybackMode.Finished)
+				{
+					this.playbackMode = PlaybackMode.Playing;
+				}
+			};
+
+			this.playbackToolbox.RestartSelected += (sender, e) => 
+			{
+				if (this.playbackMode != PlaybackMode.Exiting)
+				{
+					this.canvasPlayback.Restart();
+					this.BlankRenderTarget(this.InMemoryCanvasRenderTarget);
+					this.playbackMode = PlaybackMode.Playing;
+				}
+			};
+
+			return this.playbackToolbox;
 		}
 
 		/// <summary>
@@ -88,46 +105,82 @@ namespace Paint
 		/// <param name='gameTime'>
 		/// Allows you to monitor time passed since last draw
 		/// </param>
-		protected override void Update (GameTime gameTime)
+		protected override void Update(GameTime gameTime)
 		{
+			if (this.playbackMode == PlaybackMode.Exiting)
+			{
+				return;
+			}
+
+			this.HandleInput();
+
 			if (this.canvasPlayback.DataAvailable == false)
 			{
-				// TODO - sort out exit
-				System.Threading.Thread.Sleep(new TimeSpan(0, 0, 2));
-				this.Exit();
+				this.playbackMode = PlaybackMode.Finished;
+				this.playbackToolbox.PlayPauseEnabled = false;
 			}
+			else if (this.playbackMode == PlaybackMode.Playing)
+			{			
+				var touchPoint = this.canvasPlayback.GetNextTouchPoint();
 			
-			if (this.drawRequiredBeforeNextUpdate == true)
-			{
-				if (this.CanvasTouchPoints.Count > 0)
+				if (touchPoint != null)
 				{
-					// we still have touchpoints to draw!
-					return;
+					this.CanvasTouchPoints.Add(touchPoint);
 				}
-				
-				this.drawRequiredBeforeNextUpdate = false;
-			}
-			
-			// We need to cache the current color and brush size here to avoid the situation where the color/brush
-			// has been updated on the playback class ready for the next set of touch points but we have not yet 
-			// drawn the current touch points.  If we did not track the color/brush size ourselves then we would end
-			// up using the wrong color/brush size ahead of time
-			this.currentColor = this.canvasPlayback.Color;
-			this.brush = this.canvasPlayback.Brush;
-			
-			var touchPoint = this.canvasPlayback.GetNextTouchPoint();
-			
-			if (touchPoint != null)
-			{
-				this.CanvasTouchPoints.Add(touchPoint);
-			}
-			else 
-			{
-				this.drawRequiredBeforeNextUpdate = true;
 			}
 			                           
-			base.Update (gameTime);
+			base.Update(gameTime);
 		}		
+
+		/// <summary>
+		/// Handles any user input.
+		/// Collect all gestures made since the last 'update' - check if these need to be handled
+		/// </summary>
+		private void HandleInput()
+		{	
+			while (TouchPanel.IsGestureAvailable)
+			{
+				// read the next gesture from the queue
+				GestureSample gesture = TouchPanel.ReadGesture();
+				
+				TouchType touchType = this.ConvertGestureType(gesture.GestureType);
+				
+				TouchPoint touchPoint = new TouchPoint(gesture.Position, touchType);
+				
+				this.CheckToolboxCollision(touchPoint);
+			}
+		}
+
+		/// <summary>
+		/// What mode is the app currently in
+		/// </summary>
+		private enum PlaybackMode
+		{
+			/// <summary>
+			/// The user has not yet started the playback process
+			/// </summary>
+			NotStarted,
+
+			/// <summary>
+			/// The playback process has been paused
+			/// </summary>
+			Paused,
+
+			/// <summary>
+			/// The playback process is happening now
+			/// </summary>
+			Playing,
+
+			/// <summary>
+			/// The playback process has finished
+			/// </summary>
+			Finished,
+
+			/// <summary>
+			/// The user has selected to exit
+			/// </summary>
+			Exiting
+		}
 	}
 }
 

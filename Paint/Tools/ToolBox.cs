@@ -161,7 +161,7 @@ namespace Paint
 		/// True = we should redraw the entire control
 		/// False = just draw any updates 
 		/// </param>
-		public void Draw (bool refreshDisplay)
+		public void Draw(bool refreshDisplay)
 		{
 			/*
 			 * Draw the tools with an Opque BlendState to ensure we overwrite the previous color completely
@@ -209,7 +209,7 @@ namespace Paint
 			// Then blank out the space for the toolbar...
 			this.GraphicsDisplay.DrawGraphic(ImageType.EmptySquare, this.toolbarInnerBounds, this.BackgroundColor);
 
-			// Classes ingeriting from us may override this and do more
+			// Classes inheriting from us may override this and do more
 		}
 
 		/// <summary>
