@@ -194,6 +194,9 @@ namespace Paint
 		{
 			this.playbackProgressBar = this.CreateProgressBar(toolboxLayoutDefinition.PlaybackTools.ProgressBar);
 			this.AddTool(this.playbackProgressBar);
+
+			var speedGauge = this.CreateSpeedGauge(toolboxLayoutDefinition.PlaybackTools.SpeedGauge);
+			this.AddTool(speedGauge);
 		}
 
 		/// <summary>
@@ -204,6 +207,16 @@ namespace Paint
 		private PlaybackProgressBar CreateProgressBar(ToolboxLayoutDefinitionPlaybackToolsProgressBar progressBar)
 		{
 			return new PlaybackProgressBar(this.GraphicsDisplay, new PlaybackProgressBarDefinition(progressBar, this.Scale));
+		}
+
+		/// <summary>
+		/// Creates the speed gauge.
+		/// </summary>
+		/// <returns> The speed gauge.</returns>
+		/// <param name='speedGauge'>Speed gauge layout definition</param>
+		private SpeedGauge CreateSpeedGauge(ToolboxLayoutDefinitionPlaybackToolsSpeedGauge speedGauge)
+		{
+			return new SpeedGauge(this.GraphicsDisplay, new SpeedGaugeDefinition(speedGauge, this.Scale));
 		}
 	}
 }

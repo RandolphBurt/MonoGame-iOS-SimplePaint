@@ -160,6 +160,9 @@
     <Compile Include="ToolInterfaces\IPlaybackProgressBar.cs" />
     <Compile Include="Tools\PlaybackProgressBar.cs" />
     <Compile Include="ToolDefinitions\PlaybackProgressBarDefinition.cs" />
+    <Compile Include="ToolDefinitions\SpeedGaugeDefinition.cs" />
+    <Compile Include="Tools\SpeedGauge.cs" />
+    <Compile Include="ToolInterfaces\ISpeedGauge.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

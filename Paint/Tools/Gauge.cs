@@ -18,22 +18,22 @@ namespace Paint
 		/// <summary>
 		/// The size of the marker.
 		/// </summary>
-		protected int markerWidth;
+		protected int MarkerWidth;
 		
 		/// <summary>
 		/// The color of the gauge.
 		/// </summary>
-		protected Color gaugeColor;
+		protected Color GaugeColor;
 		
 		/// <summary>
 		/// The current position/value of the marker.
 		/// </summary>
-		protected float currentMarker;
+		protected float CurrentMarker;
 
 		/// <summary>
 		/// The previous position/value of the marker.
 		/// </summary>
-		protected float previousMarker;
+		protected float PreviousMarker;
 		
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Paint.Gauge"/> class.
@@ -47,9 +47,9 @@ namespace Paint
 		public Gauge (Color backgroundColor, IGraphicsDisplay graphicsDisplay, Rectangle bounds, int markerWidth, Color gaugeColor, float startMarker) 
 			: base(backgroundColor, graphicsDisplay, bounds) 
 		{
-			this.currentMarker = this.previousMarker = startMarker;
-			this.gaugeColor = gaugeColor;
-			this.markerWidth = markerWidth;
+			this.CurrentMarker = this.PreviousMarker = startMarker;
+			this.GaugeColor = gaugeColor;
+			this.MarkerWidth = markerWidth;
 		}
 		
 		/// <summary>
@@ -64,14 +64,14 @@ namespace Paint
 		{
 			get
 			{
-				return this.currentMarker;
+				return this.CurrentMarker;
 			}
 			
 			set 
 			{
-				if (this.currentMarker != value) 
+				if (this.CurrentMarker != value) 
 				{
-					this.currentMarker = value;
+					this.CurrentMarker = value;
 					this.OnMarkerChanged(EventArgs.Empty);
 				}
 			}
@@ -87,18 +87,18 @@ namespace Paint
 		public override void Draw(bool refreshDisplay)
 		{
 			
-			if (refreshDisplay == true || this.previousMarker != this.currentMarker) 
+			if (refreshDisplay == true || this.PreviousMarker != this.CurrentMarker) 
 			{
 				// Blank out everything 
-				this.DrawRectangle(this.bounds, this.backgroundColor); 
+				this.DrawRectangle(this.Bounds, this.BackgroundColor); 
 								
 				// Draw the gauge bar
-				this.DrawRectangle(this.CreateGaugeRectangle(), this.gaugeColor);
+				this.DrawRectangle(this.CreateGaugeRectangle(), this.GaugeColor);
 				
 				// Draw the marker
-				this.DrawRectangle(this.CreateMarkerRectangle(), this.gaugeColor);			
+				this.DrawRectangle(this.CreateMarkerRectangle(), this.GaugeColor);			
 				
-				this.previousMarker = this.currentMarker;
+				this.PreviousMarker = this.CurrentMarker;
 			}
 			
 			return;

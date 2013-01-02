@@ -43,12 +43,12 @@ namespace Paint
 		public void HandleTouch(float yPosition)
 		{
 			// Calculate the new value, but make sure still in bounds
-			int yPos = Math.Max((int)yPosition, this.bounds.Y);
-			yPos = Math.Min(yPos, this.bounds.Y + this.bounds.Height);
+			int yPos = Math.Max((int)yPosition, this.Bounds.Y);
+			yPos = Math.Min(yPos, this.Bounds.Y + this.Bounds.Height);
 			
-			this.currentMarker = (float)((this.bounds.Y + this.bounds.Height) - yPos) / (float)this.bounds.Height;
+			this.CurrentMarker = (float)((this.Bounds.Y + this.Bounds.Height) - yPos) / (float)this.Bounds.Height;
 			
-			if (previousMarker != currentMarker) 
+			if (PreviousMarker != CurrentMarker) 
 			{
 				this.OnMarkerChanged(EventArgs.Empty);
 			}
@@ -85,10 +85,10 @@ namespace Paint
 		protected override Rectangle CreateMarkerRectangle()
 		{
 			return new Rectangle(
-				this.bounds.X, 
-				this.BoundedY(((this.bounds.Y + this.bounds.Height) - (int)(this.currentMarker * this.bounds.Height)) - (this.markerWidth / 2)),
-				this.bounds.Width,
-				this.markerWidth);
+				this.Bounds.X, 
+				this.BoundedY(((this.Bounds.Y + this.Bounds.Height) - (int)(this.CurrentMarker * this.Bounds.Height)) - (this.MarkerWidth / 2)),
+				this.Bounds.Width,
+				this.MarkerWidth);
 		}
 				
 		/// <summary>
@@ -102,13 +102,13 @@ namespace Paint
 		/// </param>
 		private int BoundedY(int yPosition) 
 		{
-			if (yPosition < this.bounds.Y)
+			if (yPosition < this.Bounds.Y)
 			{
-				return this.bounds.Y;
+				return this.Bounds.Y;
 			}
 			else 
 			{
-				int maxY = this.bounds.Y + this.bounds.Height - this.markerWidth;
+				int maxY = this.Bounds.Y + this.Bounds.Height - this.MarkerWidth;
 				if (yPosition > maxY)
 				{
 					return maxY;

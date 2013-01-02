@@ -74,7 +74,7 @@
 				<ButtonType>Restart</ButtonType>
 				<Region>
 					<Location>
-						<X>60</X>
+						<X>80</X>
 						<Y>4</Y>
 					</Location>
 					<Size>
@@ -100,7 +100,7 @@
 				<ButtonType>PlayPausePlayback</ButtonType>
 				<Region>
 					<Location>
-						<X>110</X>
+						<X>130</X>
 						<Y>4</Y>
 					</Location>
 					<Size>
@@ -128,7 +128,33 @@
 		<ProgressBar>
 			<Region>
 				<Location>
-					<X>170</X>
+					<X>410</X>
+					<Y>4</Y>
+				</Location>
+				<Size>
+					<Width>551</Width>
+					<Height>46</Height>
+				</Size>
+				<BackgroundColor>
+					<Red>255</Red>
+					<Green>255</Green>
+					<Blue>255</Blue>
+				</BackgroundColor>
+			</Region>
+			<IndicatorBar>
+				<Width>535</Width>
+				<Height>6</Height>
+				<Color>
+					<Red>0</Red>
+					<Green>0</Green>
+					<Blue>255</Blue>
+				</Color>
+			</IndicatorBar>
+		</ProgressBar>
+		<SpeedGauge>
+			<Region>
+				<Location>
+					<X>190</X>
 					<Y>4</Y>
 				</Location>
 				<Size>
@@ -148,16 +174,13 @@
 						<Blue>0</Blue>
 					</Color>
 				</Border>
-			</Region>
-			<IndicatorBar>
-				<Width>184</Width>
-				<Height>6</Height>
-				<Color>
-					<Red>0</Red>
-					<Green>0</Green>
-					<Blue>255</Blue>
-				</Color>
-			</IndicatorBar>
-		</ProgressBar>
+			</Region>	
+			<Gauge>
+				<VerticalMargin>14</VerticalMargin>
+				<HorizontalMargin>36</HorizontalMargin>
+				<Width>128</Width>
+				<MarkerWidth>6</MarkerWidth>
+			</Gauge>
+		</SpeedGauge>	
 	</PlaybackTools>	
 </ToolboxLayoutDefinition>		

@@ -474,9 +474,9 @@ namespace Paint.ToolboxLayout {
         
         /// <remarks/>
         PlayPausePlayback,
-
-		/// <remarks/>
-		Restart,
+        
+        /// <remarks/>
+        Restart,
     }
     
     /// <remarks/>
@@ -766,7 +766,7 @@ namespace Paint.ToolboxLayout {
         
         private RegionType regionField;
         
-		private ToolboxLayoutDefinitionPlaybackToolsProgressBarIndicatorBar indicatorBarField;
+        private ToolboxLayoutDefinitionPlaybackToolsProgressBarIndicatorBar indicatorBarField;
         
         /// <remarks/>
         public RegionType Region {
@@ -779,61 +779,61 @@ namespace Paint.ToolboxLayout {
         }
         
         /// <remarks/>
-		public ToolboxLayoutDefinitionPlaybackToolsProgressBarIndicatorBar IndicatorBar {
+        public ToolboxLayoutDefinitionPlaybackToolsProgressBarIndicatorBar IndicatorBar {
             get {
-				return this.indicatorBarField;
+                return this.indicatorBarField;
             }
             set {
-				this.indicatorBarField = value;
+                this.indicatorBarField = value;
             }
         }
-	}
-
-	/// <remarks/>
-	[System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.0.30319.17929")]
-	[System.SerializableAttribute()]
-	[System.Diagnostics.DebuggerStepThroughAttribute()]
-	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true)]
-	public partial class ToolboxLayoutDefinitionPlaybackToolsProgressBarIndicatorBar {
-
-		private int widthField;
-		
-		private int heightField;
-
-		private ColorType colorField;
-		
-		/// <remarks/>
-		public int Width {
-			get {
-				return this.widthField;
-			}
-			set {
-				this.widthField = value;
-			}
-		}
-		
-		/// <remarks/>
-		public int Height {
-			get {
-				return this.heightField;
-			}
-			set {
-				this.heightField = value;
-			}
-		}
-
-		/// <remarks/>
-		public ColorType Color {
-			get {
-				return this.colorField;
-			}
-			set {
-				this.colorField = value;
-			}
-		}
-	}
-
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.0.30319.17929")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true)]
+    public partial class ToolboxLayoutDefinitionPlaybackToolsProgressBarIndicatorBar {
+        
+        private int widthField;
+        
+        private int heightField;
+        
+        private ColorType colorField;
+        
+        /// <remarks/>
+        public int Width {
+            get {
+                return this.widthField;
+            }
+            set {
+                this.widthField = value;
+            }
+        }
+        
+        /// <remarks/>
+        public int Height {
+            get {
+                return this.heightField;
+            }
+            set {
+                this.heightField = value;
+            }
+        }
+        
+        /// <remarks/>
+        public ColorType Color {
+            get {
+                return this.colorField;
+            }
+            set {
+                this.colorField = value;
+            }
+        }
+    }
+    
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.0.30319.17929")]
     [System.SerializableAttribute()]

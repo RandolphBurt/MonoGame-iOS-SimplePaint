@@ -57,14 +57,14 @@ namespace Paint
 
 			// Assume all images for this button are the same size, then calculate where to position the button
 			var graphicsRectangle = graphicsDisplay.SourceRectangleFromImageType(this.buttonDefinition.ImageList[0]);
-			int xDiff = this.bounds.Width - graphicsRectangle.Width;
-			int yDiff = this.bounds.Height - graphicsRectangle.Height;
+			int xDiff = this.Bounds.Width - graphicsRectangle.Width;
+			int yDiff = this.Bounds.Height - graphicsRectangle.Height;
 			
 			this.imageDestinationRectangle = new Rectangle(
-				this.bounds.X + xDiff / 2, 
-				this.bounds.Y + yDiff / 2,
-				this.bounds.Width - xDiff,
-				this.bounds.Height - yDiff);
+				this.Bounds.X + xDiff / 2, 
+				this.Bounds.Y + yDiff / 2,
+				this.Bounds.Width - xDiff,
+				this.Bounds.Height - yDiff);
 		}
 		
 		/// <summary>

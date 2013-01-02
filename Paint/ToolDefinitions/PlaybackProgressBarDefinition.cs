@@ -30,13 +30,6 @@ namespace Paint
 				progressBarDefinition.Region.BackgroundColor.Red,
 				progressBarDefinition.Region.BackgroundColor.Green,
 				progressBarDefinition.Region.BackgroundColor.Blue);
-			
-			this.BorderColor = new Color(
-				progressBarDefinition.Region.Border.Color.Red,
-				progressBarDefinition.Region.Border.Color.Green,
-				progressBarDefinition.Region.Border.Color.Blue);
-			
-			this.BorderWidth = progressBarDefinition.Region.Border.Width * scale;
 
 			this.ProgresIndicatorWidth = progressBarDefinition.IndicatorBar.Width * scale;
 			this.ProgressIndicatorHeight = progressBarDefinition.IndicatorBar.Height * scale;
@@ -52,20 +45,8 @@ namespace Paint
 			get;
 			private set;
 		}
-		
-		public Color BorderColor
-		{
-			get;
-			private set;
-		}
-		
+
 		public Color BackgroundColor
-		{
-			get;
-			private set;
-		}
-		
-		public int BorderWidth
 		{
 			get;
 			private set;

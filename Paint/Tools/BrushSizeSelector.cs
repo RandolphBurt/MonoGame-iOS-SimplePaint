@@ -56,13 +56,13 @@ namespace Paint
 
 			this.color = brushSizeDefinition.StartColor;
 			this.BrushSize = brushSizeDefinition.BrushSizeInitial;
-			this.gaugeYPosition = bounds.Y + brushSizeDefinition.GaugeVerticalMargin + this.brushSizeDefinition.BrushSizeMaximum;
+			this.gaugeYPosition = Bounds.Y + brushSizeDefinition.GaugeVerticalMargin + this.brushSizeDefinition.BrushSizeMaximum;
 			
 			Rectangle gaugeBounds = new Rectangle(
-				this.bounds.X + ((this.bounds.Width - this.brushSizeDefinition.GaugeWidth) / 2),
+				this.Bounds.X + ((this.Bounds.Width - this.brushSizeDefinition.GaugeWidth) / 2),
 				this.gaugeYPosition,
 				this.brushSizeDefinition.GaugeWidth,
-				this.bounds.Height - (this.brushSizeDefinition.BrushSizeMaximum + (this.brushSizeDefinition.GaugeVerticalMargin * 2)));
+				this.Bounds.Height - (this.brushSizeDefinition.BrushSizeMaximum + (this.brushSizeDefinition.GaugeVerticalMargin * 2)));
 			
 			float startMarkerValue = 
 				(float)(this.brushSizeDefinition.BrushSizeInitial - this.brushSizeDefinition.BrushSizeMinimum) / 
@@ -70,7 +70,7 @@ namespace Paint
 
 			this.brushSizeGauge = 
 				new VerticalGauge(
-					this.backgroundColor, 
+					this.BackgroundColor, 
 					graphicsDisplay, 
 					gaugeBounds, 
 					this.brushSizeDefinition.GaugeMarkerWidth, 
@@ -171,17 +171,17 @@ namespace Paint
 		{
 			// Blank out previous brush first...
 			Rectangle blankRectangle = new Rectangle(
-				this.bounds.X + ((this.bounds.Width - this.brushSizeDefinition.BrushSizeMaximum) / 2 ),
-				this.bounds.Y + (brushSizeDefinition.GaugeVerticalMargin / 2),
+				this.Bounds.X + ((this.Bounds.Width - this.brushSizeDefinition.BrushSizeMaximum) / 2 ),
+				this.Bounds.Y + (brushSizeDefinition.GaugeVerticalMargin / 2),
 				this.brushSizeDefinition.BrushSizeMaximum,
 				this.brushSizeDefinition.BrushSizeMaximum);
 			
-			this.DrawRectangle(blankRectangle, this.backgroundColor); 							
+			this.DrawRectangle(blankRectangle, this.BackgroundColor); 							
 			
 			// draw new brush
 			Rectangle brushRectangle = new Rectangle(
-				this.bounds.X + ((this.bounds.Width - this.BrushSize) / 2 ),
-				this.bounds.Y + (brushSizeDefinition.GaugeVerticalMargin + this.brushSizeDefinition.BrushSizeMaximum - this.BrushSize) / 2,
+				this.Bounds.X + ((this.Bounds.Width - this.BrushSize) / 2 ),
+				this.Bounds.Y + (brushSizeDefinition.GaugeVerticalMargin + this.brushSizeDefinition.BrushSizeMaximum - this.BrushSize) / 2,
 				this.BrushSize,
 				this.BrushSize);
 			

@@ -90,9 +90,9 @@ namespace Paint
 			for (int i = 0; i < colorList.Length; i++)
 			{
 				Rectangle gaugeRectangle = new Rectangle(
-					this.bounds.X + this.colorSelectorDefinition.GaugeHorizontalMargin,
-					this.bounds.Y + this.bounds.Height - ((GaugeCount - i) * (this.colorSelectorDefinition.GaugeWidth + this.colorSelectorDefinition.GaugeVerticalMargin)),
-					this.bounds.Width - this.colorSelectorDefinition.GaugeHorizontalMargin * 2,	
+					this.Bounds.X + this.colorSelectorDefinition.GaugeHorizontalMargin,
+					this.Bounds.Y + this.Bounds.Height - ((GaugeCount - i) * (this.colorSelectorDefinition.GaugeWidth + this.colorSelectorDefinition.GaugeVerticalMargin)),
+					this.Bounds.Width - this.colorSelectorDefinition.GaugeHorizontalMargin * 2,	
 					this.colorSelectorDefinition.GaugeWidth);
 				
 				gauges.Add(

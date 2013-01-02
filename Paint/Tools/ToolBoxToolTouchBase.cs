@@ -14,22 +14,22 @@ namespace Paint
 		/// <summary>
 		/// Border size for drawing the tool on screen.
 		/// </summary>
-		protected int borderWidth;
+		protected int BorderWidth;
 		
 		/// <summary>
 		/// The background color of the tool
 		/// </summary>
-		protected Color backgroundColor;
+		protected Color BackgroundColor;
 		
 		/// <summary>
 		/// The color of the borders around the control.
 		/// </summary>
-		protected Color borderColor;	
+		protected Color BorderColor;	
 		
 		/// <summary>
 		/// The location and size of the control.
 		/// </summary>
-		protected Rectangle bounds;
+		protected Rectangle Bounds;
 		
 		/// <summary>
 		/// Contains all the images for the application
@@ -49,11 +49,11 @@ namespace Paint
 		/// <param name='bounds' The bounds of this control/tool />
 		public ToolBoxToolTouchBase(Color backgroundColor, IGraphicsDisplay graphicsDisplay, Rectangle bounds)
 		{
-			this.bounds = bounds;
+			this.Bounds = bounds;
 			this.graphicsDisplay = graphicsDisplay;
-			this.backgroundColor = backgroundColor;
-			this.borderColor = backgroundColor;
-			this.borderWidth = 0;
+			this.BackgroundColor = backgroundColor;
+			this.BorderColor = backgroundColor;
+			this.BorderWidth = 0;
 		}
 
 		/// <summary>
@@ -66,11 +66,11 @@ namespace Paint
 		/// <param name='bounds' The bounds of this control/tool />
 		public ToolBoxToolTouchBase(Color backgroundColor, Color borderColor, int borderWidth, IGraphicsDisplay graphicsDisplay, Rectangle bounds)
 		{
-			this.bounds = bounds;
+			this.Bounds = bounds;
 			this.graphicsDisplay = graphicsDisplay;
-			this.backgroundColor = backgroundColor;
-			this.borderColor = borderColor;
-			this.borderWidth = borderWidth;
+			this.BackgroundColor = backgroundColor;
+			this.BorderColor = borderColor;
+			this.BorderWidth = borderWidth;
 		}
 		
 		/// <summary>
@@ -83,7 +83,7 @@ namespace Paint
 		/// <param name='touchPosition' The location where the user touched the screen (and type of touch) />
 		public bool CheckTouchCollision (ITouchPoint touch)
 		{
-			if (this.bounds.Contains(touch.Position)) 
+			if (this.Bounds.Contains(touch.Position)) 
 			{
 				if (touch.TouchType == TouchType.FreeDrag && inDragMode == false)
 				{
@@ -154,7 +154,7 @@ namespace Paint
 		/// <param name='graphicsSourceRegion' The region of the graphics texture map to get the image to paint from/>
 		protected void DrawGraphic(ImageType imageType, Rectangle paintRegion)
 		{
-			this.graphicsDisplay.DrawGraphic(imageType, paintRegion, this.backgroundColor); 
+			this.graphicsDisplay.DrawGraphic(imageType, paintRegion, this.BackgroundColor); 
 		}
 
 		/// <summary>
@@ -162,7 +162,7 @@ namespace Paint
 		/// </summary>
 		protected void Blank()
 		{
-			this.graphicsDisplay.DrawGraphic(ImageType.EmptySquare, this.bounds, this.backgroundColor);
+			this.graphicsDisplay.DrawGraphic(ImageType.EmptySquare, this.Bounds, this.BackgroundColor);
 		}
 		
 		/// <summary>
@@ -170,13 +170,13 @@ namespace Paint
 		/// </summary>
 		protected void BlankAndRedrawWithBorder()
 		{
-			if (this.borderWidth == 0)
+			if (this.BorderWidth == 0)
 			{
 				this.Blank();
 			}
 			else 
 			{
-				this.BlankAndRedrawWithBorder(this.bounds);
+				this.BlankAndRedrawWithBorder(this.Bounds);
 			}
 		}
 		
@@ -186,15 +186,15 @@ namespace Paint
 		/// <param name='redrawRectangle' The rectangular region that should be blanked and redrawn with the border/>
 		protected void BlankAndRedrawWithBorder(Rectangle redrawRectangle)
 		{
-			this.graphicsDisplay.DrawGraphic(ImageType.EmptySquare, redrawRectangle, this.borderColor); 
+			this.graphicsDisplay.DrawGraphic(ImageType.EmptySquare, redrawRectangle, this.BorderColor); 
 			
 			Rectangle inBorderRectangle = new Rectangle(
-				this.bounds.X + this.borderWidth,
-				this.bounds.Y + this.borderWidth,
-				this.bounds.Width - (2 * this.borderWidth),
-				this.bounds.Height - (2 * this.borderWidth));
+				this.Bounds.X + this.BorderWidth,
+				this.Bounds.Y + this.BorderWidth,
+				this.Bounds.Width - (2 * this.BorderWidth),
+				this.Bounds.Height - (2 * this.BorderWidth));
 			
-			this.graphicsDisplay.DrawGraphic(ImageType.EmptySquare, inBorderRectangle, this.backgroundColor); 
+			this.graphicsDisplay.DrawGraphic(ImageType.EmptySquare, inBorderRectangle, this.BackgroundColor); 
 		}
 	}
 }

@@ -37,7 +37,7 @@ namespace Paint
 		{ 
 			get 
 			{
-				return this.backgroundColor;
+				return this.BackgroundColor;
 			}
 		}
 		
