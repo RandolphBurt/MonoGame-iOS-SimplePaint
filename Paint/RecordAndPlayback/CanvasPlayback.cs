@@ -117,7 +117,20 @@ namespace Paint
 			fileStream.Seek(12, SeekOrigin.Begin);
 			this.commandsReadSoFar = 0;
 		}
-		
+
+		/// <summary>
+		/// Closes the file stream.
+		/// </summary>
+		public void Close()
+		{
+			if (this.fileStream != null)
+			{
+				this.fileStream.Close();
+				
+				this.fileStream = null;
+			}
+		}
+
 		/// <summary>
 		/// Gets the next touch point.
 		/// </summary>
@@ -151,9 +164,6 @@ namespace Paint
 						return this.CreateTouchPoint(this.commandByteArray[0]);
 				}
 			}
-			
-			// Nothing more to read so let's close the file now.
-			this.CloseFileStream();
 			
 			return null;
 		}
@@ -207,19 +217,6 @@ namespace Paint
 			newColor.B = this.commandByteArray[4];
 			
 			this.Color = newColor;
-		}
-		
-		/// <summary>
-		/// Closes the file stream.
-		/// </summary>
-		private void CloseFileStream()
-		{
-			if (this.fileStream != null)
-			{
-				this.fileStream.Close();
-				
-				this.fileStream = null;
-			}
 		}
 
         // Use C# destructor syntax for finalization code.
@@ -275,7 +272,7 @@ namespace Paint
             // Check to see if Dispose has already been called.
             if (!this.disposed)
             {
-				this.CloseFileStream();
+				this.Close();
 				
                  // Note disposing has been done.
                 this.disposed = true;

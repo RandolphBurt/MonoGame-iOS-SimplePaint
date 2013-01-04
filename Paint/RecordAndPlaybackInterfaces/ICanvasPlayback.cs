@@ -45,6 +45,11 @@ namespace Paint
 		/// Reset the input stream to the beginning ready for starting the playback all over again
 		/// </summary>
 		void Restart();
+
+		/// <summary>
+		/// Close any resources (e.g. open files)
+		/// </summary>
+		void Close();
 	}
 }
 

@@ -62,6 +62,21 @@ namespace Paint
 		}
 
 		/// <summary>
+		/// Raises the exiting event.
+		/// </summary>
+		/// <param name='sender'>Sender.</param>
+		/// <param name='args'>Arguments.</param>
+		protected override void OnExiting(object sender, EventArgs args)
+		{
+			if (this.canvasPlayback != null)
+			{
+				this.canvasPlayback.Close();
+			}
+
+			base.OnExiting(sender, args);
+		}
+
+		/// <summary>
 		/// Creates the toolbox.
 		/// </summary>
 		/// <returns>The toolbox.</returns>
