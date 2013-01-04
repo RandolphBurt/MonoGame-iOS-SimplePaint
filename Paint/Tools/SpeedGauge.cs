@@ -39,6 +39,11 @@ namespace Paint
 		private Rectangle boundsMiddleImage;
 
 		/// <summary>
+		/// The area for the gauge
+		/// </summary>
+		private Rectangle gaugeBounds;
+
+		/// <summary>
 		/// Initializes a new instance of the <see cref="Paint.SpeedGauge"/> class.
 		/// </summary>
 		/// <param name='graphicsDisplay'>raphics display.</param>
@@ -105,7 +110,19 @@ namespace Paint
 		/// <param name='touchPosition'>Touch position.</param>
 		protected override void HandleTouch(ITouchPoint touchPosition)
 		{
-			this.gauge.CheckTouchCollision(touchPosition);
+			var gaugeTouchPoint = touchPosition;
+
+			if (this.boundsMiddleImage.Contains(touchPosition.Position))
+			{
+				// if the user starts to press the gauge but slightly misses it (as it is quite small) and hence
+				// their Y is just above/below the gauge then we alter the Y position to ensure that the touch
+				// will get picked up on
+				gaugeTouchPoint = new TouchPoint(
+					new Vector2(touchPosition.Position.X, this.gaugeBounds.Y), 
+					touchPosition.TouchType);
+			}
+				
+			this.gauge.CheckTouchCollision(gaugeTouchPoint);
 		}
 
 		/// <summary>
@@ -128,7 +145,7 @@ namespace Paint
 		/// <param name='graphicsDisplay'>Graphics display.</param>
 		private void CreateGauge(IGraphicsDisplay graphicsDisplay)
 		{
-			var gaugeBounds = new Rectangle(
+			this.gaugeBounds = new Rectangle(
 				this.Bounds.X + this.speedGaugeDefinition.GaugeHorizontalMargin,
 				this.Bounds.Y + this.speedGaugeDefinition.GaugeVerticalMargin,
 				this.speedGaugeDefinition.GaugeWidth,
@@ -137,7 +154,7 @@ namespace Paint
 			this.gauge = new HorizontalGauge(
 				this.speedGaugeDefinition.BackgroundColor, 
 				graphicsDisplay, 
-				gaugeBounds, 
+				this.gaugeBounds, 
 				this.speedGaugeDefinition.GaugeMarkerWidth, 
 				this.speedGaugeDefinition.BorderColor,
 				0.5f);
