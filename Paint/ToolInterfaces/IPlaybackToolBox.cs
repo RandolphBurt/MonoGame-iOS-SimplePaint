@@ -29,7 +29,12 @@ namespace Paint
 		/// <summary>
 		/// Sets the playback progress percentage.
 		/// </summary>
-		float PlaybackProgressPercentage{ set; }
+		float PlaybackProgressPercentage { set; }
+
+		/// <summary>
+		/// Gets the playback speed.
+		/// </summary>
+		float PlaybackSpeed { get; }
 
 		/// <summary>
 		/// Disables the playback button

@@ -34,12 +34,13 @@ namespace Paint
 		float PercentageRead { get; }
 
 		/// <summary>
-		/// Gets the next touch point.
+		/// Gets the next set of touch points.
 		/// </summary>
+		/// <param name='maxTouchPoints'>Maximum number of touchpoints that should be retrieved</param>
 		/// <returns>
-		/// The next touch point.
+		/// The next set of touch points.
 		/// </returns>
-		ITouchPointSizeColor GetNextTouchPoint();
+		ITouchPointSizeColor[] GetNextTouchPoints(int maxTouchPoints);
 
 		/// <summary>
 		/// Reset the input stream to the beginning ready for starting the playback all over again

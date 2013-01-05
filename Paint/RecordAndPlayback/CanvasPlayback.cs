@@ -5,6 +5,7 @@
 namespace Paint
 {
 	using System;
+	using System.Collections.Generic;
 	using System.IO;
 	
 	using Microsoft.Xna;
@@ -132,15 +133,15 @@ namespace Paint
 		}
 
 		/// <summary>
-		/// Gets the next touch point.
+		/// Gets the next set of touch points.
 		/// </summary>
-		/// <returns>
-		/// The next touch point.
-		/// A return value of null means that we are setting the colour or brush size - so no drawing happening 
-		/// </returns>
-		public ITouchPointSizeColor GetNextTouchPoint()
+		/// <param name='maxTouchPoints'>Maximum number of touchpoints that should be retrieved</param>
+		/// <returns>The next set of touch points.</returns>
+		public ITouchPointSizeColor[] GetNextTouchPoints(int maxTouchPoints)
 		{
-			while (this.commandsReadSoFar < this.playbackCommandTotal)
+			List<ITouchPointSizeColor> touchPoints = new List<ITouchPointSizeColor>();
+
+			while (this.commandsReadSoFar < this.playbackCommandTotal && touchPoints.Count < maxTouchPoints)
 			{
 				fileStream.Read(this.commandByteArray, 0, BytesPerCommand);
 				
@@ -161,11 +162,12 @@ namespace Paint
 					case CanvasRecorderCommand.FreeDrag:
 					case CanvasRecorderCommand.DragComplete:
 					default:
-						return this.CreateTouchPoint(this.commandByteArray[0]);
+						touchPoints.Add(this.CreateTouchPoint(this.commandByteArray[0]));
+						break;
 				}
 			}
-			
-			return null;
+
+			return touchPoints.ToArray();
 		}
 		
 		/// <summary>

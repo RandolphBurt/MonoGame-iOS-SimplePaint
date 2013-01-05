@@ -24,6 +24,11 @@ namespace Paint
 		private PlaybackProgressBar playbackProgressBar;
 
 		/// <summary>
+		/// The speed gauge.
+		/// </summary>
+		private SpeedGauge speedGauge;
+
+		/// <summary>
 		/// Initializes a new instance of the <see cref="Paint.PlaybackToolbox"/> class.
 		/// </summary>
 		/// <param name='toolboxLayoutDefinition' The layout of the toolbox />
@@ -43,6 +48,17 @@ namespace Paint
 			set
 			{
 				this.playbackProgressBar.Percentage = value;
+			}
+		}
+
+		/// <summary>
+		/// Gets the playback speed.
+		/// </summary>
+		public float PlaybackSpeed
+		{ 
+			get
+			{
+				return this.speedGauge.Speed;
 			}
 		}
 
@@ -195,8 +211,8 @@ namespace Paint
 			this.playbackProgressBar = this.CreateProgressBar(toolboxLayoutDefinition.PlaybackTools.ProgressBar);
 			this.AddTool(this.playbackProgressBar);
 
-			var speedGauge = this.CreateSpeedGauge(toolboxLayoutDefinition.PlaybackTools.SpeedGauge);
-			this.AddTool(speedGauge);
+			this.speedGauge = this.CreateSpeedGauge(toolboxLayoutDefinition.PlaybackTools.SpeedGauge);
+			this.AddTool(this.speedGauge);
 		}
 
 		/// <summary>
