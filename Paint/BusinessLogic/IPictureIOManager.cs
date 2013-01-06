@@ -20,7 +20,9 @@ namespace Paint
 		/// <param name='imageStateData'>Image state data.</param>
 		/// <param name='masterImageRenderTarget' Master image render target/>
 		/// <param name='undoRedoRenderTargets'>Sequence of images representing the undo/redo chain</param>
-		void SaveData(ImageStateData imageStateData, RenderTarget2D masterImageRenderTarget, RenderTarget2D[] undoRedoRenderTargets);
+		/// <param name='bottomMarginToCutOff'>Because the toolbox will always take up some space we will cut off the bottom section (toolbox height)
+		/// when saving the master image so that there is no annoying white space at the bottom</param>
+		void SaveData(ImageStateData imageStateData, RenderTarget2D masterImageRenderTarget, RenderTarget2D[] undoRedoRenderTargets, int bottomMarginToCutOff);
 		
 		/// <summary>
 		/// Loads existing image data from disk into the undoRedoRenderTargets

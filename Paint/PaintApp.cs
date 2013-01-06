@@ -60,19 +60,21 @@ namespace Paint
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Paint.PaintApp"/> class.
 		/// Instantiate our GraphicsDeviceManager and establish where the content folder is
+		/// </summary>
 		/// <param name='pictureIOManager'>Picture IO Manager</param>
 		/// <param name='filenameResolver'>Filename Resolver</param>
 		/// <param name='imageStateData'>ImageSaveData</param>
 		/// <param name='saveBusyMessageDisplay'>Class for dsplaying the 'Busy - saving' message</param>
 		/// <param name='toolboxLayoutDefinition'>Layout of the toolbox</param>
-		/// </summary>
+		/// <param name='deviceScale'>The device scale/resolution. 1 = normal.  2 = retina.</param>
 		public PaintApp(
 			IPictureIOManager pictureIOManager, 
 			IFilenameResolver filenameResolver, 
 			ImageStateData imageStateData,
 			IUIBusyMessage saveBusyMessageDisplay,
-			ToolboxLayoutDefinition toolboxLayoutDefinition)
-			: base(imageStateData, toolboxLayoutDefinition)
+			ToolboxLayoutDefinition toolboxLayoutDefinition,
+			int deviceScale)
+			: base(imageStateData, toolboxLayoutDefinition, deviceScale)
 		{
 			this.filenameResolver = filenameResolver;
 			this.pictureIOManager = pictureIOManager;
@@ -183,12 +185,9 @@ namespace Paint
 		/// Creates the toolbox.
 		/// </summary>
 		/// <returns>The toolbox.</returns>
-		/// <param name='scale'>
-		/// determine if we are a retina or not - if so then we'll need to double (scale = 2) our layout locations/sizes
-		/// </param>
-		protected override IToolBox CreateToolbox(int scale)
+		protected override IToolBox CreateToolbox()
 		{
-			this.paintToolBox = new PaintToolBox(this.ToolboxLayoutDefinition, this.GraphicsDisplay, scale);
+			this.paintToolBox = new PaintToolBox(this.ToolboxLayoutDefinition, this.GraphicsDisplay, this.DeviceScale);
 
 			this.paintToolBox.ExitSelected += (sender, e) => 
 			{
@@ -295,7 +294,7 @@ namespace Paint
 		private void SaveAndExit()
 		{
 			this.pictureStateManager.Save();
-			this.pictureIOManager.SaveData(this.pictureStateManager.ImageStateData, this.InMemoryCanvasRenderTarget, this.undoRedoRenderTargets);
+			this.pictureIOManager.SaveData(this.pictureStateManager.ImageStateData, this.InMemoryCanvasRenderTarget, this.undoRedoRenderTargets, this.ToolBox.ToolboxMinimizedHeight);
 			
 			foreach (var renderTarget in this.undoRedoRenderTargets)
 			{

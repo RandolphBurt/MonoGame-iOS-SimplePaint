@@ -45,11 +45,13 @@ namespace Paint
 		/// <param name='canvasPlayback'>Canvas Playback data</param>
 		/// <param name='imageStateData'>ImageSaveData</param>
 		/// <param name='toolboxLayoutDefinition'>Layout of the toolbox</param>
+		/// <param name='deviceScale'>The device scale/resolution. 1 = normal.  2 = retina.</param>
 		public CanvasPlaybackApp(
 			ICanvasPlayback canvasPlayback, 
 			ImageStateData imageStateData, 
-			ToolboxLayoutDefinition toolboxLayoutDefinition)
-			: base(imageStateData, toolboxLayoutDefinition)
+			ToolboxLayoutDefinition toolboxLayoutDefinition,
+			int deviceScale)
+			: base(imageStateData, toolboxLayoutDefinition, deviceScale)
 		{
 			this.canvasPlayback = canvasPlayback;
 			this.calculatePlaybackSpeed = new CalculatePlaybackSpeed();
@@ -86,12 +88,9 @@ namespace Paint
 		/// Creates the toolbox.
 		/// </summary>
 		/// <returns>The toolbox.</returns>
-		/// <param name='scale'>
-		/// determine if we are a retina or not - if so then we'll need to double (scale = 2) our layout locations/sizes
-		/// </param>
-		protected override IToolBox CreateToolbox(int scale)
+		protected override IToolBox CreateToolbox()
 		{
-			this.playbackToolbox = new PlaybackToolbox(this.ToolboxLayoutDefinition, this.GraphicsDisplay, scale);
+			this.playbackToolbox = new PlaybackToolbox(this.ToolboxLayoutDefinition, this.GraphicsDisplay, this.DeviceScale);
 
 			this.playbackToolbox.ExitSelected += (sender, e) => 
 			{

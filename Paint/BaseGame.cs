@@ -82,6 +82,11 @@ namespace Paint
 		protected IToolBox ToolBox;
 
 		/// <summary>
+		/// The device scale/resolution. 1 = normal.  2 = retina.
+		/// </summary>
+		protected int DeviceScale;
+
+		/// <summary>
 		/// Keep track of the previous gesture/touch-type that was made by the user.
 		/// </summary>
 		private TouchType previousTouchType = TouchType.DragComplete;
@@ -91,10 +96,13 @@ namespace Paint
 		/// </summary>
 		/// <param name='imageStateData'>ImageSaveData</param>
 		/// <param name='toolboxLayoutDefinition'>Layout of the toolbox</param>
-		public BaseGame(ImageStateData imageStateData, ToolboxLayoutDefinition toolboxLayoutDefinition)
+		/// <param name='deviceScale'>Layout of the toolbox</param>
+		/// <param name='deviceScale'>The device scale/resolution. 1 = normal.  2 = retina.</param>
+		public BaseGame(ImageStateData imageStateData, ToolboxLayoutDefinition toolboxLayoutDefinition, int deviceScale)
 		{
 			this.ImageStateData = imageStateData;
 			this.ToolboxLayoutDefinition = toolboxLayoutDefinition;
+			this.DeviceScale = deviceScale;
 
 			this.GraphicsDeviceManager = new GraphicsDeviceManager(this);
 			this.GraphicsDeviceManager.IsFullScreen = true;
@@ -117,10 +125,7 @@ namespace Paint
 		/// Creates the toolbox.
 		/// </summary>
 		/// <returns>The toolbox.</returns>
-		/// <param name='scale'>
-		/// determine if we are a retina or not - if so then we'll need to double (scale = 2) our layout locations/sizes
-		/// </param>
-		protected abstract IToolBox CreateToolbox(int scale);
+		protected abstract IToolBox CreateToolbox();
 
 		/// <summary>
 		/// We load any content we need at the beginning of the application life cycle.
@@ -133,8 +138,7 @@ namespace Paint
 			// determine if we are a retina or not - 
 			// if so then we'll need to double (scale = 2) our layout locations/sizes
 			// and load a bigger spritemap
-			int scale = Math.Max(this.ImageStateData.Height, this.ImageStateData.Width) / 1024;			
-			bool highResolution = scale > 1;
+			bool highResolution = this.DeviceScale  > 1;
 
 			Texture2D graphicsTextureMap = null;
 			if (highResolution)
@@ -150,7 +154,7 @@ namespace Paint
 
 			this.Canvas = new Canvas(this.GraphicsDisplay);
 
-			this.ToolBox = CreateToolbox(scale);
+			this.ToolBox = CreateToolbox();
 
 			this.CreateRenderTargets();
 		}

@@ -36,7 +36,9 @@ namespace Paint
 		/// <param name='imageStateData'>Image state data.</param>
 		/// <param name='masterImageRenderTarget' Master image render target/>
 		/// <param name='undoRedoRenderTargets'>Sequence of images representing the undo/redo chain</param>
-		public void SaveData(ImageStateData imageStateData, RenderTarget2D masterImageRenderTarget, RenderTarget2D[] undoRedoRenderTargets)
+		/// <param name='bottomMarginToCutOff'>Because the toolbox will always take up some space we will cut off the bottom section (toolbox height)
+		/// when saving the master image so that there is no annoying white space at the bottom</param>
+		public void SaveData(ImageStateData imageStateData, RenderTarget2D masterImageRenderTarget, RenderTarget2D[] undoRedoRenderTargets, int bottomMarginToCutOff)
 		{
 			this.SaveImageStateData(this.filenameResolver.MasterImageInfoFilename, imageStateData);
 			
@@ -68,7 +70,7 @@ namespace Paint
 			masterImageRenderTarget.SaveAsJpeg(
 				this.filenameResolver.MasterImageFilename,
 				masterImageRenderTarget.Width,
-				masterImageRenderTarget.Height);
+				masterImageRenderTarget.Height - bottomMarginToCutOff);
 
 			File.Delete(this.filenameResolver.WorkingImageInfoFilename);
 		}

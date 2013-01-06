@@ -74,6 +74,11 @@ namespace Paint
 		/// </summary>
 		private IToolboxLayoutManager toolboxLayoutManager = null;
 
+		/// <summary>
+		/// The device scale/resolution. 1 = normal.  2 = retina.
+		/// </summary>
+		private int deviceScale;
+
 		//
 		// This method is invoked when the application has loaded and is ready to run. In this 
 		// method you should instantiate the window, load the UI into it and then make the window
@@ -107,8 +112,9 @@ namespace Paint
 			
 			this.CreateDirectoryStructure();
 
-			this.window = new UIWindow(UIScreen.MainScreen.Bounds);
+			this.window = new UIWindow(UIScreen.MainScreen.Bounds);	
 			this.viewController = new HomeScreen(this.imageDataPath, this.masterImagePath);
+			this.deviceScale = (int)UIScreen.MainScreen.Scale;
 			
 			this.viewController.PaintSelected += (sender, e) => {
 				this.EditImage(e.PictureId);
@@ -169,8 +175,8 @@ namespace Paint
 			// ready to display the app  (inside call to EditImage) so it wouldn't have turned yet anyway]
 			ImageStateData imageStateData = null;
 		
-			int deviceWidth = (int)(UIScreen.MainScreen.Bounds.Width * UIScreen.MainScreen.Scale);
-			int deviceHeight = (int)(UIScreen.MainScreen.Bounds.Height * UIScreen.MainScreen.Scale);
+			int deviceWidth = (int)UIScreen.MainScreen.Bounds.Width * this.deviceScale;
+			int deviceHeight = (int)UIScreen.MainScreen.Bounds.Height * this.deviceScale;
 			
 			if (orientation == PictureOrientation.Landscape)
 			{
@@ -214,7 +220,7 @@ namespace Paint
 					this.toolboxLayoutManager.PaintLandscapeToolboxLayout : 
 					this.toolboxLayoutManager.PaintPortraitToolboxLayout;
 
-			this.paintApp = new PaintApp(pictureIOManager, filenameResolver, imageStateData, busyMessageDisplay, layoutDefinition);
+			this.paintApp = new PaintApp(pictureIOManager, filenameResolver, imageStateData, busyMessageDisplay, layoutDefinition, this.deviceScale);
 			this.paintApp.Exiting += PaintAppExiting;			
 			
 			this.paintApp.Run();
@@ -241,7 +247,7 @@ namespace Paint
 					this.toolboxLayoutManager.PlaybackLandscapeToolboxLayout : 
 					this.toolboxLayoutManager.PlaybackPortraitToolboxLayout;
 
-			this.playBackApp = new CanvasPlaybackApp(canvasPlayback, imageStateData, layoutDefinition);
+			this.playBackApp = new CanvasPlaybackApp(canvasPlayback, imageStateData, layoutDefinition, this.deviceScale);
 			this.playBackApp.Exiting += CanvasPlaybackAppExiting;
 			this.playBackApp.Run();
 		}
