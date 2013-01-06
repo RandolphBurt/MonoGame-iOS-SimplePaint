@@ -163,6 +163,8 @@
     <Compile Include="ToolDefinitions\SpeedGaugeDefinition.cs" />
     <Compile Include="Tools\SpeedGauge.cs" />
     <Compile Include="ToolInterfaces\ISpeedGauge.cs" />
+    <Compile Include="RecordAndPlaybackInterfaces\ICalculatePlaybackSpeed.cs" />
+    <Compile Include="RecordAndPlayback\CalculatePlaybackSpeed.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

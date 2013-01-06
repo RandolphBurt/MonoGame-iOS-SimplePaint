@@ -35,9 +35,9 @@ namespace Paint
 		private IPlaybackToolBox playbackToolbox;
 
 		/// <summary>
-		/// The number of calls to 'update' since we last retrieved a touch point.
+		/// Calculates how many touch points should be rendered per update based on the current playback speed
 		/// </summary>
-		private int updatesSinceLastTouchPointRetrieval = 0;
+		private ICalculatePlaybackSpeed calculatePlaybackSpeed;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Paint.CanvasPlaybackApp"/> class.
@@ -52,6 +52,7 @@ namespace Paint
 			: base(imageStateData, toolboxLayoutDefinition)
 		{
 			this.canvasPlayback = canvasPlayback;
+			this.calculatePlaybackSpeed = new CalculatePlaybackSpeed();
 		}
 
 		/// <summary>
@@ -153,7 +154,7 @@ namespace Paint
 			}
 			else if (this.playbackMode == PlaybackMode.Playing)
 			{			
-				var touchPointCount = this.TouchPointsToReadOnThisUpdate();
+				var touchPointCount = this.calculatePlaybackSpeed.TouchPointsToRender(this.playbackToolbox.PlaybackSpeed);
 				var touchPoints = this.canvasPlayback.GetNextTouchPoints(touchPointCount);
 
 				this.CanvasTouchPoints.AddRange(touchPoints);
@@ -163,63 +164,6 @@ namespace Paint
 			                           
 			base.Update(gameTime);
 		}		
-
-		/// <summary>
-		/// Calculates the number of touch-points we should read on this update, based on the current playback speed
-		/// </summary>
-		/// <returns>
-		/// The number of touch-points to read on this update.
-		/// </returns>
-		private int TouchPointsToReadOnThisUpdate()
-		{
-			/*
-			 * Current speed will be between 0 and 10...
-			 * 
-			 * 0 = Read one every 6 updates
-			 * 1 = Read one every 5 updates
-			 * 2 = Read one every 4 updates
-			 * 3 = Read one every 3 updates
-			 * 4 = Read one every other update
-			 * 
-			 * 5  = Normal speed = read one touch point per update
-			 * 
-			 * 6  = *2 speed
-			 * 7  = *3 speed
-			 * 8  = *4 speed
-			 * 9  = *5 speed
-			 * 10 = *6 speed
-			 * 
-			 */
-
-			int touchPointsToRead = 0;
-
-			var currentSpeed = (int)(this.playbackToolbox.PlaybackSpeed * 10);
-
-			if (currentSpeed >= 5)
-			{
-				touchPointsToRead = currentSpeed - 4;
-			}
-			else
-			{
-				var updateGap = 5 - currentSpeed;
-
-				if (updateGap <= this.updatesSinceLastTouchPointRetrieval)
-				{
-					touchPointsToRead = 1;
-				}
-			}
-
-			if (touchPointsToRead == 0)
-			{
-				this.updatesSinceLastTouchPointRetrieval++;
-			}
-			else
-			{
-				this.updatesSinceLastTouchPointRetrieval = 0;
-			}
-
-			return touchPointsToRead;
-		}
 
 		/// <summary>
 		/// Handles any user input.
