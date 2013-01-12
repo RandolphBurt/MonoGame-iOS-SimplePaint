@@ -1,0 +1,20 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConvertImageDataFilesToRetina", "ConvertImageDataFilesToRetina\ConvertImageDataFilesToRetina.csproj", "{BA34C10D-303E-40C5-81BA-32B914519DBA}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x86 = Debug|x86
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BA34C10D-303E-40C5-81BA-32B914519DBA}.Debug|x86.ActiveCfg = Debug|x86
+		{BA34C10D-303E-40C5-81BA-32B914519DBA}.Debug|x86.Build.0 = Debug|x86
+		{BA34C10D-303E-40C5-81BA-32B914519DBA}.Release|x86.ActiveCfg = Release|x86
+		{BA34C10D-303E-40C5-81BA-32B914519DBA}.Release|x86.Build.0 = Release|x86
+	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		StartupItem = ConvertImageDataFilesToRetina\ConvertImageDataFilesToRetina.csproj
+	EndGlobalSection
+EndGlobal
