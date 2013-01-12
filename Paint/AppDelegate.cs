@@ -6,6 +6,7 @@ namespace Paint
 {
 	using System;
 	using System.IO;
+	using System.Linq;
 
 	using Paint.ToolboxLayout;
 
@@ -28,6 +29,11 @@ namespace Paint
 		/// Path to the ImageData folder
 		/// </summary>
 		private const string FolderNameImageData = "ImageData";
+
+		/// <summary>
+		/// The name of the version file.
+		/// </summary>
+		private const string VersionFileName = "version.dat";
 		
 		/// <summary>
 		/// Maximum number of changes we can undo
@@ -70,6 +76,11 @@ namespace Paint
 		private string masterImagePath;
 
 		/// <summary>
+		/// The path of the version data file.
+		/// </summary>
+		private string versionDataFilePath;
+
+		/// <summary>
 		/// The toolbox layout manager
 		/// </summary>
 		private IToolboxLayoutManager toolboxLayoutManager = null;
@@ -90,6 +101,7 @@ namespace Paint
 		{
 			this.imageDataPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "..", FolderNameLibrary, FolderNameImageData);
 			this.masterImagePath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+			this.versionDataFilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), VersionFileName);
 		
 			this.toolboxLayoutManager = new ToolboxLayoutManager();
 
@@ -131,6 +143,8 @@ namespace Paint
 			this.viewController.NewImagePortraitSelected += (sender, e) => {
 				this.NewImage(PictureOrientation.Portrait);
 			};
+
+			this.CheckInitialInstallation();
 
 			this.window.RootViewController = viewController;
 			this.window.MakeKeyAndVisible();
@@ -180,11 +194,11 @@ namespace Paint
 			
 			if (orientation == PictureOrientation.Landscape)
 			{
-				imageStateData = new ImageStateData(Math.Max(deviceHeight, deviceWidth), Math.Min(deviceHeight, deviceWidth), 10);
+				imageStateData = new ImageStateData(Math.Max(deviceHeight, deviceWidth), Math.Min(deviceHeight, deviceWidth), UndoRedoBufferSize);
 			}
 			else
 			{
-				imageStateData = new ImageStateData(Math.Min(deviceHeight, deviceWidth), Math.Max(deviceHeight, deviceWidth), 10);
+				imageStateData = new ImageStateData(Math.Min(deviceHeight, deviceWidth), Math.Max(deviceHeight, deviceWidth), UndoRedoBufferSize);
 			}
 
 			this.EditImage(Guid.NewGuid(), imageStateData);			                 
@@ -384,6 +398,31 @@ namespace Paint
 				Directory.CreateDirectory(this.imageDataPath);
 			}
 		}		
+
+		/// <summary>
+		/// Checks if this is the initial installation - and if so then performs some initial one off set-up
+		/// </summary>
+		private void CheckInitialInstallation()
+		{
+			if (!File.Exists(versionDataFilePath))
+			{
+				// This is the very first time the app has ever been run so let's copy in some default images...
+				var defaultImageInstaller = new DefaultImageInstaller(this.imageDataPath, this.masterImagePath, this.deviceScale);
+				defaultImageInstaller.InstallDefaultImages();
+			}
+
+			this.WriteVersionFile();
+		}
+
+		/// <summary>
+		/// Writes the version file.
+		/// May be used in the future if we want to track which version the app was previously running (e.g. after an upgrade)
+		/// </summary>
+		private void WriteVersionFile()
+		{
+			byte[] versionData = new byte[] { (byte)1 };
+			File.WriteAllBytes(versionDataFilePath, versionData);
+		}
 	}
 }
 
