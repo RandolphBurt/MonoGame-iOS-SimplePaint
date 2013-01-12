@@ -104,24 +104,6 @@ namespace Paint
 			this.versionDataFilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), VersionFileName);
 		
 			this.toolboxLayoutManager = new ToolboxLayoutManager();
-
-			// Temp code below for total clear down 
-			/*
-			if (Directory.Exists(imageDataPath))
-			{
-				Directory.Delete(imageDataPath, true);
-			}
-	
-			var fileList=  Directory.EnumerateFiles(this.masterImagePath).ToArray();
-			if (fileList != null && fileList.Length > 0)
-			{
-				foreach (var file in fileList)
-				{
-					File.Delete(file);
-				}
-			} 
-			*/
-			// Temp code above for total clear down
 			
 			this.CreateDirectoryStructure();
 
