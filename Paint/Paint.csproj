@@ -188,6 +188,10 @@
     <Folder Include="Content\DefaultImages\StandardResolution\805c94f5-64da-4776-acec-2c001518ac4c\" />
     <Folder Include="Content\DefaultImages\StandardResolution\e2a9c783-d72a-4681-b083-47fd32874933\" />
     <Folder Include="Content\DefaultImages\StandardResolution\f66ba7b1-dbe2-484b-8426-cceea376685a\" />
+    <Folder Include="Content\DefaultImages\RetinaResolution\39d011b1-9657-4c8b-a70e-42cfe05c0272\" />
+    <Folder Include="Content\DefaultImages\RetinaResolution\805c94f5-64da-4776-acec-2c001518ac4c\" />
+    <Folder Include="Content\DefaultImages\RetinaResolution\e2a9c783-d72a-4681-b083-47fd32874933\" />
+    <Folder Include="Content\DefaultImages\RetinaResolution\f66ba7b1-dbe2-484b-8426-cceea376685a\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\graphics.png" />
@@ -240,6 +244,30 @@
     <Content Include="Content\DefaultImages\StandardResolution\e2a9c783-d72a-4681-b083-47fd32874933\0.REC" />
     <Content Include="Content\DefaultImages\StandardResolution\f66ba7b1-dbe2-484b-8426-cceea376685a\0.PNG" />
     <Content Include="Content\DefaultImages\StandardResolution\f66ba7b1-dbe2-484b-8426-cceea376685a\0.REC" />
+    <Content Include="Content\DefaultImages\RetinaResolution\39d011b1-9657-4c8b-a70e-42cfe05c0272\0.PNG" />
+    <Content Include="Content\DefaultImages\RetinaResolution\39d011b1-9657-4c8b-a70e-42cfe05c0272\1.PNG" />
+    <Content Include="Content\DefaultImages\RetinaResolution\39d011b1-9657-4c8b-a70e-42cfe05c0272\39d011b1-9657-4c8b-a70e-42cfe05c0272.JPG" />
+    <Content Include="Content\DefaultImages\RetinaResolution\805c94f5-64da-4776-acec-2c001518ac4c\0.PNG" />
+    <Content Include="Content\DefaultImages\RetinaResolution\805c94f5-64da-4776-acec-2c001518ac4c\1.PNG" />
+    <Content Include="Content\DefaultImages\RetinaResolution\805c94f5-64da-4776-acec-2c001518ac4c\805c94f5-64da-4776-acec-2c001518ac4c.JPG" />
+    <Content Include="Content\DefaultImages\RetinaResolution\e2a9c783-d72a-4681-b083-47fd32874933\0.PNG" />
+    <Content Include="Content\DefaultImages\RetinaResolution\e2a9c783-d72a-4681-b083-47fd32874933\1.PNG" />
+    <Content Include="Content\DefaultImages\RetinaResolution\e2a9c783-d72a-4681-b083-47fd32874933\e2a9c783-d72a-4681-b083-47fd32874933.JPG" />
+    <Content Include="Content\DefaultImages\RetinaResolution\f66ba7b1-dbe2-484b-8426-cceea376685a\0.PNG" />
+    <Content Include="Content\DefaultImages\RetinaResolution\f66ba7b1-dbe2-484b-8426-cceea376685a\1.PNG" />
+    <Content Include="Content\DefaultImages\RetinaResolution\f66ba7b1-dbe2-484b-8426-cceea376685a\f66ba7b1-dbe2-484b-8426-cceea376685a.JPG" />
+    <Content Include="Content\DefaultImages\RetinaResolution\39d011b1-9657-4c8b-a70e-42cfe05c0272\0.REC" />
+    <Content Include="Content\DefaultImages\RetinaResolution\39d011b1-9657-4c8b-a70e-42cfe05c0272\1.REC" />
+    <Content Include="Content\DefaultImages\RetinaResolution\39d011b1-9657-4c8b-a70e-42cfe05c0272\DATA.INF" />
+    <Content Include="Content\DefaultImages\RetinaResolution\805c94f5-64da-4776-acec-2c001518ac4c\0.REC" />
+    <Content Include="Content\DefaultImages\RetinaResolution\805c94f5-64da-4776-acec-2c001518ac4c\1.REC" />
+    <Content Include="Content\DefaultImages\RetinaResolution\805c94f5-64da-4776-acec-2c001518ac4c\DATA.INF" />
+    <Content Include="Content\DefaultImages\RetinaResolution\e2a9c783-d72a-4681-b083-47fd32874933\0.REC" />
+    <Content Include="Content\DefaultImages\RetinaResolution\e2a9c783-d72a-4681-b083-47fd32874933\1.REC" />
+    <Content Include="Content\DefaultImages\RetinaResolution\e2a9c783-d72a-4681-b083-47fd32874933\DATA.INF" />
+    <Content Include="Content\DefaultImages\RetinaResolution\f66ba7b1-dbe2-484b-8426-cceea376685a\0.REC" />
+    <Content Include="Content\DefaultImages\RetinaResolution\f66ba7b1-dbe2-484b-8426-cceea376685a\1.REC" />
+    <Content Include="Content\DefaultImages\RetinaResolution\f66ba7b1-dbe2-484b-8426-cceea376685a\DATA.INF" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\MonoGame\MyFork\MonoGame\MonoGame.Framework\MonoGame.Framework.iOS.csproj">

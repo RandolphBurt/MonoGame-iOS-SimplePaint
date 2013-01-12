@@ -119,7 +119,8 @@ namespace Paint
 				{
 					File.Delete(file);
 				}
-			} */
+			} 
+			*/
 			// Temp code above for total clear down
 			
 			this.CreateDirectoryStructure();
