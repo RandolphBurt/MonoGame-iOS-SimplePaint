@@ -55,6 +55,7 @@ namespace Paint
 		{
 			this.graphicsDisplay = graphicsDisplay;
 			this.playbackProgressBarDefinition = playbackProgressBarDefinition;
+			this.Bounds = this.playbackProgressBarDefinition.Bounds;
 
 			var graphicsRectangleProgressBarLeft = this.graphicsDisplay.SourceRectangleFromImageType(ImageType.ProgressBarLeft);
 			var graphicsRectangleProgressBarRight = this.graphicsDisplay.SourceRectangleFromImageType(ImageType.ProgressBarRight);
@@ -87,6 +88,15 @@ namespace Paint
 				this.playbackProgressBarDefinition.Bounds.Y + indicatorYOffset,
 				this.playbackProgressBarDefinition.ProgresIndicatorWidth,
 				this.playbackProgressBarDefinition.ProgressIndicatorHeight);
+		}
+		
+		/// <summary>
+		/// The location and size of the control.
+		/// </summary>
+		public Rectangle Bounds
+		{
+			get;
+			private set;
 		}
 
 		/// <summary>

@@ -144,7 +144,12 @@ namespace Paint
 		{
 			foreach (var tool in this.interactiveTools)
 			{
-				if (tool.CheckTouchCollision(touchPosition) == true)
+				// If the tool is not fully on screen then don't check for a collision
+				// (This happens when controls are hidden because the toolbox is minimized - however
+				//  we perform this check because there is an overlap on the borders which means we 
+				//  might otherwise accidentally select a hidden tool)
+				if (tool.Bounds.Bottom < this.ToolboxHeight &&
+					tool.CheckTouchCollision(touchPosition) == true)
 				{
 					// no need to check the other tools so exit now
 					return true;

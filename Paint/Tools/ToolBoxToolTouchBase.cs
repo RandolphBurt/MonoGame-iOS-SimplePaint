@@ -25,12 +25,7 @@ namespace Paint
 		/// The color of the borders around the control.
 		/// </summary>
 		protected Color BorderColor;	
-		
-		/// <summary>
-		/// The location and size of the control.
-		/// </summary>
-		protected Rectangle Bounds;
-		
+
 		/// <summary>
 		/// Contains all the images for the application
 		/// </summary>
@@ -72,7 +67,16 @@ namespace Paint
 			this.BorderColor = borderColor;
 			this.BorderWidth = borderWidth;
 		}
-		
+
+		/// <summary>
+		/// The location and size of the control.
+		/// </summary>
+		public Rectangle Bounds
+		{
+			get;
+			private set;
+		}
+
 		/// <summary>
 		/// Checks wheter a particular touch point (user pressing the screen) is within the bounds of this control.
 		/// </summary>

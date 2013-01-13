@@ -47,6 +47,17 @@ namespace Paint
 		}
 
 		/// <summary>
+		/// Gets the bounds of the control
+		/// </summary>
+		public Rectangle Bounds
+		{
+			get
+			{
+				return this.colorSetterDefinition.Bounds;
+			}
+		}
+
+		/// <summary>
 		/// Gets or sets the color we should display
 		/// </summary>
 		public Color Color 

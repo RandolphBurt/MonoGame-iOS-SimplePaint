@@ -4,13 +4,18 @@
 /// </summary>
 namespace Paint
 {
-	using System;
-	
+	using Microsoft.Xna.Framework;
+
 	/// <summary>
 	/// Interface for any tools used in the paint app
 	/// </summary>
 	public interface IToolBoxTool
 	{
+		/// <summary>
+		/// Gets the bounds of the control
+		/// </summary>
+		Rectangle Bounds { get; }
+
 		/// <summary>
 		/// Draw this tool on to the image
 		/// </summary>
