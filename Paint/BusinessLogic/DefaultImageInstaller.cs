@@ -68,11 +68,9 @@ namespace Paint
 					Directory.CreateDirectory(destinationImageDataFolder);
 				}
 
-				foreach (string fileToCopy in new string[] { "DATA.INF", "0.REC", "0.PNG", "1.REC", "1.PNG" })
+				foreach (string fileToCopy in new string[] { "DATA.INF", "0.REC", "0.PNG" })
 				{
 					// ... and then copy the data in.
-					// Note the 0.xxx files contain blank data so the user can undo to a blank screen. Not idea however if we just had a single 
-					// image/recorder file then the app thinks that it is a new image and shows it blank.  Might fix properly one day...
 					var sourceDataFile = Path.Combine(folder, fileToCopy);
 					var destinationDataFile = Path.Combine(destinationImageDataFolder, fileToCopy);
 
