@@ -39,10 +39,10 @@ namespace Paint
 
 		/// <summary>
 		/// Initialise the picture state manager
-		/// <param name='pictureId' Unique ID for this particular picture />
+		/// <param name='newImage' Indicates if this is a new image or not />
 		/// </summary>
-		void InitialisePictureState();
-			
+		void InitialisePictureState(bool newImage);
+
 		/// <summary>
 		/// Draw the latest updates to our image/render target.
 		/// <param name='touchPointList'>

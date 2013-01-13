@@ -139,11 +139,11 @@ namespace Paint
 		
 		/// <summary>
 		/// Initialise the picture state manager
-		/// <param name='pictureId' Unique ID for this particular picture />
+		/// <param name='newImage' Indicates if this is a new image or not />
 		/// </summary>
-		public void InitialisePictureState()
+		public void InitialisePictureState(bool newImage)
 		{
-			if (this.ImageStateData.IsNewImage() == true)
+			if (newImage == true)
 			{
 				this.StoreSavePointData();
 				this.UndoEnabled = false;

@@ -254,10 +254,13 @@ namespace Paint
 		/// </summary>
 		private void CreatePictureStateManager()
 		{
+			bool newImage = true;
+
 			if (File.Exists(this.filenameResolver.MasterImageInfoFilename) == true)
 			{
 				// existing image so we load the rendertargetlist from disk
 				this.pictureIOManager.LoadData(this.GraphicsDeviceManager.GraphicsDevice, this.SpriteBatch, this.undoRedoRenderTargets, this.BackgroundColor);
+				newImage = false;
 			}
 			
 			this.pictureStateManager = new PictureStateManager(this.filenameResolver, this.pictureIOManager, this, this.ImageStateData);			
@@ -271,7 +274,7 @@ namespace Paint
 				this.paintToolBox.UndoEnabled = this.pictureStateManager.UndoEnabled;
 			};
 			
-			this.pictureStateManager.InitialisePictureState();			
+			this.pictureStateManager.InitialisePictureState(newImage);			
 		}
 
 		/// <summary>

@@ -92,25 +92,7 @@ namespace Paint
 			get;
 			private set;
 		}
-		
-		/// <summary>
-		/// Determines whether this instance is new image.
-		/// </summary>
-		/// <returns>
-		/// <c>true</c> if this instance is new image; otherwise, <c>false</c>.
-		/// </returns>
-		public bool IsNewImage()
-		{
-			if (this.CurrentSavePoint == 0 &&
-			    this.FirstSavePoint == 0 &&
-			    this.LastSavePoint == 0)
-			{
-				return true;
-			}
-			
-			return false;
-		}
-		
+
 		/// <summary>
 		/// Resets the last save point to be the same as the current save point
 		/// e.g. if user presses undo and then alters the image then we need to throw away future redo images
