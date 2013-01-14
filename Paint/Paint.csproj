@@ -192,6 +192,7 @@
     <Folder Include="Content\DefaultImages\RetinaResolution\805c94f5-64da-4776-acec-2c001518ac4c\" />
     <Folder Include="Content\DefaultImages\RetinaResolution\e2a9c783-d72a-4681-b083-47fd32874933\" />
     <Folder Include="Content\DefaultImages\RetinaResolution\f66ba7b1-dbe2-484b-8426-cceea376685a\" />
+    <Folder Include="Images\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\graphics.png" />
@@ -252,6 +253,8 @@
     <Content Include="Content\DefaultImages\RetinaResolution\e2a9c783-d72a-4681-b083-47fd32874933\DATA.INF" />
     <Content Include="Content\DefaultImages\RetinaResolution\f66ba7b1-dbe2-484b-8426-cceea376685a\0.REC" />
     <Content Include="Content\DefaultImages\RetinaResolution\f66ba7b1-dbe2-484b-8426-cceea376685a\DATA.INF" />
+    <Content Include="Images\Icon_72*72.png" />
+    <Content Include="Images\Icon_144*144.png" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\MonoGame\MyFork\MonoGame\MonoGame.Framework\MonoGame.Framework.iOS.csproj">
@@ -279,5 +282,9 @@
   </ProjectExtensions>
   <ItemGroup>
     <BundleResource Include="background.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ITunesArtwork Include="iTunesArtwork" />
+    <ITunesArtwork Include="iTunesArtwork%402x" />
   </ItemGroup>
 </Project>

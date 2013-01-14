@@ -2,6 +2,17 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>CFBundleDisplayName</key>
+	<string>iPaint</string>
+	<key>CFBundleIconFiles</key>
+	<array>
+		<string>Images/Icon_72*72.png</string>
+		<string>Images/Icon_144*144.png</string>
+	</array>
+	<key>CFBundleVersion</key>
+	<string>1.0</string>
+	<key>MinimumOSVersion</key>
+	<string>6.0</string>
 	<key>UIDeviceFamily</key>
 	<array>
 		<integer>2</integer>
