@@ -167,6 +167,13 @@
     <Compile Include="RecordAndPlayback\CalculatePlaybackSpeed.cs" />
     <Compile Include="BusinessLogic\DefaultImageInstaller.cs" />
     <Compile Include="BusinessLogic\IDefaultImageInstaller.cs" />
+    <Compile Include="MonoTouch\LaunchScreen.cs" />
+    <Compile Include="MonoTouch\LaunchScreen.designer.cs">
+      <DependentUpon>LaunchScreen.cs</DependentUpon>
+    </Compile>
+    <Compile Include="AppDelegate.designer.cs">
+      <DependentUpon>AppDelegate.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -255,6 +262,8 @@
     <Content Include="Content\DefaultImages\RetinaResolution\f66ba7b1-dbe2-484b-8426-cceea376685a\DATA.INF" />
     <Content Include="Images\Icon_72*72.png" />
     <Content Include="Images\Icon_144*144.png" />
+    <Content Include="Content\launchTitle.png" />
+    <Content Include="Content\launchAuthor.png" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\MonoGame\MyFork\MonoGame\MonoGame.Framework\MonoGame.Framework.iOS.csproj">
@@ -264,6 +273,7 @@
   </ItemGroup>
   <ItemGroup>
     <InterfaceDefinition Include="MonoTouch\HomeScreen.xib" />
+    <InterfaceDefinition Include="MonoTouch\LaunchScreen.xib" />
   </ItemGroup>
   <ProjectExtensions>
     <MonoDevelop>

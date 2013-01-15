@@ -108,6 +108,22 @@ namespace Paint
 			this.CreateDirectoryStructure();
 
 			this.window = new UIWindow(UIScreen.MainScreen.Bounds);	
+
+			var launchScreen = new LaunchScreen();
+			launchScreen.LaunchScreenComplete += (sender, e) => {
+				this.LaunchHomeScreen();
+			};
+
+			this.window.RootViewController = launchScreen;
+			this.window.MakeKeyAndVisible();
+
+			// TODO - check if problem if this.viewController not set because user hits home screen and them reloads quickly etc
+			return true;
+		}
+
+		private void LaunchHomeScreen()
+		{
+			this.window = new UIWindow(UIScreen.MainScreen.Bounds);	
 			this.viewController = new HomeScreen(this.imageDataPath, this.masterImagePath);
 			this.deviceScale = (int)UIScreen.MainScreen.Scale;
 			
@@ -118,7 +134,7 @@ namespace Paint
 			this.viewController.PlaybackSelected += (sender, e) => {
 				this.PlaybackImage(e.PictureId);
 			};
-
+			
 			this.viewController.NewImageLandscapeSelected += (sender, e) => {					                    
 				this.NewImage(PictureOrientation.Landscape);
 			};
@@ -126,13 +142,11 @@ namespace Paint
 			this.viewController.NewImagePortraitSelected += (sender, e) => {
 				this.NewImage(PictureOrientation.Portrait);
 			};
-
+			
 			this.CheckInitialInstallation();
-
+			
 			this.window.RootViewController = viewController;
 			this.window.MakeKeyAndVisible();
-			
-			return true;
 		}
 		
 		public override void WillEnterForeground(UIApplication application)
