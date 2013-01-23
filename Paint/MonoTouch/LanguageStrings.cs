@@ -19,11 +19,11 @@ namespace Paint
 
 		public const string EmailSenderMessage = "My awesome picture!";
 
-		public const string EmailSenderBody = "Look at this picture I created using iPaint for the iPad...";
+		public const string EmailSenderBody = "Look at this picture I created using Paint Replay for the iPad...";
 
-		public const string TweetMessage = "Check out this awesome picture I created using iPaint for the iPad! #iPaint";
+		public const string TweetMessage = "Check out this awesome picture I created using Paint Replay for the iPad! #PaintReplay";
 
-		public const string PostFacebookMessage = "Check out this awesome picture I created using iPaint for the iPad!";
+		public const string PostFacebookMessage = "Check out this awesome picture I created using Paint Replay for the iPad!";
 
 		public const string SocialNetworkDisabledAlertViewTitle = "Unable to post message";
 
