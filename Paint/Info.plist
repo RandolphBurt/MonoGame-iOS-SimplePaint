@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>CFBundleDisplayName</key>
-	<string>iPaint</string>
+	<string>Paint Replay</string>
 	<key>CFBundleIconFiles</key>
 	<array>
 		<string>Images/Icon_72*72.png</string>
