@@ -121,6 +121,22 @@ namespace Paint
 					new Vector2(touchPosition.Position.X, this.gaugeBounds.Y), 
 					touchPosition.TouchType);
 			}
+			else if (this.boundsLeftImage.Contains(touchPosition.Position))
+			{
+				// if the user presses the 'slow icon' to the left of the gauge then treat this as pressing the 
+				// far left of the gauge - i.e. the slowest speed
+				gaugeTouchPoint = new TouchPoint(
+					new Vector2(this.boundsMiddleImage.X, this.gaugeBounds.Y), 
+					touchPosition.TouchType);
+			}
+			else if (this.boundsRightImage.Contains(touchPosition.Position))
+			{
+				// if the user presses the 'fast icon' to the right of the gauge then treat this as pressing the 
+				// far right of the gauge - i.e. the fastest speed
+				gaugeTouchPoint = new TouchPoint(
+					new Vector2(this.boundsMiddleImage.X + this.boundsMiddleImage.Width - 1, this.gaugeBounds.Y), 
+					touchPosition.TouchType);
+			}
 				
 			this.gauge.CheckTouchCollision(gaugeTouchPoint);
 		}
