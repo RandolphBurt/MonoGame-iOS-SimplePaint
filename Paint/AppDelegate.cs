@@ -110,6 +110,11 @@ namespace Paint
 			this.window = new UIWindow(UIScreen.MainScreen.Bounds);	
 
 			var launchScreen = new LaunchScreen();
+			if (File.Exists(versionDataFilePath))
+			{
+				launchScreen.AllowUserExit = true;
+			}
+
 			launchScreen.LaunchScreenComplete += (sender, e) => {
 				this.LaunchHomeScreen();
 			};
@@ -117,7 +122,6 @@ namespace Paint
 			this.window.RootViewController = launchScreen;
 			this.window.MakeKeyAndVisible();
 
-			// TODO - check if problem if this.viewController not set because user hits home screen and them reloads quickly etc
 			return true;
 		}
 
@@ -401,7 +405,7 @@ namespace Paint
 		/// </summary>
 		private void CheckInitialInstallation()
 		{
-			if (!File.Exists(versionDataFilePath))
+			if (!File.Exists(this.versionDataFilePath))
 			{
 				// This is the very first time the app has ever been run so let's copy in some default images...
 				var defaultImageInstaller = new DefaultImageInstaller(this.imageDataPath, this.masterImagePath, this.deviceScale);
