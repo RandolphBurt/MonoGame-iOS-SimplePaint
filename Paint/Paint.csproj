@@ -264,6 +264,10 @@
     <Content Include="Images\Icon_144*144.png" />
     <Content Include="Content\launchTitle.png" />
     <Content Include="Content\launchAuthor.png" />
+    <Content Include="Content\launchAuthor%402x.png" />
+    <Content Include="Content\launchTitle%402x.png" />
+    <Content Include="Content\launchImage%402x.jpg" />
+    <Content Include="Content\launchImage.jpg" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\MonoGame\MyFork\MonoGame\MonoGame.Framework\MonoGame.Framework.iOS.csproj">
