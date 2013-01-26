@@ -13,6 +13,8 @@
 	<string>1.0</string>
 	<key>MinimumOSVersion</key>
 	<string>6.0</string>
+	<key>CFBundleIdentifier</key>
+	<string>com.randeroo.paintreplay</string>
 	<key>UIDeviceFamily</key>
 	<array>
 		<integer>2</integer>
