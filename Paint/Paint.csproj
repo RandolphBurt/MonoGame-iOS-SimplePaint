@@ -191,6 +191,7 @@
     <Compile Include="AppDelegate.designer.cs">
       <DependentUpon>AppDelegate.cs</DependentUpon>
     </Compile>
+    <Compile Include="MonoTouch\Device.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -217,6 +218,7 @@
     <Folder Include="Content\DefaultImages\RetinaResolution\e2a9c783-d72a-4681-b083-47fd32874933\" />
     <Folder Include="Content\DefaultImages\RetinaResolution\f66ba7b1-dbe2-484b-8426-cceea376685a\" />
     <Folder Include="Images\" />
+    <Folder Include="Device\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\graphics.png" />

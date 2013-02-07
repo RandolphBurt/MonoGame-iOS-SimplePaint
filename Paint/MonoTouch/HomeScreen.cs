@@ -112,7 +112,12 @@ namespace Paint
 		public override void ViewDidLoad()
 		{
 			base.ViewDidLoad();
-				
+
+			if (Device.OSVersion < Device.OSVersion60)
+			{
+				this.btnFacebook.Hidden = true;
+			}
+
 			this.btnPaint.SetImage(UIImage.FromBundle("Content/paint.png"), UIControlState.Normal);
 			this.btnPlayback.SetImage(UIImage.FromBundle("Content/playback.png"), UIControlState.Normal);
 			this.btnFacebook.SetImage(UIImage.FromBundle("Content/facebook.png"), UIControlState.Normal);
