@@ -71,6 +71,13 @@ namespace Paint
 			this.authorImageView.Image = UIImage.FromBundle("Content/launchAuthor.png");
 			this.pictureImageView.Image = UIImage.FromBundle("Content/launchImage.jpg");
 		}
+		
+		[Obsolete]
+		public override bool ShouldAutorotateToInterfaceOrientation(UIInterfaceOrientation toInterfaceOrientation)
+		{
+			// Return true for supported orientations (Required for iOS versions < 6.0)
+			return true;
+		}
 
 		/// <Docs>Set containing the touches.</Docs>
 		/// <summary>

@@ -174,6 +174,13 @@ namespace Paint
 			return true;
 		}
 
+		[Obsolete]
+		public override bool ShouldAutorotateToInterfaceOrientation(UIInterfaceOrientation toInterfaceOrientation)
+		{
+			// Return true for supported orientations (Required for iOS versions < 6.0)
+			return true;
+		}
+
 		/// <summary>
 		/// Loads all of our images and displays them on screen ready for editing
 		/// </summary>
