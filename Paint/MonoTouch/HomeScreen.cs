@@ -372,7 +372,13 @@ namespace Paint
 				return;
 			}
 
-			this.PostImageToSocialNetwork(this.PictureIdFromFile(currentFileIndex), SLServiceKind.Twitter);
+			if (Device.OSVersion < Device.OSVersion60)
+			{
+				this.PostImageToTwitterIOS5(this.PictureIdFromFile(currentFileIndex));
+			}
+			else{
+				this.PostImageToSocialNetwork(this.PictureIdFromFile(currentFileIndex), SLServiceKind.Twitter);
+			}
 		}
 
 		partial void btnEmail_TouchUpInside(MonoTouch.UIKit.UIButton sender)
@@ -533,6 +539,17 @@ namespace Paint
 		private PictureSelectedEventArgs SelectedPictureEventArgs()
 		{
 			return new PictureSelectedEventArgs(this.PictureIdFromFile(currentFileIndex));
+		}
+
+		/// <summary>
+		/// Posts the image to twitter (when using iOS5).
+		/// </summary>
+		/// <param name="pictureId">Picture identifier.</param>
+		private void PostImageToTwitterIOS5(Guid pictureId)
+		{
+			var filenameResolver = this.CreateFilenameResolver(pictureId);
+			var twitterIOS5 = new TwitterIOS5(this);
+			twitterIOS5.PostImage(filenameResolver.MasterImageFilename);
 		}
 
 		/// <summary>

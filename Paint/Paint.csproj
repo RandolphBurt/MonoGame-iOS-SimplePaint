@@ -192,6 +192,7 @@
       <DependentUpon>AppDelegate.cs</DependentUpon>
     </Compile>
     <Compile Include="MonoTouch\Device.cs" />
+    <Compile Include="MonoTouch\TwitterIOS5.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

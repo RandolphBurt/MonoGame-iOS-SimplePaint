@@ -4,7 +4,6 @@
 /// </summary>
 namespace Paint
 {
-	using System;	
 	using MonoTouch.Social;
 	using MonoTouch.UIKit;
 
