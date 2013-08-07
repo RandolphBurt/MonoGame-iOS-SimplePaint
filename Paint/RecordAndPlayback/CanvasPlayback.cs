@@ -212,7 +212,7 @@ namespace Paint
 		/// </summary>
 		private void SetColor()
 		{
-			Color newColor;
+			Color newColor = new Color();
 			newColor.A = this.commandByteArray[1];
 			newColor.R = this.commandByteArray[2];
 			newColor.G = this.commandByteArray[3];
